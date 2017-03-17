@@ -1,0 +1,119 @@
+
+2017-03-16
+----------
+
+DISCUSS:
+
+  + linked plot and table with ...
+    - 'rplotly'
+      + can do it via 'crosstalk' with 'plotly' and 'DT' (data.table)
+        - generally can link any 'htmlwidgets' package (e.g., 'leaflet')
+        - AS LONG AS the package has been integrated with 'crosstalk'
+        - uses "shared data object" as common data between linked elements
+          (changes to data flow to changes in linked elements?)
+        - limited to filtering and linked brushing
+        - limited to small data
+        - classic trade-off between (major) ease-of-use for supported things
+          but (major) headache to customise
+        - uses 'bootstrap' underneath to build and layout HTML page 
+          (standard framework for responsive HTML pages)
+      + not sure yet whether can get access to the HTML/SVG/js that 'plotly'   
+        is generating (to do further manual customisation)
+    - 'rbokeh'
+      + can't do it yet
+      + 'bokeh' can itself do it
+        - does its own plots, tables, etc
+        - standard (full) API is Python
+        - R API needs expanding
+        - not designed to link to things outside bokeh
+    - 'ggvis'/'rvega'
+      + both stale/stagnated ?
+      + both use Shiny's reactive engine to interact with browser?
+
+
+TODO:
+
+  + record notes (incl URLs) in text file on computer
+
+  + create a github repo to store (and share) notes, images, code, ...
+
+  + do the linked-plot-table thing with 'Shiny'
+
+  + follow up 'ggvis'/'rvega' to check that they can actually 
+    talk back to R!?
+    - which 'plotly' and 'crosstalk' etc do NOT do (right?)
+
+  + (for the future) look at D3 with 'gridSVG' output
+
+
+2017-03-09
+----------
+
+DISCUSS:
+
+  + goals are:
+
+    - interactive plots (from iNZight)
+      + plot + table
+      + multipanel plots
+      + linked brushing (select in one plot, highlight in another)
+      + communication back to R ?
+        (what was selected, recalculate a fitted line, ...)
+
+
+TODO:
+
+  + plot using 'rbokeh', table using 'xtable', LINK the two
+  + ditto 'plotly'
+  + ditto 'highcharts'?
+  + ditto 'rvega'?
+  + ditto 'ggvis'?
+
+
+2017-03-02
+----------
+
+PLAN:
+
+  + get an 'rbokeh'/'plotly' plot going
+  + get an 'rbokeh'/'plotly' plot going from iNZight
+  + get a 'DataTable' table 
+  + link the plot to the table
+
+  
+DISCUSS:
+
+  + Paul/Chris confirm project with Brendon
+
+  + project topic ...
+
+    "using gridSVG to create charts/plots, and implement
+     interactivity/animation with javascript libraries such as d3 or
+     Raphael.js as mentioned on Paul's student project idea page.
+
+     It may help create more high level interactivity graphs for
+     iNZight for future development"
+
+  + Make existing code (from Summer) more robust
+
+  + New starts ...
+
+    - use D3 rather than raw javascript
+    - use something like highcharts (via htmlwidgets)
+      http://www.htmlwidgets.org/showcase_datatables.html
+      http://www.htmlwidgets.org/showcase_plotly.html 
+
+    - compare the different approaches
+      + integrating difference components on a page
+      + customising and extending components
+
+  + New things ...
+
+    - use 'DOM' to get the SVG to the browser (and talk back)
+    - integration with iNZight
+    - zooming interaction
+    - linked brushing
+
+
+
+  
