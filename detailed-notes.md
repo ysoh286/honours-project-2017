@@ -84,7 +84,7 @@ bscols(
 - Able to achieve linked brushing with rbokeh, but not link a table
 
 A: YES, but only on Python and to the table provided by Bokeh.
-    NO on rbokeh due to only plotting functions provided. However, developer is thinking about integrating crosstalk which could make this possible.
+    NO on rbokeh due to only plotting functions provided. However, developer Ryan Hafen (who made rbokeh) is thinking about integrating crosstalk which could make this possible. http://ryanhafen.com/blog/rbokeh-0-5-0
 
 Code in R:
 ```
@@ -131,7 +131,7 @@ bscols(
 
 ```
 
-#### NEW TECHNOLOGIES & IDEAS:
+#### OTHER TECHNOLOGIES, TOOLS & IDEAS:
 **Crosstalk:** https://rstudio.github.io/crosstalk/
 - "An add-on to HTMLwidgets", package that allows htmlwidgets to cross-communicate and link together
 - Interactions available: linked brushing, filtering
@@ -141,5 +141,5 @@ bscols(
 - Limitations: Not all HTMLwidgets could easily implement this, they have to meet some criteria.
 See the criteria and limitations here:
 https://rstudio.github.io/crosstalk/authoring.html
-- Relatively new/experimental, but has potential to be expanded across other htmlwidgets (some other the developers of the other widgets above are looking into using it)
+- Relatively new/experimental, but has potential to be expanded across other htmlwidgets (some other the developers of the other widgets above are looking into it)
 - R Documentation: https://cran.r-project.org/web/packages/crosstalk/crosstalk.pdf
