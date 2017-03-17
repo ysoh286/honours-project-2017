@@ -14,7 +14,7 @@ This document contains findings, examples, and all kinds of things related to th
 
 ## Week 1 (09/03-16/03): Looking at different JS libraries, linking plots to tables
 
-**Q: Is it possible to link a plot to a table using the following: plotly, rbokeh, highcharter, ggvis, rvega? **
+**Q: Is it possible to link a plot to a table using the following: plotly, rbokeh, highcharter, ggvis, rvega?**
 
 **A:**
   - NO to highcharter, rbokeh
@@ -27,7 +27,7 @@ This document contains findings, examples, and all kinds of things related to th
 
 Even though these JavaScript libraries are available, some only document how to use it for its main purpose (to generate an interactive plot easily for the web) through a different programme (such as R, Python, MATLAB, e.t.c).
 
-*Random thought: Could I find a JS library that's more flexible in creating customised interaction and visualisation? *
+*Random thought: Could I find a JS library that's more flexible in creating customised interaction and visualisation?*
 
 ### More details and notes:
 
@@ -97,11 +97,7 @@ figure() %>%
   tool_lasso_select()
 
 ```
-Code in Python for linking plot to a Bokeh table:
-```
-#Currently still rewriting!
-
-```
+Code in Python for linking plot to a Bokeh table - still writing...
 
 **Highcharter:** http://jkunst.com/highcharter/
 - r wrapper/interface for HighChartsJS
@@ -140,7 +136,7 @@ bscols(
 - "An add-on to HTMLwidgets", package that allows htmlwidgets to cross-communicate and link together
 - Interactions available: linked brushing, filtering
 - Supported HTMLwidgets: Plotly, DT, Leaflet
-- generation of HTML pages using Bootstrap, jQuery...
+- generation of HTML pages, uses Bootstrap, jQuery...
 - Use of a sharedObject(V6) - in simple terms, you turn your data into a sharedObject which becomes interlinked between all widgets, making linked interactions possible (but that's only if your widget's already linked up with crosstalk)
 - Limitations: Not all HTMLwidgets could easily implement this, they have to meet some criteria.
 See the criteria and limitations here:
