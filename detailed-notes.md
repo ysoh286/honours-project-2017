@@ -12,7 +12,7 @@ This document contains findings, examples, and all kinds of things related to th
 - According to most of these htmlwidgets, you can link them to Shiny? Could possibly try that out if I have time.
 
 
-### MORE DETAILS AND NOTES:
+#### NOTES:
 **Shiny:** https://shiny.rstudio.com/
 - R package that allows ease of building web applications through R
 - Tutorial page: https://shiny.rstudio.com/tutorial/
@@ -44,7 +44,7 @@ Even though these JavaScript libraries are available, some only document how to 
 
 *Random thought: Could I find a JS library that's more flexible in creating customised interaction and visualisation?*
 
-### MORE DETAILS AND NOTES:
+#### NOTES:
 
 **Plotly:**  https://plot.ly/
 - Graphing library, build upon D3
