@@ -12,6 +12,21 @@ This document contains findings, examples, and all kinds of things related to th
 - According to most of these htmlwidgets, you can link them to Shiny? Could possibly try that out if I have time.
 
 
+### MORE DETAILS AND NOTES:
+**Shiny:** https://shiny.rstudio.com/
+- R package that allows ease of building web applications through R
+- Tutorial page: https://shiny.rstudio.com/tutorial/
+
+**ggvis:** http://ggvis.rstudio.com/
+- data visualisation package, looks very similar to ggplot
+- allows interactivity through R, 'uses shiny's infrastructure' to do this rather than a JS library
+- graphics rendered (SVG) are done using Vega (JS library? - converts plot objects to JSON?) https://vega.github.io/vega/
+
+**rVega:** https://github.com/metagraf/rVega
+- r interface for Vega
+- Uses shiny for interactivity 
+
+
 ## Week 1 (09/03-16/03): Looking at different JS libraries, linking plots to tables
 
 **Q: Is it possible to link a plot to a table using the following: plotly, rbokeh, highcharter, ggvis, rvega?**
@@ -29,7 +44,7 @@ Even though these JavaScript libraries are available, some only document how to 
 
 *Random thought: Could I find a JS library that's more flexible in creating customised interaction and visualisation?*
 
-### More details and notes:
+### MORE DETAILS AND NOTES:
 
 **Plotly:**  https://plot.ly/
 - Graphing library, build upon D3
@@ -104,7 +119,7 @@ Code in Python for linking plot to a Bokeh table - still writing...
 - HighCharts website: http://www.highcharts.com/
 
 A: NO. Once again, the developer has also thought about adding crosstalk, which could make this possible with DT. (Currently, you can add a DT on the same page using crosstalk as separate entities, but none of the links/interactions are available.)
-The other problem with this is that Highcharts does not appear to have a mechanism to select points (ie, no box selection or way of isolating a single point - you can only select 'groups' of points) which could make crosstalk implementation much harder.
+The other problem is that Highcharts does not appear to have a mechanism to select points (ie, no box selection or way of isolating a single point - you can only select 'groups' of points) which may make crosstalk implementation more complex.
 
 Code in R:
 ```
