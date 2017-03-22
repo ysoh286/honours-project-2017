@@ -4,12 +4,28 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Q: Looking at ggvis, rvega, and Shiny, can we link a plot to a table + is it possible to return values selected to R?**  
 
-**A:** ??
+**A:** It may be possible to link a ggvis plot to a table... (I just haven't figured it out yet!)
+There are examples/variations where in a Shiny app, the plot links to a table (or a certain row of points). HOWEVER, none of them appear to report something back into R whenever you select something on the user side. With R sessions running, would be nice to investigate if you could pass something back.
 
-**TO DOS**
-- Need to learn some Shiny!
-- ggvis, rvega plots
-- According to most of these htmlwidgets, you can link them to Shiny? Could possibly try that out if I have time.
+Examples that achieve similar things:
+- Shiny's article on selection of points (not related to a table, but the output it gives are rows from the dataframe itself) - uses ggplot2
+https://shiny.rstudio.com/articles/selecting-rows-of-data.html
+
+- ggvis's demo apps on filtering to control points that appear on the graph and on the table (basic)
+https://github.com/rstudio/ggvis/tree/master/demo/apps
+
+- DT's examples on linking DT to the plot (select on table to point, rather than plot to table)
+https://yihui.shinyapps.io/DT-rows/
+More about linking DT to Shiny: http://rstudio.github.io/DT/shiny.html
+
+Advantages of using Shiny:
+- Code all in R - inclusive of HTML/CSS customisation (UI), addition of custom JavaScript possible (https://shiny.rstudio.com/articles/js-events.html, Shiny's JavaScript tutorial)
+- Most HTMLWidgets can be used with Shiny
+
+Disadvantages of using Shiny:
+- ?? (needs more investigation)
+
+**Overall comment:** I think I still need some time to learn and understand Shiny to see what else it can do/can't do - but it seems that a lot of interactivity can be done in R. Wonder if I can actually try get the server to print something during the R session whenever the user does something (like change inputs).
 
 
 #### NOTES:
@@ -20,11 +36,17 @@ This document contains findings, examples, and all kinds of things related to th
 **ggvis:** http://ggvis.rstudio.com/
 - data visualisation package, looks very similar to ggplot
 - allows interactivity through R, 'uses shiny's infrastructure' to do this rather than a JS library
-- graphics rendered (SVG) are done using Vega (JS library? - converts plot objects to JSON?) https://vega.github.io/vega/
+- graphics rendered (SVG) are done using Vega (JS library? - converts plot objects to JSON)
+- Vega Library: https://vega.github.io/vega/
 
-**rVega:** https://github.com/metagraf/rVega
+- Attempting to write a Shiny app that links ggvis plot to table: (still in progress...)
+
+
+**rVega:** https://github.com/metagraf/rVega DON'T USE.
 - r interface for Vega
-- Uses shiny for interactivity 
+- Also uses Shiny for interactivity, can also integrate into Shiny
+- Very limited features, package doesn't appear to have any documentation :(
+- Ideally, for using the Vega library - use ggvis instead.
 
 
 ## Week 1 (09/03-16/03): Looking at different JS libraries, linking plots to tables
