@@ -1,31 +1,42 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
+## Week 3 (23/03-30/03): Understanding more Shiny, limits to functions 
+
+**Q: ?**
+
+**A: ?**
+
+**TO DOS:**
+- Learn more Shiny, try different functions and testing the limits of these functions that Shiny provides
+- Test these functions on different plots
+
 ## Week 2 (16/03-23/03): Looking at Shiny, ggvis, rVega + talk to R
 
 **Q: Looking at ggvis, rvega, and Shiny, can we link a plot to a table + is it possible to return values selected to R?**  
 
-**A:** It may be possible to link a ggvis plot to a table... (I just haven't figured it out yet!)
+**A:** It may be possible to link a ggvis plot to a table.
 There are examples/variations where in a Shiny app, the plot links to a table (or a certain row of points). HOWEVER, none of them appear to report something back into R whenever you select something on the user side. With R sessions running, would be nice to investigate if you could pass something back.
 
 Examples that achieve similar things:
-- Shiny's article on selection of points (not related to a table, but the output it gives are rows from the dataframe itself) - uses ggplot2
+- Shiny's article on selection of points (not related to a table, but the output it gives are rows from the dataframe itself), uses base plots and ggplot2
 https://shiny.rstudio.com/articles/selecting-rows-of-data.html
 
-- ggvis's demo apps on filtering to control points that appear on the graph and on the table (basic)
+- ggvis's demo apps - includes linked brushing, hovers, and filtering
 https://github.com/rstudio/ggvis/tree/master/demo/apps
 
 - DT's examples on linking DT to the plot (select on table to point, rather than plot to table)
 https://yihui.shinyapps.io/DT-rows/
-More about linking DT to Shiny: http://rstudio.github.io/DT/shiny.html
+- More about linking DT to Shiny: http://rstudio.github.io/DT/shiny.html
 
 Advantages of using Shiny:
 - Code all in R - inclusive of HTML/CSS customisation (UI), addition of custom JavaScript possible (https://shiny.rstudio.com/articles/js-events.html, Shiny's JavaScript tutorial)
 - Most HTMLWidgets can be used with Shiny
 
 Disadvantages of using Shiny:
-- ?? (needs more investigation)
+- Speed and efficiency (Shiny's reactive engine uses a process of 're-running' code, which could slow things down when dealing with big data sets)
+- Prepackaged functions - which are great, but alot happens behind each function. Would it be hard to customise (would we run into a similar problem with JavaScript libraries from week 1)? 
 
-**Overall comment:** I think I still need some time to learn and understand Shiny to see what else it can do/can't do - but it seems that a lot of interactivity can be done in R. Wonder if I can actually try get the server to print something during the R session whenever the user does something (like change inputs).
+**Overall comment:** I think I still need some time to learn and understand Shiny to see what else it can do/can't do - but it seems that a lot of interactivity can be done in R. Wonder if I can actually try get the server to print something during the R session whenever the user does something (like change inputs)...
 
 
 #### NOTES:
