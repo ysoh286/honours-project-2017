@@ -1,4 +1,25 @@
 
+2017-03-23
+----------
+
+DISCUSS:
+
+  + 'shiny' has brushedPoints() for brushing a plot and having something
+    else on the page update
+    - appears to work with base plots, ggplot2, and ggvis (at least)
+
+
+TODO:
+
+  + where are the limits of 'shiny's brushedPoints() ?
+    - 'lattice' plots ?
+    - multipanel/facetted plots ?
+    - boxplots ?
+    - dotplots ?
+    - can you link plot to another plot?
+    - can you link plot to itself ? (e.g., colour brushed points)
+
+
 2017-03-16
 ----------
 
