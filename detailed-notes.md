@@ -2,14 +2,145 @@ This document contains findings, examples, and all kinds of things related to th
 
 ## Week 3 (23/03-30/03): Understanding more Shiny, limits to functions
 
-**Q: What are the limits to Shiny's functions (e.g.brushedPoints())?**
+**Q: What are the limits to Shiny's interactive functions (e.g.brushedPoints())?**
 
-**A: ?**
+**A:**
+The main limitation of using these interactive functions that Shiny provides is that they **only work on base and ggplot2** (includes facetted plots).  and appears to work on a mapping condition where plotted co-ordinates are aligned to the data creating this link between the plot and oth er features. Without this 'mapping', it fails (as seen with lattice plots).
+There may be a possibility of using these on plots that are built upon ggplot2 (such as ggvis). It could also be adaptable to bar and box plots.
 
-**TO DOS:**
-- Learn more Shiny, try different functions and testing the limits of these functions that Shiny provides
-- Test these functions on different plots
-- Linking plots to other plots, and plot to itself
+- Still in progress: investigating box plots, bar plots, linking within a plot and between plots
+
+Note that the limits to brushedPoints() would apply to some of the other functions that Shiny also has for incorporating interactivity (such as nearPoints()).
+
+#### NOTES:
+- According to its documentation, brushedPoints() works on base plots and ggplot2 (note that CRAN version works for base plots, but the dev version for Shiny is required for ggplots)
+- brushedPoints() allows selection of data by allowing the user to draw a selection box over points
+- Most of these code examples written below are adapted from Shiny's articles about incorporating interactivity in different ways:
+  - [Selecting rows of data](https://shiny.rstudio.com/articles/selecting-rows-of-data.html)
+  - [Advanced plot interaction](http://shiny.rstudio.com/articles/plot-interaction-advanced.html)
+
+**Linking a plot to a table:**
+- works with base plots, ggplot2,
+- fails on grid plots, lattice
+
+Example using ggplot2:
+
+```
+#to use brushedPoints() on ggplot2, use the dev version of Shiny.
+devtools::install_github('rstudio/shiny')
+
+library(shiny)
+library(ggplot2)
+
+ui <- basicPage(
+  plotOutput("plot", brush = "plot_brush"),
+  tableOutput("iris_table")
+)
+
+server <- function(input, output) {
+
+  output$plot <- renderPlot({
+    ggplot(iris, aes(x = Petal.Width, y = Petal.Length)) + geom_point()
+  })
+
+  output$iris_table <- renderTable({
+    brushedPoints(iris, input$plot_brush, xvar = "Petal.Width", yvar = "Petal.Length")
+    })
+}
+
+shinyApp(ui, server)
+
+```
+
+WHY?
+- brushedPoints() works on base plots and ggplot2 as the plot co-ordinates on the png are connected to the data, which allows for correct brushing.
+
+- From looking at the open source code of brushedPoints(), it appears there are some functions that allow the mapping of these co-ordinates from the image/plot points to the data, as well as some scaling.
+- Source code from the Shiny github repository: [brushedPoints](https://github.com/rstudio/shiny/blob/9613c58bf8120bcfdab35801b17167418b5464ac/R/image-interact.R)
+
+- When trialling this on a lattice plot, it fails as it cannot detect what points have been selected and works on a different co-ordinate system (something that appears to make the graph span between (0, 0) and (1, 1)). The data has not been matched with the co-ordinates of these points, hence it reports different values when you click on the points.
+(It's still a bit confusing how it actually works...)
+
+- Shiny does have another function that renders an image, to which you may be able to attach some interaction with.
+
+>'Instead of plot coordinates scaled to the data, they will contain pixel coordinates. You may need to transform these coordinates to something useful for your data.' - from Shiny's advanced plot interaction article
+
+Example attempting to use lattice plots:
+```
+library(shiny)
+library(lattice)
+
+ui <- basicPage(
+  plotOutput("plot", click = "plot_click", brush = "plot_brush"),
+  verbatimTextOutput("info"),
+  tableOutput("income_table")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    x <- income100$weekly_hrs
+    y <- income100$weekly_income
+    xyplot(y~x,  main = "Lattice scatterplot of nzincome", ylab ="Weekly income", xlab = "Weekly hrs")
+  })
+
+  output$info <- renderText({
+    paste0("Weekly_hrs=", input$plot_click$x, "\n Weekly_income=", input$plot_click$y)
+  })
+
+  output$income_table <- renderTable({
+    brushedPoints(income100, input$plot_brush, xvar = "weekly_hrs", yvar = "weekly_income")
+  })
+
+}
+
+shinyApp(ui, server)
+
+```
+
+**Facetted plots (ggplot2):**
+- brushedPoints() does work for facetted (multipanel) plots drawn with ggplot2
+- Note that it fails on data with missing values (in corporation with table)
+
+- Example of facetted plots:
+
+```
+## Use of nzincome.csv dataset, which is stored in a variable called income
+income <- read.csv('datasets/nzincome.csv', header = TRUE)
+income100 <- income[1:100, ]
+
+## Shiny app with facetted plots produced by ggplot2:
+
+ui <- basicPage(
+  plotOutput("plot", brush = "plot_brush"),
+  tableOutput("income_table")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    ggplot(income100, aes(x = weekly_hrs, y= weekly_income, color = sex)) + geom_point() + facet_grid(.~ethnicity)
+  })
+
+  output$income_table <- renderTable({
+    brushedPoints(income100, input$plot_brush, xvar = "weekly_hrs", yvar = "weekly_income")
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+**Box plots?**
+- There's an example provided under Shiny's advanced plot interaction article that allows box plot interactivity under the section 'Categorical axes'.
+
+[ IN PROGRESS ]
+**Bar plots?**
+
+**Dot plots?**
+
+**Linking between plots?**
+
+**Could you do the same with ggvis?**
+
 
 ## Week 2 (16/03-23/03): Looking at Shiny, ggvis, rVega + talk to R
 
@@ -30,7 +161,7 @@ https://yihui.shinyapps.io/DT-rows/
 - More about linking DT to Shiny: http://rstudio.github.io/DT/shiny.html
 
 
-**Overall comment:** I think I still need some time to learn and understand Shiny to see what else it can do/can't do - but it seems that a lot of interactivity can be achieved. Wonder if I can actually try get the server to print something during the R session whenever the user does something (like change inputs)...
+**Overall comment:** I think I still need some time to learn and understand Shiny to see what else it can do/can't do - but it seems that a lot of interactivity can be achieved (for inspiration: [Shiny's gallery](https://shiny.rstudio.com/gallery/)). Wonder if I can actually try get the server to print something during the R session whenever the user does something (like change inputs)...
 
 
 #### NOTES:
