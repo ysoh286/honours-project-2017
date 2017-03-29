@@ -133,6 +133,7 @@ shinyApp(ui, server)
 
 #Could you do it with lattice?
 
+library(lattice)
 ui <- basicPage(
   plotOutput("plot", click = "plot_click", brush = "plot_brush"),
   verbatimTextOutput("info"),
@@ -180,9 +181,9 @@ server <- function(input, output) {
     ggplot(income100, aes(x = sex, y = weekly_hrs, fill = sex)) + geom_dotplot(binaxis = 'y', stackdir = 'center')
   })
   
-  output$hpoint <- renderText({
-    paste0("weekly_hrs = ", input$plot_hover$y)
-  })
+  #output$hpoint <- renderText({
+   # paste0("weekly_hrs = ", input$plot_hover$y)
+  #})
   
   output$table <- renderTable({
     brushedPoints(income100, input$plot_brush, xvar = "sex", yvar = "weekly_hrs") 
@@ -209,6 +210,53 @@ server <- function(input, output) {
 }
 
 shinyApp(ui, server)
+
+## trialling on a dotplot created by base graphics:
+
+#creating a dotplot:
+
+stripchart(income100$weekly_hrs, method = "stack", offset = .5, at = .15, pch = 19, 
+           main = "Weekly_hrs", xlab = "weekly_hrs")
+
+ui <- basicPage(
+  plotOutput("plot", brush = "plot_brush"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    stripchart(income100$weekly_hrs, method = "stack", offset = 0.75, at = 0.15, pch = 19, main = "Weekly no. of hours", xlab = "weekly_hrs")
+  })
+  
+  output$table <- renderTable({
+    brushedPoints(income100, input$plot_brush, xvar = "weekly_hrs", yvar = NULL, allRows = TRUE)
+  })
+}
+
+shinyApp(ui, server) #yes, so brushedPoints doesn't work on single variable dot plots. It keeps looking for a y-variable.
+
+#What if it's a dotplot with 1 categorical + continuous?
+
+stripchart(weekly_hrs~sex, data = income100, main = "blah", pch = 19, vertical = TRUE, col = c("red", "blue"))
+
+
+ui <- basicPage(
+  plotOutput("plot", brush = "plot_brush"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    stripchart(weekly_hrs~sex, data = income100, main = "blah", pch = 19, vertical = TRUE, col = c("red", "blue"))
+  })
+  
+  output$table <- renderTable({
+    brushedPoints(income100, input$plot_brush, xvar = "sex", yvar = "weekly_hrs")
+  })
+}
+
+shinyApp(ui, server) #works!
+
 
 #-----------------------------------------------------------------------------------------------
 
@@ -260,10 +308,78 @@ shinyApp(ui, server)
 
  ggplot(data = income, aes(x = sex, y = highest_qualification)) + geom_bar() + theme_minimal()
 
-#Linking different plots?
+#----------------------------------------------------------------------------------------------
 
+#Linking different plots? - possible. https://jjallaire.shinyapps.io/shiny-ggplot2-brushing/ is an example of this.
+
+ui <- basicPage(
+  plotOutput("plot1", brush = "plot1_brush"),
+  plotOutput("plot2"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+  
+  selected <- reactive({
+    iris_brushed <- brushedPoints(iris, input$plot1_brush) 
+    if (nrow(iris_brushed) == 0) {
+      iris_brushed = iris }
+      return(iris_brushed)
+  })
+  
+  output$plot1 <- renderPlot({
+    ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point()
+  })
+  
+  print(selected)
+  output$plot2 <- renderPlot({
+    ggplot(selected(), aes(x = Sepal.Width, y = Sepal.Length, color = Species)) + geom_point()
+  })
+  
+  output$table <- renderTable({
+    selected()
+  })
+}
+
+shinyApp(ui, server)
+
+#--------------------
+
+#one with a bar plot:
+ui <- basicPage(
+  plotOutput("plot1", brush = "plot1_brush"),
+  plotOutput("plot2"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+  
+  selected <- reactive({
+    iris_brushed <<- brushedPoints(iris, input$plot1_brush) 
+    if (nrow(iris_brushed) == 0) {
+      iris_brushed = iris }
+      return(iris_brushed)
+  })
+  
+  output$plot1 <- renderPlot({
+    ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point()
+  })
+  
+  output$plot2 <- renderPlot({
+    ggplot(selected(), aes(x = Species, fill = Species)) + geom_bar()
+  })
+  
+  output$table <- renderTable({
+    selected()
+  })
+
+}
+
+shinyApp(ui, server)
+
+
+#---------------------
 #Adding more features and interactivity?
-
 
 
 

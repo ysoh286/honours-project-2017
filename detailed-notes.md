@@ -1,20 +1,37 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
 ---
+### Week 4 (30/03 - 06/04): Shiny + Plotly, Shiny + ggvis, 'what-ifs' on avoiding redrawing plots?
+
+ **Q: Investigate the following in more detail: Shiny + Plotly, Shiny + ggvis, Crosstalk**
+
+ **A:** ??
+
+**TO DOs:**
+- investigate Shiny + Plotly
+- investigate Shiny + ggvis
+- investigate crosstalk
+- think of ways for achieving these 'challenges'
+
+---
 ## Week 3 (23/03-30/03): Understanding more Shiny, limits to functions
 
 **Q: What are the limits to Shiny's interactive functions (e.g.brushedPoints())?**
 
 **A:**
-The main limitation of using these interactive functions that Shiny provides is that they **only work on base and ggplot2** (includes facetted plots). It appears to work on a mapping condition where plotted co-ordinates on a high resolution PNG are aligned to the data. Without this 'mapping', it fails (as seen with lattice plots). The function tries to handle missing data appropriately.
-It can be adaptable to bar and box plots (but requires a bit more code and thought).
+The main limitation of using these interactive functions that Shiny provides is that they **only work on base and ggplot2** (includes facetted plots). They appear to work on a mapping condition where plotted co-ordinates on a high resolution PNG are aligned to the data. Without this 'mapping', it fails (as seen with lattice plots). The function tries to handle missing data appropriately, and doesn't handle large datasets very well.
+It can be adapted to bar and box plots but requires a bit more code and thought.
+
+You can link two plots together to achieve linked brushing by making the dataset 'reactive' based upon what is being selected by the user.
+
+Note that the limits to brushedPoints() would apply to some of the other functions that Shiny also has for incorporating interactivity (such as nearPoints()).
 
 **ggvis** has its own functions that allow for similar interactions to be achieved (but requires a few more lines of code as you have to make a link rather than brushedPoints() that does it automatically).
 
-- Still in progress: investigating box plots, bar plots, linking within a plot and between plots
-- Alot of interactions that Shiny achieves are not interactions directly on/inside the plot, but rather something outside of the plot that 'redraws'/'reshapes' it. (e.g. filter slides to control a variable or number of counts, or 'animations' that are rather static images joined together than 'moving' points on the graph ). That could possibly be explained by how Shiny works with its reactive engine....
+- Alot of interactions that Shiny achieves are not interactions directly on/inside the plot, but rather something outside of the plot that 'redraws'/'reshapes' it. (e.g. filter slides to control a variable or number of counts, or 'animations' that are rather static images joined together than 'moving' points on the graph ). That could possibly be explained by how Shiny works with its reactive engine...
 
-Note that the limits to brushedPoints() would apply to some of the other functions that Shiny also has for incorporating interactivity (such as nearPoints()).
+- In comparison to week 1's HTMLwidgets, those had interactions within the plot, but in a standalone sense where they're not linked to anything else but themselves.
+
 
 #### NOTES:
 - According to its documentation, brushedPoints() works on base plots and ggplot2 (note that CRAN version works for base plots, but the dev version for Shiny is required for ggplots)
@@ -64,7 +81,7 @@ WHY? (It's still a bit confusing how it actually works...)
 - From looking at the open source code of brushedPoints(), it appears there are some functions that allow the mapping of these co-ordinates from the image/plot points to the data, as well as some scaling.
 - Source code from the Shiny github repository: [brushedPoints](https://github.com/rstudio/shiny/blob/9613c58bf8120bcfdab35801b17167418b5464ac/R/image-interact.R)
 
-- When trialling this on a lattice plot, it fails as it cannot detect what points have been selected and works on a different co-ordinate system (something that appears to make the graph span between (0, 0) and (1, 1)). The data has not been matched with the co-ordinates of these points, hence it reports different values when you click on the points...
+- When trialling this on a lattice plot, it fails as it cannot detect what points have been selected and works on a different co-ordinate system (something that appears to make the graph span up to (1,1) - but you don't know where the origin is). The data has not been matched with the co-ordinates of these points, hence it reports different values when you click on the points...
 
 - Shiny does have another function that renders an image, to which you may be able to attach some interaction with.
 
@@ -135,13 +152,13 @@ shinyApp(ui, server)
 
 **Box plots and bar plots**
 - There's an example provided under Shiny's advanced plot interaction article that allows box plot interactivity under the section 'Categorical axes'. It suggests that bar plots can also achieve the same.
-
-[ IN PROGRESS ]
+- Requires more thought and code, but ideally, brushPoints works best with scatterplots
 
 **Dot plots?**
-- Doesn't seem to work on singular dot plots (1 continuous variable)?
+- Doesn't seem to work on dotplots with 1 continuous variable
 - Works on multi-dot plots (1 continuous variable with 1 categorical variable) - but it seems a little unreliable (doesn't appear to display all the data if you've got a lot of values...)
-
+- Same situation applies for base plots (using stripchart())
+- If the points don't lie on the axes (horizontal stacking), it won't be detected.
 
 ```
 ui <- basicPage(
@@ -174,10 +191,48 @@ shinyApp(ui, server)
 
 ```
 
-
 **Linking between plots?**
+- It is possible to do a link between two plots!
+- In the example below it's only one way (ie one plot affects the other, but not vice versa)
+- Done by making the selected/brushed dataset reactive + redrawing of plot
+- A question of whether you could do it both ways?
 
-[ IN PROGRESS ]
+```
+#Linking different plots? - possible. https://jjallaire.shinyapps.io/shiny-ggplot2-brushing/ is an example of this. This example has been adapted from that.
+
+ui <- basicPage(
+  plotOutput("plot1", brush = "plot1_brush"),
+  plotOutput("plot2"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+
+  selected <- reactive({
+    iris_brushed <- brushedPoints(iris, input$plot1_brush)
+    if (nrow(iris_brushed) == 0) {
+      iris_brushed = iris }
+      iris_brushed
+  })
+
+  output$plot1 <- renderPlot({
+    ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point()
+  })
+
+  print(selected)
+  output$plot2 <- renderPlot({
+    ggplot(selected(), aes(x = Sepal.Width, y = Sepal.Length, color = Species)) + geom_point()
+  })
+
+  output$table <- renderTable({
+    selected()
+  })
+
+}
+
+shinyApp(ui, server)
+
+```
 
 **Could you do the same with ggvis?**
 - ggvis has its own set of functions that allow for similar interactions to be achieved.
@@ -233,13 +288,12 @@ shinyApp(ui, server)
 ```
 
 #### OTHER IDEAS:
-- Could we render and link an SVG's co-ordinates and create brushing?
-- How hard would it be to try 'map' co-ordinates?
-- How do things differ when trying to integrate HTMLwidgets into Shiny?
-- Are there any other options that achieve interactivity in R rather than using Shiny, HTMLwidgets?
+- Could we render and link an SVG's co-ordinates and create brushing? Possible, but requires mapping.
+- How hard would it be to try 'map' co-ordinates? Too hard.
+- How do things differ when trying to integrate HTMLwidgets into Shiny? (see week4 with Plotly)
+- Are there any other options that achieve interactivity in R rather than using Shiny, HTMLwidgets through a web browser?
 - Are there any better examples of 'in-plot' interactions?
 - Incorporating Shiny interactions directly on iNZight plots (iNZight Lite)?
-
 
 ---
 ## Week 2 (16/03-23/03): Looking at Shiny, ggvis, rVega + talk to R

@@ -1,4 +1,44 @@
 
+2017-03-30
+----------
+
+DISCUSS:
+
+  + 'shiny' brushedPoints() does have limitations
+    - always wants x and y coords, so does not work with boxplot of 1 variable
+    - does not work with 'lattice' (you can get x/y location of mouse, but
+      you have to do the mapping to data coordinates yourself AND it is not
+      clear what coordinate system the mouse x/y is in)
+      
+  + examples of "challenging" interactions that Chris or Paul would like
+    - scatter plot with smooth line; change smoothness of line WITHOUT
+      having to redraw entire plot (because redraw of plot might be slow
+      if have lots of points)
+    - click on a boxplot to select all data from median to LQ in data set
+
+  + having a standalone interactive plot (NOT connected to R) is nice
+    for being able to share plots
+
+
+TODO:
+
+  + swap github repo URLs with Shan-I 
+
+  + investigate 'shiny' + 'plotly' a bit
+    - can it do facetting?
+    - can it do other types of plots?
+
+    - what do all the columns mean in the data frame that event_data() returns?
+      + especially the "curve" one ?  is this some sort of group label ?
+
+  + investigate 'shiny' + 'ggvis' a bit more
+    - can it do facetting?
+    - can it do other types of plots?
+    
+  + investigate 'crosstalk' a bit more
+    - does it force complete redraws (like 'shiny' does) ?
+
+
 2017-03-23
 ----------
 
