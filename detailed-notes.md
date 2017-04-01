@@ -1,7 +1,7 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
 ---
-### Week 4 (30/03 - 06/04): Shiny + Plotly, Shiny + ggvis, 'what-ifs' on avoiding redrawing plots?
+## Week 4 (30/03 - 06/04): Shiny + Plotly, Shiny + ggvis, 'what-ifs' on avoiding redrawing plots?
 
  **Q: Investigate the following in more detail: Shiny + Plotly, Shiny + ggvis, Crosstalk**
 
@@ -13,13 +13,71 @@ This document contains findings, examples, and all kinds of things related to th
 - investigate crosstalk
 - think of ways for achieving these 'challenges'
 
+#### NOTES:
+
+**Shiny + Plotly:**
+- Because Plotly has been adapted as an HTMLwidget, it's easy to embed plots into Shiny
+- Plotly can also render plots from ggplot2
+- appears to be much easier to achieve in-plot interactions as well as link things to the plots
+- [CRAN documentation](https://cran.r-project.org/web/packages/plotly/plotly.pdf)
+- A cheatsheet for using [Plotly in R](https://images.plot.ly/plotly-documentation/images/r_cheat_sheet.pdf)
+- You can create *faceted plots* - need to build each plot before you can put it altogether using the subplot() function
+- you could also build faceted plots from ggplot2, then render with Plotly
+- Limitations? Selection box does not appear correctly (but if you drag over the points you wish to select, the table correctly reports those points corresponding to that plot)
+- Curve number changes according to whichever plot you refer to (counts from 0 onwards rather than 1), point number refers to the point (row number in the original data).
+- Curve number can also refer to 'trace' (if you've got a subset in your data - e.g. Gender of males and females, males = 0 and females = 1)
+> curveNumber: for mutiple traces, information will be returned in a stacked fashion - *Plotly in R*
+
+```
+# Code coming soon.
+
+```
+
+- event_data("plot_selected") produces a data frame with a 'curve number' and appears to work best with scatterplots. When attempting to render values in a table, the selection does not return anything when tried on bar plots, histograms, heatmaps, boxplots (there's no mechanism for dealing with aggregated data). "plotly_click" and "plotly_hover" are more versatile in which they work for most plots as they return a single point/bar/value.
+- Plotly also can't appear to plot single variable dot plots (without 2 variables, plot makes no sense).
+>"Dot plots show changes between two points in time or between two conditions." - *Dot Plots in R, Plotly*
+
+
+- Example highlighting some of the different plots that be drawn with Plotly and testing 'plotly_selected':
+
+```
+# Code coming soon.
+```
+- Linked brushing example (where 1 plot selection affects the other, replicating from example using crosstalk):
+
+```
+# Code coming soon.
+```
+
+- **'What if' challenge: Adding and changing a trendline**
+[IN PROGRESS]
+
+**Shiny + ggvis:**
+[IN PROGRESS]
+
+**Comparing Shiny vs Crosstalk on Plotly:**
+- Carson Sievert (who has written *Plotly for R* and documentation for the plotly package) has also investigated whether to use Shiny or Crosstalk and its limitations.
+ - [Linking views with Shiny](https://cpsievert.github.io/plotly_book/linking-views-with-shiny.html)
+ - [Linked Views](https://github.com/cpsievert/plotly_book/blob/master/linked-views.Rmd#linking-views-without-shiny)
+- Investigating in more detail on how Shiny's reactivity works:
+[IN PROGRESS]
+
+- Unfortunately, due to Shiny's reactive nature and requirement to 'rerun' code to update things, we are unable prevent redrawing (ie you must run plot_ly() function within in order to update/change the plot - you can't run additional layers separately...)
+
+#### OTHER IDEAS:
+- Some resources to look at in communicating Javascript to R, R to Javascript:
+ - Dean Attali's shinyjs package and tips on how to enhance Shiny interactions
+    - [ShinyJS CRAN Documentation](https://cran.r-project.org/web/packages/shinyjs/shinyjs.pdf)
+    - [Send messages from R to JavaScript, and back](https://github.com/daattali/advanced-shiny#message-r-to-javascript)
+    - [Simple AJAX system for Shiny apps](https://github.com/daattali/advanced-shiny#api-ajax)
+
 ---
 ## Week 3 (23/03-30/03): Understanding more Shiny, limits to functions
 
 **Q: What are the limits to Shiny's interactive functions (e.g.brushedPoints())?**
 
 **A:**
-The main limitation of using these interactive functions that Shiny provides is that they **only work on base and ggplot2** (includes facetted plots). They appear to work on a mapping condition where plotted co-ordinates on a high resolution PNG are aligned to the data. Without this 'mapping', it fails (as seen with lattice plots). The function tries to handle missing data appropriately, and doesn't handle large datasets very well.
+The main limitation of using these interactive functions that Shiny provides is that they **only work on base and ggplot2** (includes facetted plots). They appear to work on a mapping condition where plotted co-ordinates on a high resolution PNG are aligned to the data. Without this 'mapping', it fails (as seen with lattice plots). The function tries to handle missing data appropriately but doesn't handle large datasets very well.
 It can be adapted to bar and box plots but requires a bit more code and thought.
 
 You can link two plots together to achieve linked brushing by making the dataset 'reactive' based upon what is being selected by the user.
