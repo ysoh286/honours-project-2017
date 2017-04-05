@@ -5,13 +5,25 @@ This document contains findings, examples, and all kinds of things related to th
 
  **Q: Investigate the following in more detail: Shiny + Plotly, Shiny + ggvis, Crosstalk**
 
- **A:** ??
+ *Can Plotly and ggvis do facetting? Can it do other kinds of plots? Complete redraws from crosstalk?*
 
-**TO DOs:**
-- investigate Shiny + Plotly
-- investigate Shiny + ggvis
-- investigate crosstalk
-- think of ways for achieving these 'challenges'
+ **A:** **Plotly** can render facetted plots through either using ggplot2 and ggplotly() or by using a subplot() function - one approach where you need to draw each individual plot before you can put it altogether. Plotly provides a range of different plots (from histograms, heatmaps, scatterplots, boxplots, barplots, line plots... dot plots are a bit of a challenge as they view these as a special kind of 'scatterplot' - but it faces a similar problem where it requires 2 variables).
+However, there are limitations to using event_data("plotly_selected") - it only appears to work on scatter plots and facetted plots and returns an empty list when the user tries to do a selection over any of the other plots listed above.
+event_data("plotly_hover", "plotly_click") are more versatile in the sense that they are able to return a single point/bar/value.
+
+Columns in the list that event_data() returns:
+- curveNumber represents either the 'trace' (subsets) or a corresponding plot number (if you have facetting plots with a single subset/group)
+- x and y return x and y values corresponding to the plot, pointNumber returns the point number on the plot
+
+- In terms of linked brushing between plots via shiny (either plotly or ggvis): in these examples, the selection appears to be redrawn on top of the points that are being selected, creating an additional layer of plotting.  
+- Crosstalk seems to be easier to achieve linked brushing with less code + no reliance on Shiny
+
+**ggvis** is currently under development (they're still currently expanding their API). Facetted plots are currently unavailable, but is being developed under a function known as subvis() and appears to work similarly to facetting with Plotly. Unlike ggplot2, there is currently no function that automatically does facetting (such as facet_wrap/facet_grid). It would be interesting to see how much can be achieved using the Vega library.
+
+**Crosstalk + Plotly:** Still investigating. It appears to be a lot faster than Shiny. Not actually sure if crosstalk would actually rerun code like Shiny, or if it depends on the Javascript library itself and how it renders/updates plots.
+
+**What if challenges:**
+I'm still investigating how to do the 'what if' challenges! Still trying to find if there's a function that allows removal/addition of plot layers without redrawing the plot (though, chances of it seem pretty slim at the moment).
 
 #### NOTES:
 
@@ -22,51 +34,229 @@ This document contains findings, examples, and all kinds of things related to th
 - [CRAN documentation](https://cran.r-project.org/web/packages/plotly/plotly.pdf)
 - A cheatsheet for using [Plotly in R](https://images.plot.ly/plotly-documentation/images/r_cheat_sheet.pdf)
 - You can create *faceted plots* - need to build each plot before you can put it altogether using the subplot() function
-- you could also build faceted plots from ggplot2, then render with Plotly
-- Limitations? Selection box does not appear correctly (but if you drag over the points you wish to select, the table correctly reports those points corresponding to that plot)
+- you could also build faceted plots from ggplot2, then render with Plotly (using ggplotly())
+- Limitations? It appears that you can't select points from different 'curves' and limited to that subplot. Selection box does not appear correctly (but if you drag over the points you wish to select, the table correctly reports those points corresponding to that plot) - best to reset the plot if you wish to select points from a different subplot.
 - Curve number changes according to whichever plot you refer to (counts from 0 onwards rather than 1), point number refers to the point (row number in the original data).
 - Curve number can also refer to 'trace' (if you've got a subset in your data - e.g. Gender of males and females, males = 0 and females = 1)
-> curveNumber: for mutiple traces, information will be returned in a stacked fashion - *Plotly in R*
+> curveNumber: for mutiple traces, information will be returned in a stacked fashion - *Plotly in R website*
 
 ```
-# Code coming soon.
+ui <- basicPage(
+  plotlyOutput("plot"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+
+  groups <- group_by(iris, Species)
+  plots <- do(groups, p = plot_ly(., x = ~Petal.Width, y = ~Petal.Length, color = ~Species, type = "scatter", mode = "markers")
+                          %>% layout(dragmode = "select"))
+
+  output$plot <- renderPlotly({
+    subplot(plots[['p']], nrows = 1, shareX = TRUE, shareY = TRUE)
+  })
+
+  output$table <- renderTable({
+    event_data("plotly_selected")
+  })
+}
+
+shinyApp(ui, server)
 
 ```
 
-- event_data("plot_selected") produces a data frame with a 'curve number' and appears to work best with scatterplots. When attempting to render values in a table, the selection does not return anything when tried on bar plots, histograms, heatmaps, boxplots (there's no mechanism for dealing with aggregated data). "plotly_click" and "plotly_hover" are more versatile in which they work for most plots as they return a single point/bar/value.
+- event_data("plot_selected") produces a data frame with a 'curve number' and appears to work best with scatterplots. When attempting to render values in a table, the selection does not return anything when tried on bar plots, histograms, heatmaps, boxplots (there appears to be no mechanism for dealing with aggregated data - just returns an empty list). "plotly_click" and "plotly_hover" are more versatile in which they work for most plots as they return a single point/bar/value.
 - Plotly also can't appear to plot single variable dot plots (without 2 variables, plot makes no sense).
->"Dot plots show changes between two points in time or between two conditions." - *Dot Plots in R, Plotly*
+>"Dot plots show changes between two points in time or between two conditions." - *Dot Plots in R, Plotly website*
 
-
-- Example highlighting some of the different plots that be drawn with Plotly and testing 'plotly_selected':
-
-```
-# Code coming soon.
-```
-- Linked brushing example (where 1 plot selection affects the other, replicating from example using crosstalk):
+- It is possible to do linked brushing with Plotly. A key or a unique identifier in the dataset needs to be present to link two plots together.
+- The example follows something similar to linked brushing in ggvis  - use of a key to link between the two, but also drawing a layer on top of the plot to show selected values. (The code below links the two together, but still reports duplicate readings due to having duplicate 'traces'. Still looking into a solution for it...)
+- Would it be possible to actually use point number generated by event_data() as an identifier instead? Not sure. (Actually, that might not be such a good idea if you've got facetting plots going on.)
 
 ```
-# Code coming soon.
-```
+#setting up user interface and layout:
+ui <- fluidPage(
+  fluidRow(
+    column(6, plotlyOutput("plot1")),
+    column(6, plotlyOutput("plot2"))
+    ),
+  tableOutput("table")
+)
 
-- **'What if' challenge: Adding and changing a trendline**
-[IN PROGRESS]
+server <- function(input, output) {
+
+  #for datasets without an identifier - make your own (by default, use row numbers...)
+  id <- seq_len(nrow(iris))
+
+  #bind to dataset:
+  iris <- cbind(iris, id)
+
+  #render first plot:
+  output$plot1 <- renderPlotly({
+    selected <- event_data("plotly_selected")
+    plot <- plot_ly(iris, x = ~Petal.Length, y = ~Petal.Width, type = "scatter", mode = "markers", source = "plot") %>%
+      add_markers(key = ~id) #add markers for id
+    layout(plot, dragmode = "select")
+  })
+
+  output$plot2 <- renderPlotly({
+    selected <- event_data("plotly_selected", source = "plot")
+
+    plot <- plot_ly(iris, x = ~Sepal.Length, y = ~Sepal.Width, type = "scatter", mode = "markers") %>%
+      add_markers(key = ~id)
+
+      #add markers for id - would it be possible to get rid of this and somehow just use the key to link the two together?
+      #this appears to add on the additional traces that we don't want.
+
+    if (!is.null(selected)) {
+      #find all the values that have been selected:
+      select <- iris[iris$id %in% selected[["key"]], ]
+      #to locate selected points: color them red (it's like an additional layer on top - similar to what's been done on ggvis!)
+      plot <- add_markers(plot, data = select, color = I("red"))
+    }
+
+    layout(plot, dragmode = "select")
+
+      })
+
+  output$table <- renderTable({
+    event_data("plotly_selected", source = "plot")
+  })
+}
+
+shinyApp(ui, server)
+
+
+```
+- An example where we can generate a plot using event_data("plotly_selected"):
+
+```
+#uses the income.csv dataset: note that n = 11000 - just to see how well plotly + shiny responds...
+
+ui <- fluidPage(
+  fluidRow(
+    column(4, plotlyOutput("sourceplot")),
+    column(4, plotlyOutput("boxplot")),
+    column(4, plotlyOutput("histogram"))
+  ),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+
+  #scatterplot
+  output$sourceplot <- renderPlotly({
+    plot_ly(income, x = ~weekly_hrs, y = ~weekly_income, color = ~sex, type = "scatter", mode = "markers", source = "source") %>%
+      layout(dragmode = "select")
+  })
+
+  #render a box plot based upon the selection from scatterplot
+  output$boxplot <- renderPlotly({
+    s = event_data('plotly_selected', source = "source")
+    selected_data <- income[s[["pointNumber"]], ]
+    plot_ly(selected_data, x = ~weekly_hrs, type = "box")
+  })
+
+  #render a histogram based upon selection from scatterplot
+  output$histogram <- renderPlotly({
+    s = event_data('plotly_selected', source = "source")
+    selected_data <- income[s[["pointNumber"]], ]
+    plot_ly(selected_data, x = ~weekly_hrs, type = "histogram")
+  })
+
+  #render table results
+  output$table <- renderTable({
+    event_data('plotly_selected', source = "source")
+  })
+
+}
+
+shinyApp(ui, server)
+
+```
 
 **Shiny + ggvis:**
-[IN PROGRESS]
+- ggvis still appears to be under development! They're still currently trying to expand their API.
+  - [Questions and discussions](https://groups.google.com/forum/#!forum/ggvis)
+  - [Github repository](https://github.com/rstudio/ggvis)
+- Aims to be something more restricted than d3, but good for exploratory analysis and follows the 'Grammar of Graphics'
+- Facetting plots are currently unavailable. However, it appears to be under development through a function called subvis() that achieves a similar set up to Plotly - need to individually plot, and then you can put it altogether. Someone has actually asked on the forum of whether there would be a facetting function, Wickham's (2013) stated that it may not be necessary as it's easy to embed plots together - but there is demand for it = subvis() in the works - search through the google group discussion with 'facetting' + [demo on subvis](https://github.com/rstudio/ggvis/blob/master/demo/subvis.R)
+
+- Supported plots: scatter plots, regression lines, bar graphs, line graphs, histograms, box plots, kernel density plots and dot plots (you can't do box plots of 1 continuous variable though - might need a bit more thought). Look at 'ggvis-shiny.R' in the code folder or the [ggvis Cookbook](http://ggvis.rstudio.com/cookbook.html)
+- Different kinds of interactions? Basic, but could get you far enough with out using Shiny. If you need more complex interactions, developers say to use Shiny with ggvis.
+  - hovers
+  - input: sliders, select, checkboxes..e.t.c
+- It appears you could prevent redrawing of the plot if you just use ggvis alone. But that probably needs to be justified by understanding how the Vega library works when it updates things...
+
+Simple example using ggvis + shiny together:
+```
+#inprogress
+```
+- For a linked brushing example and other bits and bobs with ggvis, refer to Week 3,'ggvis-shiny.R' in the code folder, or the original [demos](https://github.com/rstudio/ggvis/tree/master/demo) given by RStudio in the ggvis repository.
 
 **Comparing Shiny vs Crosstalk on Plotly:**
-- Carson Sievert (who has written *Plotly for R* and documentation for the plotly package) has also investigated whether to use Shiny or Crosstalk and its limitations.
- - [Linking views with Shiny](https://cpsievert.github.io/plotly_book/linking-views-with-shiny.html)
- - [Linked Views](https://github.com/cpsievert/plotly_book/blob/master/linked-views.Rmd#linking-views-without-shiny)
-- Investigating in more detail on how Shiny's reactivity works:
-[IN PROGRESS]
+- Carson Sievert (who has written *Plotly for R* and documentation for the plotly package + provided many good examples to learn from) has also investigated whether to use Shiny or Crosstalk and its limitations.
+  - [Linking views with Shiny](https://cpsievert.github.io/plotly_book/linking-views-with-shiny.html)
+  - [Linked Views without Shiny (via Crosstalk)](https://github.com/cpsievert/plotly_book/blob/master/linked-views.Rmd#linking-views-without-shiny)
 
-- Unfortunately, due to Shiny's reactive nature and requirement to 'rerun' code to update things, we are unable prevent redrawing (ie you must run plot_ly() function within in order to update/change the plot - you can't run additional layers separately...)
+
+- His talk on interactive web graphics from R highlights most of the pros and cons + lots of examples of what can be done (includes a working example of changing an interactive polynomial model to a scatter plot - flick to slide 27)
+[Interactive Web Graphics in R using Plotly and Shiny](http://cpsievert.github.io/talks/20160121/#27)
+
+
+- Investigating in more detail on how Shiny's reactivity works:
+  - [An overview on reactivity](https://shiny.rstudio.com/articles/reactivity-overview.html)
+  - [Understanding reactivity](https://shiny.rstudio.com/articles/understanding-reactivity.html)
+
+
+- Unfortunately, due to Shiny's reactive nature and requirement to 'rerun' code to update things, we may be unable prevent redrawing (ie you must run plot_ly() function within in order to update/change the plot - you can't run additional layers separately...)
+
+- Through plotting packages, it is hard to add or remove things without calling the original plot
+For example, it requires the plot_ly() function, and you cannot run an 'add_markers()' command alone. In ggvis, when we store the plot into a variable and try run individual commands, the plot changes accordingly and gets replotted. To understand this in more detail, may need to look at the Vega library and how the updating works.)
+
+
+- It's hard to tell if crosstalk actually rerenders the plot or not :/ Crosstalk may only be responsible for making links - it may depend on whether Plotly plots are being 'updated' or redrawn via the javascript library - may have to dig into Plotly's JS library to find out how it's rendering stuff connected to crosstalk.
+  - Attempting to read the [source code](https://github.com/rstudio/crosstalk/blob/master/R/crosstalk.R) (which actually demonstrates how crosstalk can be used with Shiny with shared V6 objects)
+  - [Crosstalk package notes](https://github.com/rstudio/crosstalk/blob/master/NOTES.md)
+
+Comparing an example using crosstalk vs Shiny vs using both :
+  ```
+  - inprogress
+#crosstalk only:
+
+#Shiny only:
+
+#crosstalk + Shiny:
+
+
+  ```
+
+- Still looking for a solution to prevent redrawing... :(
+- You can hide lines and such easily, but that's when it's already on the plot.
+
+#### 'WHAT-IF' CHALLENGES:
+
+**- Adding/changing a trendline**
+- Using ggvis + layer_model_predictions() + layer_smooths() - currently has linear models, loess smoothing and RLM provided. Not sure if you could actually write your own models in though. These allow changes on the trendline:
+
+```
+ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
+  layer_points() %>%
+  layer_smooths(stroke:= "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess smoother" )) %>%
+  layer_model_predictions(stroke:="blue",
+                          model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
+                          se = input_checkbox(value = FALSE, label = "Show standard errors"))
+
+```
+- You could probably replicate the same thing in Shiny + ggvis (but probably needs to redraw the plot everytime...)
+- Still looking into trying to add/remove lines from a plot
+
+**- Boxplot challenge with iNZight:** ??
+
 
 #### OTHER IDEAS:
 - Some resources to look at in communicating Javascript to R, R to Javascript:
- - Dean Attali's shinyjs package and tips on how to enhance Shiny interactions
+ - Dean Attali's shinyjs package and tips on how to enhance Shiny interactions (if we plan to go down the Shiny route...)
     - [ShinyJS CRAN Documentation](https://cran.r-project.org/web/packages/shinyjs/shinyjs.pdf)
     - [Send messages from R to JavaScript, and back](https://github.com/daattali/advanced-shiny#message-r-to-javascript)
     - [Simple AJAX system for Shiny apps](https://github.com/daattali/advanced-shiny#api-ajax)
@@ -331,7 +521,9 @@ server <- function(input, output, session) {
     iris %>%
       ggvis(~Petal.Length, ~Petal.Width, fill = ~Species) %>%
       layer_points(fill.brush := "blue") %>%
+      #takes linked brushing input
       lb$input() %>%
+      #adds the selected data points on top of the plot
       add_data(iris_selected) %>%
       bind_shiny("plot")
 
