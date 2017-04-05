@@ -23,6 +23,7 @@ Columns in the list that event_data() returns:
 **Crosstalk + Plotly:** Still investigating. It appears to be a lot faster than Shiny. Not actually sure if crosstalk would actually rerun code like Shiny, or if it depends on the Javascript library itself and how it renders/updates plots.
 
 **What if challenges:**
+- Boxplot challenge: see 'what-if' folder >> boxplot.svg
 I'm still investigating how to do the 'what if' challenges! Still trying to find if there's a function that allows removal/addition of plot layers without redrawing the plot (though, chances of it seem pretty slim at the moment).
 
 #### NOTES:
@@ -188,10 +189,6 @@ shinyApp(ui, server)
   - input: sliders, select, checkboxes..e.t.c
 - It appears you could prevent redrawing of the plot if you just use ggvis alone. But that probably needs to be justified by understanding how the Vega library works when it updates things...
 
-Simple example using ggvis + shiny together:
-```
-#inprogress
-```
 - For a linked brushing example and other bits and bobs with ggvis, refer to Week 3,'ggvis-shiny.R' in the code folder, or the original [demos](https://github.com/rstudio/ggvis/tree/master/demo) given by RStudio in the ggvis repository.
 
 **Comparing Shiny vs Crosstalk on Plotly:**
@@ -219,17 +216,6 @@ For example, it requires the plot_ly() function, and you cannot run an 'add_mark
   - Attempting to read the [source code](https://github.com/rstudio/crosstalk/blob/master/R/crosstalk.R) (which actually demonstrates how crosstalk can be used with Shiny with shared V6 objects)
   - [Crosstalk package notes](https://github.com/rstudio/crosstalk/blob/master/NOTES.md)
 
-Comparing an example using crosstalk vs Shiny vs using both :
-  ```
-  - inprogress
-#crosstalk only:
-
-#Shiny only:
-
-#crosstalk + Shiny:
-
-
-  ```
 
 - Still looking for a solution to prevent redrawing... :(
 - You can hide lines and such easily, but that's when it's already on the plot.
@@ -251,8 +237,8 @@ ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
 - You could probably replicate the same thing in Shiny + ggvis (but probably needs to redraw the plot everytime...)
 - Still looking into trying to add/remove lines from a plot
 
-**- Boxplot challenge with iNZight:** ??
-
+**- Boxplot challenge with iNZight:** Similar to previous project - done in 30 minutes. See the 'what-if' folder, 'boxplot.svg'.
+- There is actually a problem in which if I keep adding more features to it (from my summer project), it's becoming hard to maintain and becomes like spaghetti code (...and that's probably because I don't know enough JavaScript or simply a good structure/design to facilitate all these interactions).
 
 #### OTHER IDEAS:
 - Some resources to look at in communicating Javascript to R, R to Javascript:
