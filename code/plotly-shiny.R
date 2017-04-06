@@ -20,6 +20,7 @@ income <-read.csv('nzincome.csv', header =TRUE)
 
 library(shiny)
 library(plotly)
+library(dplyr)
 
 ui <- fluidPage(
   plotlyOutput("plot"),

@@ -134,10 +134,7 @@ ggvis(income, ~weekly_hrs) %>%
     )
   )
 
-#----------- SIMPLE EXAMPLE using ggvis + shiny together:
-#still need to do.
-
-
+#----- WHAT IF CHALLENGE: ADDING/CHANGING/REMOVING TRENDLINE....
 #Could I do a ggvis example without using shiny for plotting trendlines? YES. [ WHAT-IF CHALLENGE ]
 ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
   layer_points() %>%
@@ -146,16 +143,26 @@ ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
                           model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
                           se = input_checkbox(value = FALSE, label = "Show standard errors"))
 
+
+
+#----- another example...
 ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
   layer_points() %>%
   group_by(sex) %>%
-  layer_smooths(stroke := "red", span = input_slider(0, 1, value = 1, labe = "Span of loess smoother (red)")) %>%
+  layer_smooths(stroke := "red", span = input_slider(0, 1, value = 1, label = "Span of loess smoother (red)")) %>%
   layer_model_predictions(stroke:="blue", 
                           model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
                           se = input_checkbox(value = FALSE, label = "Show standard errors"))
   
 #maybe try on a different dataset?
-library(stats20x)
-ggvis()
+ggvis(cocaine, ~weight, ~price) %>%
+  layer_points() %>%
+  layer_smooths(stroke := "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess curve (red)")) %>%
+  layer_model_predictions(stroke := "blue", model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
+                          se = TRUE)
 
-# Comparing to using both ggvis + Shiny:
+
+#----------- SIMPLE EXAMPLE using ggvis + shiny together:
+#still need to do...
+
+

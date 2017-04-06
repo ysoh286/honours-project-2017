@@ -1,4 +1,72 @@
 
+2017-04-06
+----------
+
+DISCUSS:
+
+  + do we have an example of shiny + crosstalk + plotly ?
+    - not yet
+
+  + another challenge from Chris:
+    - array of plots, all linked, where you can click on one to
+      get a view of just that single plot, but it is still interactive
+      (e.g., tooltips) and it still has current selection  
+      => you could used linked brushing on the array of plots then
+         zoom in to explore the selected points on just one plot
+      + what about if the click popped a new browser tab or window,
+        so you can still see the array of plots as well as the single plot
+        (and they are all linked)
+
+
+DONE:
+
+  + challenges from last time:
+    - scatter with smooth line
+      + doable with ggvis
+      + not sure yet about plotly
+      + could iplots do this ?
+
+  + plotly event_data() "curve number" column corresponds to group id
+
+  + shiny + plotly
+    - can do facetting, though it is a bit manual
+      + build multiple plots then combine via subplot() 
+        (with possibility to share x-scale and y-scale between plots)
+    - event_data("plotly_selected") only works on scatterplots (?)
+      + i.e., region selection (as opposed to single click)
+
+  + shiny + ggvis
+    - ggvis has its own widgets (like shiny), but it does not allow
+      control over the arrangement of widgets relative to plot or page
+
+  + crosstalk
+    - there is no R code to produce redraws, so maybe only update
+      messages/info gets sent between R and htmlwidgets?
+    - if Yu Han cannot figure it out, Paul can email Joe Cheng
+
+
+TODO:
+
+  + start to build a list of "challenges" that help us to describe the
+    boundary where the existing tools start to get difficult or 
+    impossible to use
+    - boxplot interaction
+    - smoother with slider
+    - array of plots to drill into
+
+  + try to tackle the challenges using existing tools
+    - what is easy?
+    - what is hard?
+    - what is impossible?
+    
+  + where existing tools fail (or are awkward), produce implementation
+    using gridSVG/javascript
+    - try to draw out an underlying structure so that do not have to
+      start from scratch each time
+    - try to build functions that can be reused (and others could reuse)
+    - where on the convenience/customisation scale do we want to be?
+
+
 2017-03-30
 ----------
 

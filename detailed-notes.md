@@ -1,6 +1,27 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
 ---
+## Week 5 (06/04- 13/04): Challenges
+
+**Q: Do the following challenges.**
+
+*- Attempt to recreate the boxplot challenge using Plotly, ggvis, Shiny/Crosstalk*
+
+*- Recreate the trendline challenge with Plotly, ggvis, Shiny/Crosstalk, iplots*
+
+*- Array of plots challenge*
+
+#### NOTES:
+Summary Table (in progress):
+
+| Comparison  | Similarities     | Differences   |
+|:------------| :-------------   | :-------------|
+| Shiny vs Crosstalk    | ??     | ??|
+| Plotly vs ggvis | Construction of plots using layers, use of pipeline operator, compatible with Shiny, both provide in-plot interactions, construction of facetted and multi-panel plots are relatively similar         |ggvis can provide out-plot interactions, while Plotly alone cannot. Different JS libraries.         |
+| ggvis vs Shiny | ??| ??|
+| ggplot2 vs ggvis | ??| ??|
+
+---
 ## Week 4 (30/03 - 06/04): Shiny + Plotly, Shiny + ggvis, 'what-ifs' on avoiding redrawing plots?
 
  **Q: Investigate the following in more detail: Shiny + Plotly, Shiny + ggvis, Crosstalk**
@@ -24,7 +45,9 @@ Columns in the list that event_data() returns:
 
 **What if challenges:**
 - Boxplot challenge: see 'what-if' folder >> boxplot.svg
+
 I'm still investigating how to do the 'what if' challenges! Still trying to find if there's a function that allows removal/addition of plot layers without redrawing the plot (though, chances of it seem pretty slim at the moment).
+
 
 #### NOTES:
 
