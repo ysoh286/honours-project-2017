@@ -2,16 +2,15 @@
 # resources: https://plot.ly/r/shiny-tutorial/
 
 
-# Note: These work when you're using the CRAN version of plotly. 
-#the dev version of plotly crashes with ggplot2 and throws an error.
-#Downgrade back down to the CRAN version of plotly if needed.
+# Note: If it throws an error, try re-installing plotly. 
+
 install.packages('plotly')
 
 # checking versions
 packageVersion('plotly')
 
-# load a dataset: 
-income <-read.csv('nzincome.csv', header =TRUE)
+# load a dataset - can be found in the datasets folder: 
+income <-read.csv('datasets/nzincome.csv', header =TRUE)
 
 # Adheres to HTMLwidgets, able to embed graphs.
 # Can easily change stuff, with event_data()
@@ -30,7 +29,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-  #renderPlotly = ggplot2 objects?
+  #renderPlotly = renders plotly objects
   output$plot <- renderPlotly({
     plot_ly(iris, x = ~Petal.Width, y = ~Petal.Length, type = "scatter")
   })
@@ -68,7 +67,8 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 
-## trying some of the other plotly functions - adapting example: https://plot.ly/r/shinyapp-plotly-events/
+## trying some of the other plotly functions -
+# adapting example: https://plot.ly/r/shinyapp-plotly-events/
 
 ui <- fluidPage(
 
@@ -150,7 +150,8 @@ subplot(plots[['p']], nrows = 1, shareX = TRUE, shareY = TRUE) #shareX = share t
 groups <- group_by(income100, sex)
 plots <- do(groups, p = plot_ly(., x = ~weekly_hrs, y = ~weekly_income, color = ~sex, type = "scatter", mode = "markers") %>% layout(dragmode = "select"))
 subplot(plots[['p']], nrows =1 , shareX = TRUE, shareY = TRUE)
-#Does throw a warning message - but the other way you could change the values is to change the 'name' to whatever group it is. Extracting names from tibble groups?
+#Does throw a warning message - another way is to change the 'name' to
+#whatever group it is. Extracting names from tibble groups? Currently not too familiar with dplyr.
 
 #doing it without dplyr:
 setosa <- iris[iris$Species == "setosa", ]
@@ -188,10 +189,77 @@ server <- function(input, output) {
 
 shinyApp(ui, server) 
 
+
+##------ doing an example using ggplotly:
+# alot more simpler, as ggplot2 already provides facetting via facet_grid/facet_wrap
+# the advantage of using Plotly's subplot is if you wish to bind different kinds of plots
+# (such as a bar plot + histogram)
+
+
+Sepal.Width.Category <- ifelse(iris$Sepal.Width < 3, "big", "small")
+iris1 <- cbind(iris, Sepal.Width.Category)
+
+ggplot(iris1, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point() + facet_grid(Species~Sepal.Width.Category)
+ggplotly()
+
+
+ui <- basicPage(
+  plotlyOutput("plot"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+  
+  iris1 <- cbind(iris, Sepal.Width.Category)
+  
+  
+  output$plot <- renderPlotly({
+    ggplot(iris1, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point() + facet_grid(Species~Sepal.Width.Category)
+    ggplotly() %>%
+      layout(dragmode = "select")
+  })
+  
+  output$table <- renderTable({
+    event_data("plotly_selected")
+  })
+}
+
+shinyApp(ui, server) 
+
+#curve number in this case refers to the plot number (single subset).
+
+#trying on a more complex facetted plot:
+
+income500 <- income[1:500, ]
+
+ui <- basicPage(
+  plotlyOutput("plot"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+  
+  output$plot <- renderPlotly({
+    ggplot(income500, aes(x = weekly_hrs, y = weekly_income, color = sex)) + geom_point() + facet_grid(highest_qualification~ethnicity)
+    ggplotly() %>%
+      layout(dragmode = "select")
+  })
+  
+  output$table <- renderTable({
+    event_data("plotly_selected")
+  })
+}
+
+shinyApp(ui, server) 
+
+#in this case: curveNumber counts from 0 to the length of plots x no. of groups you're subsetting by.
+# E.g. Females are counted as 0 to 19, males are counted from 20 onwards to 42.
+
 #---- what if I try doing it individually?
 
 #the funny thing with this, for this to work well, you need to reset it each time you 
-# switch to a different curve - selection box gets stuck when you switch to a different curve, but it reports what's selected in the table just fine.
+# switch to a different curve - selection box gets stuck when you switch to a different curve
+# but it reports what's selected in the table just fine.
 # Another example of facetting using ggplotly:
 
 p <- ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point() + facet_grid(.~Species)
@@ -347,7 +415,7 @@ shinyApp(ui, server)
 
 #so, barplots, lineplots, don't return anything under 'plotly_selected' for a table. 
 #However, you can use it to drive something else (e.g. another plot?)
-#returns an empty list.
+# It somehow prints "list()", but then event_data("plotly_selected") actually returns a dataframe.
 # plotly_hover and plotly_click work with these graphs to give single points, but when it comes to a selection, nothing is given (meaning, no mechanism for aggregating data, except for on scatter points).
 
 
@@ -358,14 +426,16 @@ shinyApp(ui, server)
 # Linked brushing between two plots and a table:
 shared_iris <- SharedData$new(iris)
 bscols(
-  widths = c(6, 6, 12), #though, need to check on this
+  widths = 4, #though, need to check on this
   plot_ly(shared_iris, x = ~Petal.Length, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers"),
-  plot_ly(shared_iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species, type="scatter"),
+  plot_ly(shared_iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species, type="scatter", mode = "markers"),
   datatable(shared_iris)
 )
 
 
-#attempting to replicate the same thing using Shiny: - adapted from https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324
+#attempting to replicate the same thing using Shiny: 
+#- adapted from https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324
+
 ui <- fluidPage(
   fluidRow(
     column(6, plotlyOutput("plot1")),
@@ -413,9 +483,8 @@ server <- function(input, output) {
 shinyApp(ui, server)
 
 
-#current issues: does not filter very well. Need to just show the points that are shown.
-# compare this with a ggvis example?
-#try get rid of the secondary tracing?? - use pointNumber as id instead seems to work....
+#In this case, assumes that the pointNumber corresponds to the same points in each plot.
+#uses pointNumber as id instead seems to work (to get rid of additional 'traces')
 #works one way for now... but could do it both ways.
 #in comparison - crosstalk = less code
 
@@ -439,8 +508,9 @@ server <- function(input, output) {
   })
   
   output$plot2 <- renderPlotly({
-    s = event_data('plotly_selected', source = "plot1") #s = list() (the 'dataframe')
-    store <- iris[s[["pointNumber"]], ]
+    s = event_data('plotly_selected', source = "plot1") # A reactive context. (the 'dataframe')
+    #print(class(s))  # test for the class of s = dataframe
+    store <- iris[s[["pointNumber"]], ] 
     plot_ly(store, x = ~Sepal.Width, y = ~Sepal.Length, type = "scatter", color = ~Species, mode = "markers")
   })
   
@@ -453,6 +523,7 @@ server <- function(input, output) {
 shinyApp(ui, server)
 
 #--- another example creating different plots?
+
 ui <- fluidPage(
   fluidRow(
     column(4, plotlyOutput("sourceplot")),
@@ -488,25 +559,4 @@ server <- function(input, output) {
 }
 
 shinyApp(ui, server)
-
-
-#--------------------------------------
-
-#WHAT-IF CHALLENGE:
-#Adding a trendline + changes to trendlines:
-
-income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
-
-plot_ly(income, x=~weekly_hrs, y = ~weekly_income) %>%
-  add_lines(~weekly_hrs, y = ~weekly_income)
-
-# Could you do the same with crosstalk + HTMLwidgets capabilities??
-
-
-
-
-
-
-
-
 

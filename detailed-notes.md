@@ -11,15 +11,124 @@ This document contains findings, examples, and all kinds of things related to th
 
 *- Array of plots challenge*
 
+*- Address previous issues - crosstalk + plotly + shiny, redraws from crosstalk/plotly*
+
+**Hard to find a way to stop things from replotting/redrawing.**
+
+**A few minor mistakes + issues addressed:**
+- event_data("plotly_selected") does indeed return a dataframe, NOT a LIST - I fell into a trap because the output that was written when trying on other plots was "list()".
+
+- curveNumber can get a little complex when it comes to dealing with more complex facetted plots, but it is a group id for each subset for each plot (verified by a more complex ggplotly example added in Week 4).
+
+- A crosstalk-plotly-shiny example has been provided below. The advantages of using all three altogether would be to achieve linked brushing/filtering more easily with crosstalk, but also extending interactions further using Shiny as it can recognise shared objects/datasets.
+
+- Crosstalk and Plotly via HTMLwidgets suggest that under filtering it redraws the Plotly graph, while under selection - it appears to only update 'traces' (styles of points), which may explain why selection is more faster than compared to filtering.
+
+**Boxplot challenge:**
+- It's tough to do a selection on the boxplot itself (I would probably categorise it along 'Can be done if I knew Plotly.JS well or was a JavaScript wizard, or somehow format those interactions' if you wanted something similar to what I've achieved with iNZight).
+- Instead, just trying to achieve it with some Shiny sliders.
+
+**Trendline challenge:**
+- Easily achievable using Plotly + Shiny (or anything with Shiny) - however you still face the problem of re-rendering the entire plot.
+
+
+**Array of plots challenge:** ??
+
 #### NOTES:
-Summary Table (in progress):
+Summary Tables:  Just to recap what I've learnt so far in the past month.
+
 
 | Comparison  | Similarities     | Differences   |
 |:------------| :-------------   | :-------------|
-| Shiny vs Crosstalk    | ??     | ??|
-| Plotly vs ggvis | Construction of plots using layers, use of pipeline operator, compatible with Shiny, both provide in-plot interactions, construction of facetted and multi-panel plots are relatively similar         |ggvis can provide out-plot interactions, while Plotly alone cannot. Different JS libraries.         |
-| ggvis vs Shiny | ??| ??|
-| ggplot2 vs ggvis | ??| ??|
+| Shiny vs Crosstalk    |  Both rely on R, allow users to control and communicate information between plots and other inputs/outputs (such as tables, sliders, e.t.c).    | Crosstalk limited to two features, you can achieve much more with Shiny. Much more customisable compared to Crosstalk. Shiny requires R session to power everything, crosstalk is more standalone. |
+| Plotly vs ggvis | Construction of plots using layers, use of pipeline operator %>% (functional in the sense where you can constantly modify plots by storing plot objects in variables), compatible with Shiny, both provide in-plot interactions, construction of facetted and multi-panel plots are relatively similar (via subplots/subvis). No support for 1 variable dotplots (programmed to look for a y-variable). Both support a wide variety of plots.     | ggvis can provide out-plot interactions, while Plotly alone cannot. Vega vs PlotlyJS (different javascript libraries). ggvis interactions are driven through R, Plotly interactions driven by JS. No support for facetted plots for ggvis(yet!).        |
+| ggvis vs Shiny | Both use R sessions to drive interactions (in fact, ggvis communicates between R and the web browser via Shiny), very similar inputs, syntax and interactions can be achieved | ggvis does not allow layout control, Shiny does. ggvis allows for some basic in-plot interactions to be achieved, while Shiny does not.|
+
+
+| | Pros/Strengths        | Cons/Weaknesses | Comments? |
+|:---------- | :--------- | :-----------| :---------|
+| Shiny | Generic, allows UI and layouts on the page to be easily customised, out-plot interactions  , popular for incorporating interactions via R without the need to learn other web technologies. Can easily be connected with other packages such as Plotly, ggvis. Extensible to using R for statistical computing.  |  Rerunning code and redrawing plots (inefficient on large datasets),  limited on in-plot interactions. Linked brushing (via brushedPoints) only works on base plots and ggplot2 - may be supported through other packages in their own way (plotly: plotly_selected, ggvis: linked_brush).  | Been around for quite a while. |
+| Crosstalk | Great with dealing with row-observation data, no reliance on R (standalone sense), great for linked brushing and filtering , easy to link up tables to plots via making data frame as shared key objects. Selection may not require redrawing.  |  Does not work on aggregated and summarised data, hard to implement (requires set up through R on your own widget + JS), selection and filtering must be well defined through JS interactions, only has two features so far: selection/linked brushing and filtering. May require redrawing of plots (depends on how author has defined JS interactions and what it does with the data). Currently supported HTMLwidgets: Plotly, Leaflet, d3scatter, DT.  |    Still in development, relatively new.  |
+
+| | Pros/Strengths | Cons/Weaknesses | Comments? |
+| :-- | :--| :--| :--|
+| Plotly | ?? | ?? | Been around for a while, alot more utilities can be found through their own interface compared to R (but still expanding). |
+| ggvis | ?? | ?? |  Still in development (expanding API). |
+
+
+**A bit more on ggvis and its interactivity:**
+- Been watching Winston Chang's presentation about ggvis from the useR conference in 2014. [Youtube link](https://www.youtube.com/watch?v=wYafq7hYWcg)
+
+Some notes from this presentation are recorded below:
+- Interactivity is driven by Shiny: "functional reactive programming,  a reactive can use a  value from another reactive - creating a dependency of reactives which persist. When something changes, everything that's dependent on it changes (recompute)."
+- Vega.js is doing the rendering - either as SVG, or HTML canvas, NO R graphics AT ALL.
+- ggplot is fundamentally different from ggvis
+- Bidirectional links: have to be careful how you setup the reactives carefully.
+- Large datasets? - in browser rendering done by JavaScript, can get sluggish when interacting when you've got lots of points. (If you're dealing with large data -> do computation in R first, then scale. They intend to change to using C to do computation as it's alot faster than R. )
+- may not work on early version of R due to package dependencies
+
+**Fast search: Crosstalk + Plotly + Shiny**
+
+Here are some working demo examples that use crosstalk, plotly and shiny together (found in the Plotly repository):
+
+- [Basic demo app](https://github.com/ropensci/plotly/blob/51e159ba825b007657c1d7534825ef25afc7e7af/demo/shiny/basic/app.R)
+- [Using DT](https://github.com/ropensci/plotly/blob/51e159ba825b007657c1d7534825ef25afc7e7af/demo/shiny/DT/app.R)
+
+- You need to define the shared dataset/data outside of the shiny app in order for it to work... not sure why yet (maybe in order for crosstalk to work?).
+- A simple example using the iris dataset:
+
+```
+#  in progress
+
+```
+
+**Investigating crosstalk + Plotly in more detail:**
+- Crosstalk only supports filtering and selection
+- After digging through and looking for more source code: FINALLY FOUND THIS (though, still making sense of it), which may explain how the filtering and selection works on Plotly with crosstalk objects:
+[plotly.js via HTMLwidgets](https://github.com/ropensci/plotly/blob/08fe476068da4f5925c5cb696cf07c221d2c6942/inst/htmlwidgets/plotly.js)
+- At line 476, it suggests that Plotly redraws under filtering
+- At line 484 - function TraceManager.prototype.updateSelection suggests that it may be just changing the styling of key objects rather than redrawing the whole plot under selection...?
+- This may explain why it's so much faster than Shiny at selection and linked brushing (because you don't have to redraw things EVERY single time - it's just changing styles...)
+- Still uncertain if this is really the correct functions that are driving crosstalk-plotly behaviour/interactions.
+- Awaiting confirmation from Carson Sievert
+Questions to email to the Plotly author:
+- With selection and filtering via crosstalk, how does Plotly react and update its plots or express these interactions?
+- Is it possible to customise or add on plot interactions into Plotly graphs, and if so - how can this be achieved?
+
+**iPlots:**
+- [iPlots page](http://rosuda.org/software/iPlots/)
+- interactive graphs in R using Java
+- features: querying, highlighting, color brushing, changing parameters
+- *Does it redraw?*
+- Possible to add things to a plot via its API?
+- functions for different graphs: imosaic(), ibar(),ipcp() (parallel plots), ibox(), ilines(), ihist()... e.t.c
+
+- Facetting: ??
+
+**Boxplot challenge:** ??
+- Easily achievable with iNZight/gridSVG/custom JS (though, a possible future problem is the ease of matching the correct elements to interactions if there are lots of elements on the page)
+
+**An advanced facetting example/array of plots challenge:** ??
+
+**Trendline challenge:**
+- When you're coupling it with Shiny - it seems everything's doable (in an R sense).
+- Main advantages of using Shiny becomes much clearer in the sense where you have access to R to do statistical computation (such as computing models, lines, and you could probably go further with of what kind of trendline you want to plot - e.g. formulas, type of model, type of family distribution (GAM), span for loess...e.t.c)
+- Downside for using Shiny: recomputation takes time and it's inefficent (and sometimes Shiny lags + or is unstable), + can't do it on large datasets
+- Plotly + Shiny: Plotly itself has limited statistical curves. You can achieve the same by linking it up to Shiny. However, if you use ggplot2 + ggplotly - you can go further as ggplot2 has built in functions that help make plotting of smoothers easier.
+- ggvis alone: Because ggvis does use Shiny's infrastructure to drive its interactions + ui inputs, you can achieve this via using layer_model_predictions() (limited to 3 different types of models at the moment) and layer_smooths() (loess) function.
+- ggvis + Shiny: probably can achieve more models? Need to test this out.
+- iPlots: ??
+
+Other ideas in the works:
+- Using crosstalk + Plotly to select span/jitter for loess
+- What if you could change interactions via Plotly.JS?
+- How much 'math' can JavaScript handle and would it be a good idea to make use of it (to create standalone plots), or let R do all the computation (and somehow link the two to drive a change in a trendline - in this case linked and not standalone).
+- A gridSVG/custom JS version with iNZight?
+- iNZight + Shiny??
+
+**HTMLtools:**
+
+
 
 ---
 ## Week 4 (30/03 - 06/04): Shiny + Plotly, Shiny + ggvis, 'what-ifs' on avoiding redrawing plots?
@@ -32,8 +141,9 @@ Summary Table (in progress):
 However, there are limitations to using event_data("plotly_selected") - it only appears to work on scatter plots and facetted plots and returns an empty list when the user tries to do a selection over any of the other plots listed above.
 event_data("plotly_hover", "plotly_click") are more versatile in the sense that they are able to return a single point/bar/value.
 
-Columns in the list that event_data() returns:
+Columns in the ~~list~~ **DATAFRAME** (got confused because the output returned = "list()") that event_data() returns:
 - curveNumber represents either the 'trace' (subsets) or a corresponding plot number (if you have facetting plots with a single subset/group)
+- **UPDATE:** In cases of facetted plots - curveNumber counts from no. of plots to each subset group (becomes a lot more complex - see a more complex plot below).
 - x and y return x and y values corresponding to the plot, pointNumber returns the point number on the plot
 
 - In terms of linked brushing between plots via shiny (either plotly or ggvis): in these examples, the selection appears to be redrawn on top of the points that are being selected, creating an additional layer of plotting.  
@@ -86,6 +196,36 @@ server <- function(input, output) {
 }
 
 shinyApp(ui, server)
+
+```
+
+A more complex example using ggplotly and how curveNumber works in facetted plots:
+
+```
+income500 <- income[1:500, ]
+
+ui <- basicPage(
+  plotlyOutput("plot"),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+
+  output$plot <- renderPlotly({
+    ggplot(income500, aes(x = weekly_hrs, y = weekly_income, color = sex)) + geom_point() + facet_grid(highest_qualification~ethnicity)
+    ggplotly() %>%
+      layout(dragmode = "select")
+  })
+
+  output$table <- renderTable({
+    event_data("plotly_selected")
+  })
+}
+
+shinyApp(ui, server)
+
+#in this case: curveNumber counts from 0 to the length of plots x no. of groups you're subsetting by.
+# E.g. Females are counted as 0 to 19, males are counted from 20 onwards to 42.
 
 ```
 
@@ -211,6 +351,9 @@ shinyApp(ui, server)
   - hovers
   - input: sliders, select, checkboxes..e.t.c
 - It appears you could prevent redrawing of the plot if you just use ggvis alone. But that probably needs to be justified by understanding how the Vega library works when it updates things...
+- Difference between ':=' notation and '=' notation:
+   - := is used if you wish to make points of a fixed color and size (on an unscaled value - e.g. pixel co-ordinate system)
+   - = is used for mapping (where if you want to map data to co-ordinates rather than have just pixels - ideally use for when passing variables to get correct scaling on the plot)
 
 - For a linked brushing example and other bits and bobs with ggvis, refer to Week 3,'ggvis-shiny.R' in the code folder, or the original [demos](https://github.com/rstudio/ggvis/tree/master/demo) given by RStudio in the ggvis repository.
 
@@ -231,11 +374,21 @@ shinyApp(ui, server)
 
 - Unfortunately, due to Shiny's reactive nature and requirement to 'rerun' code to update things, we may be unable prevent redrawing (ie you must run plot_ly() function within in order to update/change the plot - you can't run additional layers separately...)
 
-- Through plotting packages, it is hard to add or remove things without calling the original plot
+- Through plotting packages, it is hard to add or remove things without calling the original plot.
 For example, it requires the plot_ly() function, and you cannot run an 'add_markers()' command alone. In ggvis, when we store the plot into a variable and try run individual commands, the plot changes accordingly and gets replotted. To understand this in more detail, may need to look at the Vega library and how the updating works.)
 
+- Comparing Shiny to Crosstalk:
+  - Crosstalk is limited to selection and filtering
+  - Crosstalk allows in-plot interactions
+  - Crosstalk does not require an R-session - rather, most interactions are driven by Javascript in the browser
+  - Crosstalk is still under development - currently cannot summarize/aggregate data
+  - Shiny is more generic and allows 'out-plot' interactions, requires redrawing of the whole plot when something changes (based upon input/output system and reactivity) but the user sees it as something different
+  - It is possible to use both together, as Shiny can identify shared V6 objects
+  - In comparing how to do linked brushing, crosstalk is alot faster in the sense that it doesn't have to redraw the plot, and does it very quickly whereas in Shiny, you may need to make your own key in order to link things up (unless you're comparing plotly - event_data() can do it automatically)
 
-- It's hard to tell if crosstalk actually rerenders the plot or not :/ Crosstalk may only be responsible for making links - it may depend on whether Plotly plots are being 'updated' or redrawn via the javascript library - may have to dig into Plotly's JS library to find out how it's rendering stuff connected to crosstalk.
+
+- **UPDATE 08/04: See Week 5 - With plotly, it redraws when you do filtering, but only changes styles of the points when it does selection through crosstalk.**
+It's hard to tell if crosstalk actually rerenders the plot or not :/ Crosstalk may only be responsible for making links - it may depend on whether Plotly plots are being 'updated' or redrawn via the javascript library - may have to dig into Plotly's JS library to find out how it's rendering stuff connected to crosstalk.
   - Attempting to read the [source code](https://github.com/rstudio/crosstalk/blob/master/R/crosstalk.R) (which actually demonstrates how crosstalk can be used with Shiny with shared V6 objects)
   - [Crosstalk package notes](https://github.com/rstudio/crosstalk/blob/master/NOTES.md)
 
@@ -249,6 +402,11 @@ For example, it requires the plot_ly() function, and you cannot run an 'add_mark
 - Using ggvis + layer_model_predictions() + layer_smooths() - currently has linear models, loess smoothing and RLM provided. Not sure if you could actually write your own models in though. These allow changes on the trendline:
 
 ```
+#install if required:
+install.packages('ggvis')
+
+library(ggvis)
+
 ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
   layer_points() %>%
   layer_smooths(stroke:= "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess smoother" )) %>%
