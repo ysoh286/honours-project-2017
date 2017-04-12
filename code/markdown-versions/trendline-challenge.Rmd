@@ -1,72 +1,35 @@
-## trendline challenge:
+---
+title: "trendline-challenge"
+output: html_document
+runtime: shiny
+---
 
-## Attempt to either add trendlines on/off or be able to change trendlines on the plot.
-
-## load some data in:
-income <- read.csv('datasets/nzincome.csv', header = TRUE)
-
-#ggvis version:
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(ggvis)
+library(knitr)
+library(plotly)
+library(iNZightPlots)
+```
 
-ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
-  layer_points() %>%
-  layer_smooths(stroke:= "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess smoother" )) %>%
-  layer_model_predictions(stroke:="blue", 
-                          model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
-                          se = input_checkbox(value = FALSE, label = "Show standard errors"))
+Just testing out ggvis + Shiny apps with RMarkdown and knitr.
 
-#----- another example...
-ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
-  layer_points() %>%
-  group_by(sex) %>%
-  layer_smooths(stroke := "red", span = input_slider(0, 1, value = 1, label = "Span of loess smoother (red)")) %>%
-  layer_model_predictions(stroke:="blue", 
-                          model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
-                          se = input_checkbox(value = TRUE, label = "Show standard errors"))
+### Example 1: using ggvis alone
 
-#maybe try on a different dataset?
+```{r}
+income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
+
 ggvis(cocaine, ~weight, ~price) %>%
   layer_points() %>%
-  add_tooltip(function(cocaine) paste0("Weight: <b>", cocaine$weight, "</b><br>", "Price: <b>", cocaine$price, "</b><br>"), "hover") %>%
   layer_smooths(stroke := "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess curve (red)")) %>%
   layer_model_predictions(stroke := "blue", model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
                           se = TRUE)
 
-## TODO: extending ui options?
+```
 
-#So in this case, you can change where the ui options go (as in sliders, and all. You could also do it individually.)
-library(ggvis)
-library(shiny)
+### Example 2: using Plotly graphs + Shiny
 
-ui <- fluidPage(
-  titlePanel("Trendline challenge: ggvis + Shiny"),
-  sidebarLayout(
-    sidebarPanel(
-      uiOutput("plot_ui")
-    ),mainPanel(
-      ggvisOutput("plot")
-    )
-    , position = c("left", "right"),
-    fluid = TRUE)
-)
-
-server <- function(input, output) {
-  ggvis(cocaine, ~weight, ~price) %>%
-    layer_points() %>%
-    layer_smooths(stroke := "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess curve (red)")) %>%
-    layer_model_predictions(stroke := "blue", model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
-                            se = TRUE) %>%
-  bind_shiny("plot", "plot_ui")
-}
-
-shinyApp(ui, server)
-
-#----------------------------------------------------------------
-# plotly + shiny:
-
-library(plotly)
-library(shiny)
+```{r}
 
 shinyApp(
     ui = fluidPage(
@@ -97,7 +60,7 @@ shinyApp(
                    plot <- plot_ly(cocaine, x = ~weight, y = ~price, mode = "markers", type = "scatter")
                    
                     #run condition for model lines:
-                     if (input$model == "loess") { #try to get the loess to smoothen. Or use plotly- curves.
+                     if (input$model == "loess") { 
                          modelLine <- loess(price ~ weight, data = cocaine, span = 0.75, se = TRUE)
                       } else if (input$model == "MASS::RLM") {
                            modelLine <- mass::rlm(price ~weight, data = cocaine)
@@ -107,31 +70,23 @@ shinyApp(
                    
                      #add trendline
                     add_lines(plot,y = ~fitted(modelLine), line = list(color = "red"))
-                 
+                  # you could add standard errors via add_ribbons().
+                    
                   })
            }
    )
 
-#Maybe use plotly curves? If they have any statistical smoothing functions - they don't?
-#When you couple things with R, it actually becomes very advantageous.
-#you can't avoid redrawing when using Shiny :(
+```
 
+### Using ggplotly() + Shiny:
 
-#----------------------------------------------------------------
-#using ggplot2 + shiny + plotly:
-#trying out stat_smooth from ggplot2 + additional customisation of trendlines
-#ggplot2 has more statistical functions, which could possibly make it easier...?
-#parameters available: mapping, data, geom,  method (lm, glm, gam, loess, rlm), formula, se (confidence interval), span 
-#You could also use qplot? 
-
-p <- ggplot(cocaine, aes(price, weight)) + geom_point() + stat_smooth()
-p <- ggplotly(p)
-p
+```{r}
 
 total.obs <- nrow(cocaine)
 
-
-ui <- fluidPage(
+shinyApp(
+  
+ui = fluidPage(
   titlePanel("Trendline challenge: using ggplot2 + ggplotly + Shiny"),
   sidebarLayout(
     sidebarPanel(
@@ -145,9 +100,9 @@ ui <- fluidPage(
     )
     , position = c("left", "right"),
     fluid = TRUE)
-)
+),
 
-server <- function(input, output) {
+server = function(input, output) {
   
   output$plot <- renderPlotly({
     
@@ -186,26 +141,14 @@ server <- function(input, output) {
    
   
 }
+)
 
-shinyApp(ui, server)
+```
 
-# What if you could extend it further for each kind of model?? 
-#(that is, for glm: specify families, formulae, polynomial degrees... e.t.c)
-# You could go further and try do a model comparison. (AIC, BIC, DIC?)
-#A clear advantage of using Shiny:: you have access to other R packages and their functions.
+## iNZightPlots + Shiny?
 
-#Facetted plots?
+```{r}
 
-
-#----------------------------------------------------------------
-#TODOS: plotly + crosstalk? - would crosstalk help in any way?
-
-library(crosstalk)
-library(plotly)
-
-
-#----------------------------------------------------------------
-## iNZightPlots + Shiny trial:
 shinyApp (
   ui = fluidPage(
     titlePanel("Trendline challenge: iNZightPlots + Shiny"),
@@ -254,12 +197,4 @@ shinyApp (
   }
 )
 
-
-# in all cases, there's always redrawing of plots.
-# Can Plotly just change that one line (or even just remove the line)? or is it really not possible at all?
-# May need to look into the PlotlyJS to see if I could possibly change/customise JS interactions
-#further.
-
-
-
-
+```

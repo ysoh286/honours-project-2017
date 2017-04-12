@@ -1,0 +1,25 @@
+---
+title: "crosstalk"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(crosstalk)
+library(plotly)
+library(DT)
+```
+
+## Crosstalking!
+
+```{r}
+shared_iris <- SharedData$new(iris)
+
+bscols(
+  plot_ly(shared_iris, x = ~Petal.Length, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers"),
+  datatable(shared_iris)
+)
+
+```
+
+
