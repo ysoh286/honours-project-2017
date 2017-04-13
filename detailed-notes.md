@@ -1,7 +1,22 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
 ---
-## Week 5 (06/04- 13/04): Challenges
+## Week 6 & 7 (13/04-28/04): Challenges - Part II
+
+**Q: Continuation of challenges.**
+
+On the to-do list for the break:
+- Learn about plotly's API, more javascript + customising
+- Learn about customising Shiny with Javascript + make a diagram of how Shiny really works with R + web browser (who's driving what in order to know which part should I be 'mending/breaking/bending' the rules with)
+- Do the box plot challenge with Shiny vs with Javascript
+- Learn iplots
+- investigate how Facebook's Visdom works (looking similar to what we want to achieve in the array of plots challenge)
+- Array of plots challenge - get a linking scatterplot matrix, then try make a zoom-in plot.
+- Achieve the trendline challenge using Javascript alone
+- investigate way to communicate between R and the web browser + Javascript
+
+---
+## Week 5 (06/04- 13/04): Challenges - Part I
 
 **Q: Do the following challenges.**
 
@@ -32,11 +47,10 @@ Possible TO-DO'S for next week:
 - Plotly itself does not have statistical curves or statistcal functions to compute model fitting for trendlines (not designed to). Extensible by how much you know R (for data + model fitting) - you may need to get it in a correct 'format' before Plotly can do it.
 (Here's an [example](https://moderndata.plot.ly/regression-diagnostic-plots-using-r-and-plotly/ where it's managed to plot residuals and scale location plots!) making residual and scale location plots from Plotly and R.)
 - An even easier approach is using ggplotly(), which makes it simple if you're a whizz at ggplot2 through stat_smooth()/geom_smooth() (ggvis is in a sense trying to achieve this via layer_model_predictions(), where it does everything for you)
-- Done with iNZightPlots + Shiny (just some simple trendline fitting)
+- Done with iNZightPlots + Shiny (just some simple trendline fitting - already established in iNZight Lite)
 
-A possible problem? (if we go down the JavaScript route)
-- How much 'math/stats' can JavaScript handle and would it be a good idea to make use of it (to create standalone plots), or let R do all the computation (and somehow link the two to drive a change in a trendline - in this case linked and not standalone, like Shiny - but avoid redraws).
-- A gridSVG/custom JS version with iNZight
+A possible problem/idea to investigate?
+- How much 'math/stats' can JavaScript handle and would it be a good idea to make use of it (to create standalone plots), or let R do all the computation (and somehow link the two to drive a change in a trendline - in this case linked and not standalone, like Shiny - but avoid redraws). - get it talking to each other.
 
 **Boxplot challenge:**
 - It might be tough to do a selection on the boxplot itself via plotly (I would probably categorise it along 'Can be done if I knew Plotly.JS well or was a JavaScript whizz'). Despite this, I'm still going to give it a go  some time next week!
@@ -52,7 +66,7 @@ Summary Tables:  Just to recap what I've learnt so far in the past month.
 
 | Comparison  | Similarities     | Differences   |
 |:------------| :-------------   | :-------------|
-| Shiny vs Crosstalk    |  Both rely on R, allow users to control and communicate information between plots and other inputs/outputs (such as tables, sliders, e.t.c).    | Crosstalk limited to two features, you can achieve much more with Shiny. Crosstalk's aim is to link HTMLwidgets seamlessly together. Shiny requires R session to power everything, crosstalk is more standalone and easy to share. |
+| Shiny vs Crosstalk    |   Allow users to control and communicate information between plots and other inputs/outputs (such as tables, sliders, e.t.c).    | Crosstalk limited to two features, you can achieve much more with Shiny. Crosstalk's aim is to link HTMLwidgets seamlessly together. Shiny requires R session to power everything, crosstalk is more standalone and easy to share. |
 | Plotly vs ggvis | Construction of plots using layers, use of pipeline operator %>% (functional in the sense where you can constantly modify plots by storing plot objects in variables), compatible with Shiny, both provide in-plot interactions, construction of facetted and multi-panel plots are relatively similar (via subplots/subvis). No support for 1 variable dotplots (programmed to look for a y-variable). Both support a wide variety of plots. Both use JS libraries/APIs that are built upon D3.     | ggvis can provide out-plot interactions, while Plotly alone cannot. Vega vs Plotly.js. ggvis interactions are driven through R, Plotly interactions driven by JS. No support for facetted plots for ggvis(yet!). For Plotly, facetted plots achievable using ggplotly() + ggplot2 or subplot().        |
 | ggvis vs Shiny | Both use R sessions to drive interactions (in fact, ggvis communicates between R and the web browser via Shiny), very similar inputs and interactions can be achieved. | ggvis does not allow layout control, Shiny does. ggvis allows for some basic in-plot interactions to be achieved, while Shiny does not.|
 
@@ -82,7 +96,7 @@ Here are some working demo examples that use crosstalk, plotly and shiny togethe
 - [Using DT](https://github.com/ropensci/plotly/blob/51e159ba825b007657c1d7534825ef25afc7e7af/demo/shiny/DT/app.R)
 
 - You need to define the shared dataset/data outside of the shiny app in order for it to work... not sure why yet (maybe in order for crosstalk to work?).
-- A simple example using the iris dataset:
+- A simple example using the iris dataset found in the code folder.
 
 
 **Investigating crosstalk + Plotly in more detail:**
@@ -119,17 +133,14 @@ Here are some working demo examples that use crosstalk, plotly and shiny togethe
 - Easily achievable with iNZight/gridSVG/custom JS (though, a possible future problem is the ease of matching the correct elements to interactions if there are lots of elements on the page)
 - Trying to attempt it with Shiny + filter sliders (still working on it!).
 
-
 **Trendline challenge:**
 - When you're coupling it with Shiny - it seems everything's doable (in an R sense).
 - Main advantages of using Shiny becomes much clearer in the sense where you have access to R to do statistical computation (such as computing models, lines, and you could probably go further with of what kind of trendline you want to plot - e.g. formulas, type of model, type of family distribution (GAM), span for loess...e.t.c)
 - Downside for using Shiny: recomputation takes time and it's inefficent (and sometimes Shiny lags + or is unstable), + can't do it on large datasets
 - Plotly + Shiny: Plotly itself has limited statistical curves. You can achieve the same by linking it up to Shiny. However, if you use ggplot2 + ggplotly - you can go further as ggplot2 has built in functions that help make plotting of smoothers easier.
 - ggvis alone: Because ggvis does use Shiny's infrastructure to drive its interactions + ui inputs, you can achieve this via using layer_model_predictions() (limited to 3 different types of models at the moment) and layer_smooths() (loess) function.
-- ggvis + Shiny: probably can achieve more models? Need to test this out.
-- iPlots: ??
+- ggvis + Shiny: probably can achieve more models using other R packages that are made for modelling.
 
-- ~~iNZight + Shiny??~~
 
 ---
 ## Week 4 (30/03 - 06/04): Shiny + Plotly, Shiny + ggvis, 'what-ifs' on avoiding redrawing plots?
