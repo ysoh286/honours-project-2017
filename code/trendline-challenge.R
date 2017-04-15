@@ -194,15 +194,10 @@ shinyApp(ui, server)
 # You could go further and try do a model comparison. (AIC, BIC, DIC?)
 #A clear advantage of using Shiny:: you have access to other R packages and their functions.
 
-#Facetted plots?
-
-
 #----------------------------------------------------------------
-#TODOS: plotly + crosstalk? - would crosstalk help in any way?
-
-library(crosstalk)
-library(plotly)
-
+# plotly + crosstalk? - would crosstalk help in any way?
+# According to limitations stated, it's not possible.
+# It can only filter and select raw data.  
 
 #----------------------------------------------------------------
 ## iNZightPlots + Shiny trial:
@@ -260,6 +255,64 @@ shinyApp (
 # May need to look into the PlotlyJS to see if I could possibly change/customise JS interactions
 #further.
 
+##---------------------------------------------------------------------
+## trying a base plot example:
+
+plot.new()
+## different modelLines:
+plot(cocaine$weight, cocaine$price)
+modelLine <- loess.smooth(cocaine$weight, cocaine$price, span = 0.75, degree = 2)
+lines(modelLine$x, modelLine$y, col = "red")
+##lm
+abline(lm(cocaine$price ~ cocaine$weight), col = "blue")
+##glm:
+abline(glm(cocaine$price ~ cocaine$weight), col = "green")
+
+## baseplot + shiny? 
+library(shiny)
+shinyApp(
+  ui = fluidPage(
+  titlePanel("Trendline challenge: Base Plots + Shiny"),
+  sidebarLayout(
+    sidebarPanel( #things on the side...
+      selectInput("model", "Model", c("Linear" = "lm", "GLM" = "glm", "Loess" = "loess")),
+      numericInput("obs", "Observations:", nrow(cocaine), min = 0, max = nrow(cocaine)),
+      sliderInput("span", "Smoothness", min = 0.5, max = 1, value = 0.75), 
+      sliderInput("lwd", "Line width", min = 0.1, max = 5, value = 1),
+      numericInput("degree", "Degree", min = 1, max = 2, value = 1)
+      
+    ), mainPanel(
+      plotOutput("plot"),
+      verbatimTextOutput("summary")
+    )
+    , position = c("left", "right"),
+    fluid = TRUE)
+    
+  ),
+  
+  server = function(input, output) {
+    
+    output$plot <- renderPlot({
+      plot(cocaine$weight, cocaine$price)
+      
+      if(input$model == "loess") {
+        modelLine <- loess.smooth(cocaine$weight, cocaine$price, span = input$span, degree = input$degree)
+        lines(modelLine$x, modelLine$y, col = "red", lwd = input$lwd)
+      } else if (input$model == "glm") {
+        abline(glm(cocaine$price ~ cocaine$weight), col = "green", lwd = input$lwd)
+      } else {
+        abline(lm(cocaine$price ~ cocaine$weight), col = "blue", lwd = input$lwd)
+      }
+      
+    })
+    
+  }
+
+)
+
+# Even if you can add on to a plot separately - the main problem with using Shiny is the
+# renderPlot() function that encapsulates the entire plot. Would isolate() help in any way?
 
 
+## ------------------ JAVASCRIPT SOLUTIONS?? -------------------------
 

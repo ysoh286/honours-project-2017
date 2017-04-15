@@ -137,4 +137,6 @@ ggvis(income, ~weekly_hrs) %>%
 #----------- SIMPLE EXAMPLE using ggvis + shiny together:
 #TODOS: Make a simple example using ggvis and shiny.
 
+library(shiny)
+library(ggvis)
 

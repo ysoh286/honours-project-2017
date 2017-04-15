@@ -8,6 +8,9 @@ library(crosstalk)
 library(plotly)
 library(DT)
 
+##load some data in:
+income <- read.csv('datasets/nzincome.csv', header = TRUE)
+
 # a simple plotly plot:
 p <- plot_ly(iris, x = ~Petal.Length, y  = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers")
 p
