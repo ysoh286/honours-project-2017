@@ -12,10 +12,7 @@ This document contains findings, examples, and all kinds of things related to th
 *- Array of plots challenge*
 
 On the to-do list for the break:
-
-- Learn iplots
-- Achieve the trendline challenge using Javascript alone
-
+- Achieve the trendline challenge without using Shiny.
 
 **Trendline challenge:**
 - Easily achievable using Plotly + Shiny (or anything with Shiny) - however you still face the problem of re-rendering the entire plot.
@@ -24,21 +21,26 @@ On the to-do list for the break:
 - An even easier approach is using ggplotly(), which makes it simple using ggplot2 through stat_smooth()/geom_smooth() (ggvis is in a sense trying to achieve this via layer_model_predictions(), where it does everything for you)
 - Done with iNZightPlots + Shiny (just some simple trendline fitting - already established in iNZight Lite)
 - Not possible with crosstalk due to its limitations.
+- Can be done with iPlots (you can easily remove and add trendlines to a plot)
 - Possible Javascript solutions??
 
 **Boxplot challenge:**
-- This seems 'impossible' with plotly in R alone. With crosstalk, it seems somewhat possible, but it's not a reliable method (selecting over a box by eye).
+- This seems 'impossible' with plotly. With crosstalk, it seems somewhat possible, but it's not a reliable method (selecting over a box by eye).
 - It also seems impossible for ggvis  - hard to add/remove layers, and only allows very basic interactions. You could use brushing on it, but that's not reliable either.
 - Tried using a filter_slider with this, however you cannot define the points along the slider (so for example, if I wanted a slider that has tick points at it's minimum, maximum, median, LQ and UQ, it's not possible because the argument 'step' only takes in 1 value).
-- In terms of using plotly.JS alone, it is possible, but not designed to (the boxplot itself is defined as a single object, drawn by a single SVG path rather than individual lines/rectangles).
+- In terms of using plotly.JS alone, it is possible, but not designed to (the boxplot itself is defined as a single object, drawn by a single SVG path rather than individual lines/rectangles??).
+- Surprisingly, this was the harder challenge of the 3. Any more ideas on how I could stretch this one??
+
 
 **Array of plots challenge:**
-- A half-solution? Works on Shiny + d3scatter + crosstalk. Use crosstalk to do the linking between plots, and then shiny to facilitate the zooming in by using a modal. The problem is you'd have to specify a modal button for every single plot, and Shiny doesn't have capabilities of 'clicking' on an output plot. (You could do the same with Plotly + crosstalk + Shiny, but currently it seems like Plotly's got a bug with linking multiple plots together with crosstalk where it only links 1 of the plots.)
+- A half-solution? Works on Shiny + d3scatter + crosstalk. Use crosstalk to do the linking between plots, and then shiny to facilitate the zooming in by using a modal. The problem is you'd have to specify a modal button for every single plot, and Shiny doesn't have capabilities of 'clicking' on an output plot.
+- Works on Shiny + Plotly + crosstalk in the same way, but to link all plots together, use the subplot() function to create the scatterplot matrix.
 - Using ggpairs to generate the scatterplot matrix + ggplotly has crosstalk embedded in easily links the matrix together, however because the entire plot is rendered as a single plot, hard to zoom into/ extract out a single plot.
-- I could see this being done manually where you construct your own HTML page and nest each plot in a < div > tag, but probably requires a lot more work (and maybe expert knowledge on how crosstalk works?). It might be hard to link up the plot if it were to be opened in a new page/window (not sure).
-- You can easily use crosstalk to link all the plots up
-- You could possibly do it with Shiny alone (but you have to co-ordinate links to every single plot, and that could get kind of messy, and a better knowledge on how the reactive programming model works.)
+- Could be done manually where you construct your own HTML page and nest each plot in a < div > tag, but probably requires a lot more work (and maybe some knowledge on how crosstalk works?). It might be hard to link up the plot if it were to be opened in a new page/window (not sure).
+- You could possibly do it with Shiny alone (but you have to co-ordinate links to every single plot)
 - Managed to do linking with ggvis + Shiny, running into a little trouble trying to make it visible in a modal.
+- Can be done with iPlots - draw each individual scatterplot, and they are all automatically linked. If you need to zoom in on a single plot, just increase the size.
+- This might be complex to build from scratch for iNZight (especially the linking - probably would start small with linked brushing and then expand).
 
 
 **Ideas and problems to investigate:**
@@ -48,7 +50,7 @@ On the to-do list for the break:
 
 **Another possible reason why it may be hard to prevent re-rendering of plots:**
 - (Not sure if this can be considered an underlying problem?) In all cases of using plotly, ggvis, or even ggplot2, even though the plots generated are 'layers', it does not appear possible to isolate a single 'layer' and modify it without drawing the entire plot again. (Sometimes when we try to run a single 'layer', it draws an entirely different plot... which is not what we want, or complains an error.)
-You can add on layers, but you always have to refer back to the plot (either through %>%, or storing the plot as a variable).
+You can add on layers, but you always have to refer back to the plot (either through %>%, or storing the plot as a variable). Regardless, Shiny will always(?) manage to rerender the entire plot.
 
 **A few minor mistakes + issues addressed (Week 5):**
 - event_data("plotly_selected") does indeed return a dataframe, NOT a LIST - output that was printed when trying on other plots was "list()".
@@ -60,7 +62,6 @@ You can add on layers, but you always have to refer back to the plot (either thr
 #### NOTES:
 - Summary Tables:  Just to recap what I've learnt so far in the past month.
 *UPDATE: These have been moved to a separate file called 'summary-tables.md' found in this repository... they were getting too long.*
-
 
 **A bit more on ggvis and its interactivity:**
 - Been watching Winston Chang's presentation about ggvis from the useR conference in 2014. [Youtube link](https://www.youtube.com/watch?v=wYafq7hYWcg)
@@ -105,11 +106,8 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - This may explain why it's so much faster than Shiny at selection and linked brushing (because you don't have to redraw things EVERY single time - it's just changing styles...)
 - Still uncertain if these are really the correct functions that are driving crosstalk-plotly behaviour/interactions.
 - Confirmed!
-
 *Plotly.redraw() does indeed rerender the entire plot, but they're working on maybe trying to prevent it via selection logic.*
-
 - Is it possible to customise or add on plot interactions into Plotly graphs, and if so - how can this be achieved?
-
 *It is possible - need to learn Plotly's API + read on how to plug in custom JS for this.*
 - Not sure how long this could take, but will give it a go anyway!
 - Alot of issues of expanding interactivity for plotly are discussed under their Github repository. Here's all their ideas for [cross-filtering](https://github.com/plotly/plotly.js/issues/1316) that's appearing as a work in progress (might be helpful to know if I'm going to end up building something)
@@ -121,22 +119,31 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 
 **iPlots:**
 - [iPlots page](http://rosuda.org/software/iPlots/)
-- interactive graphs in R using Java
+- interactive graphs in R using Java (run through JGR)
 - features: querying, highlighting, color brushing, changing parameters
 - *Does it redraw?*
 - Possible to add things to a plot via its API?
 - functions for different graphs: imosaic(), ibar(),ipcp() (parallel plots), ibox(), ilines(), ihist()... e.t.c
+- It's a little old, but it's pretty great at linking, brushing
+- Downsides: uses Java and JGR (installation was a bit of a hiccup), plots look kind of outdated, no way of connecting plots to the web (native solution!)
+- Similarity to grid/base plots: use of 'objects', object lists, and you can easily remove and add plot objects
+- In comparison to all the other packages we've been looking at - it's not available to view on a web browser.
+- Short learning curve (~1 hour or so to learn basic plotting and interactive functions)
+- Use of keyboard shortcuts and mouse keys for some interactive features
 
-- Facetting: ??
-
-**Co-ordinating multiple views with GGobi/rggobi:**
+**rggobi?:**
+- Got a bit curious just to see what it was as it was briefly mentioned by Cheng during his *crosstalk presentation*
 - 'open source statistical software tool for interactive data visualisation'
 - rggobi is the r interface to GGobi
 - Fairly old technology, 2008.
 - features: linking, brushing, identifying points on multiple graphs
+- Native software - might look into it in the future if it's of use.
+- Resources:
+  - [CRAN documentation](https://cran.r-project.org/web/packages/rggobi/rggobi.pdf)
+  - [rggobi Introduction](http://www.ggobi.org/rggobi/introduction.pdf)
 
 **Co-ordinating multiple views using Shiny**
-- Most of this video was introducing interactivity that Shiny can do on baseplots and ggplot2 (what we investigated in week 3).
+- Most of this [video](https://www.rstudio.com/resources/videos/coordinated-multiple-views-linked-brushing/) by Winston Chang was introducing interactivity that Shiny can do on baseplots and ggplot2 (what we investigated in week 3). Useful to look back to for how to achieve linked brushing using Shiny.
 
 **Trelliscope package and trelliscopeJS:**
 - Looked into this as it was mentioned on the *'Navigating Many Views'* section in *Plotly for R*

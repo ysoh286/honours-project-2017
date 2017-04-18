@@ -29,12 +29,13 @@ ggpairs(iris, aes(color = Species)) %>% ggplotly()
 # Use crosstalk to link everything together?
 #use crosstalk:
 library(crosstalk)
+library(plotly)
 shared_iris <- SharedData$new(iris)
 #SepalLength:
-sl1 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers")
-sl2 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Petal.Length, color = ~Species, type = "scatter", mode = "markers")
+sl1 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Width,color = ~Species, type = "scatter", mode = "markers")
+sl2 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Petal.Length,color = ~Species, type = "scatter", mode = "markers")
 sl3 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers")
-sl4 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Length, color = ~Species, type = "scatter", mode = "markers")
+sl4 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Length,color = ~Species, type = "scatter", mode = "markers")
 
 #Sepal.Width:
 sw1 <- plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers")
@@ -77,9 +78,89 @@ shinyApp(
 
 ##Technically this should work? and link things together? but it's only linking to 1 single plot. 
 #Dunno if it's crosstalk being broken, or plotly? 
-# (brushing issue... - okay, Plotly might have a bug going on here. It works with d3scatter fine.)
+# (brushing issue... - okay, so Plotly's linking via crosstalk only works on subplot() objects.)
+subplot(sw1, sw2, sw3, sw4, pl1, pl2, pl3, pl4, pw1, pw2, pw3, pw4, sl1, sl2, sl3, sl4, nrows = 4)
 
+## trying plotly + Shiny + crosstalk:
+shinyApp(
+  ui <- fluidPage(
+    fluidRow(
+      plotlyOutput('plotMatrix')
+    ),
+    fluidRow(
+      column(3,actionButton("show", "Zoom into plot5")),
+      selectInput('view', "View plot", c("0" = "0", "1" = "1", "2" = "2"), "0")
+    )
+  ),
+  
+  server <- function(input, output, session) {
+    
+    #defined shared object/dataset:
+    shared_iris <- SharedData$new(iris)
+    
+    observeEvent(input$show, {
+      showModal(modalDialog(
+        output$sl1 <- renderPlotly({
+          plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers")
+        })
+      ))
+    })
+    
+    observeEvent(input$view, {
+      
+      if (input$view == "1") {
+        showModal(modalDialog(
+          output$sw1 <- renderPlotly({
+            plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers")
+          })
+        )
+       )
+      } else if (input$view == "2") {
+        showModal(modalDialog(
+          output$sw2 <- renderPlotly({
+            plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Petal.Length, color = ~Species, type = "scatter", mode = "markers")
+          })
+        ) 
+        )
+      } else {
+        return()
+      }
+      
+    })
+    
+    output$plotMatrix <- renderPlotly({
+      #SepalLength:
+      sl1 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Width,color = ~Species, type = "scatter", mode = "markers")
+      sl2 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Petal.Length,color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      sl3 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      sl4 <- plot_ly(data = shared_iris, x = ~Sepal.Length, y = ~Sepal.Length,color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      
+      #Sepal.Width:
+      sw1 <- plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      sw2 <- plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Petal.Length, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      sw3 <- plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      sw4 <- plot_ly(data = shared_iris, x = ~Sepal.Width, y = ~Sepal.Length, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      
+      #Petal.Length:
+      pl1 <- plot_ly(data = shared_iris, x = ~Petal.Length, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      pl2 <- plot_ly(data = shared_iris, x = ~Petal.Length, y = ~Petal.Length, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      pl3 <- plot_ly(data = shared_iris, x = ~Petal.Length, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      pl4 <- plot_ly(data = shared_iris, x = ~Petal.Length, y = ~Sepal.Length, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      
+      #Petal.Width:
+      pw1 <- plot_ly(data = shared_iris, x = ~Petal.Width, y = ~Sepal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      pw2 <- plot_ly(data = shared_iris, x = ~Petal.Width, y = ~Petal.Length, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      pw3 <- plot_ly(data = shared_iris, x = ~Petal.Width, y = ~Petal.Width, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      pw4 <- plot_ly(data = shared_iris, x = ~Petal.Width, y = ~Sepal.Length, color = ~Species, type = "scatter", mode = "markers", showlegend = FALSE)
+      
+      #put it altogether as a single plotly object
+      subplot(sw1, sw2, sw3, sw4, pl1, pl2, pl3, pl4, pw1, pw2, pw3, pw4, sl1, sl2, sl3, sl4, nrows = 4)
+      
+    })
+  }
+)
 
+## ------------------------------------------------------------------------------------------------------------------
 #trying using crosstalk + Shiny + d3scatter instead...:
 shinyApp(
   ui <- fluidPage(
@@ -225,11 +306,11 @@ shinyApp(
     fluidRow(
       column(6, ggvisOutput('plot3')),
       column(6, ggvisOutput('plot4'))
-    )
-    #fluidRow(
+    ),
+    fluidRow(
       ## add a modal and see what happens?? Could I link them back to the other 4 plots?
-     # column(12, actionButton("show", "Show plot1"))
-    #)
+      column(12, actionButton("show", "Show plot1"))
+    )
     
   ),
 
@@ -251,14 +332,14 @@ server <- function(input, output, session) {
   iris %>%
     ggvis(~Sepal.Length, ~Sepal.Width, key := ~id) %>%
     #then you layer on the points that are actually highlighted
-    layer_points(fill := lb$fill, fill.brush := "red", opacity := 0.3) %>%
+    layer_points(fill := lb$fill, fill.brush := "red") %>%
     lb$input() %>%
   bind_shiny('plot1')
   
   #plot2:
   iris %>%
     ggvis(~Sepal.Length, ~Petal.Width, key := ~id) %>%
-    layer_points(fill := lb$fill, fill.brush := "red", opacity := 0.3) %>%
+    layer_points(fill := lb$fill, fill.brush := "red") %>%
     lb$input() %>%
   bind_shiny('plot2')
   
@@ -288,7 +369,7 @@ server <- function(input, output, session) {
 )
 
 # I have a feeling ggvis isn't responsive in snapping to bootstrap layouts... yet 
-#(or somehow overrides the idea of fitting it within the 'column widths' specified under the ui.)
+#(or somehow overrides fitting it within the 'column widths' specified under ui.)
 
 #---------------------------------------------------------------------------
 
