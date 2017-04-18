@@ -1,0 +1,56 @@
+<html>
+  <!-- Trying out plotly.js -->
+  <head>
+    <!-- load plotly.js in -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js">
+    </script>
+  </head>
+
+  <body>
+    <!-- plotting the graph -->
+    <!-- simple scatter plot -->
+    <div id = "tester">
+        <script>
+        var TESTER = document.getElementById('tester');
+        Plotly.plot(TESTER, [{
+          x: [1, 2, 3, 4, 5],
+          y: [2, 4, 6, 8, 10]
+        }], {
+          margin: {t: 0}
+        })
+        </script>
+    </div>
+
+    <!-- simple boxplot -->
+    <div id = "boxplot">
+      <script>
+
+       var boxplot = document.getElementById('boxplot');
+       var data = [
+  {
+    y: [0, 1, 1, 2, 3, 5, 8, 13, 21],
+    boxpoints: 'all',
+    jitter: 0.3,
+    pointpos: -1.8,
+    type: 'box',
+  }
+];
+var boxData = {
+  min: 0,
+  lq: 1,
+  med: 3,
+  uq: 9.25,
+  max: 21
+};
+
+  Plotly.newPlot('boxplot', data);
+
+
+
+  </script>
+    </div>
+
+  </body>
+
+
+</html>

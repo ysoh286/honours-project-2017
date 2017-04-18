@@ -11,44 +11,43 @@ This document contains findings, examples, and all kinds of things related to th
 
 *- Array of plots challenge*
 
-*- Address previous issues - crosstalk + plotly + shiny, redraws from crosstalk/plotly*
-
-
 On the to-do list for the break:
 
-- Learn about customising Shiny with Javascript + make a diagram of how Shiny really works with R + web browser (who's driving what in order to know which part should I be 'mending/breaking/bending' the rules with)
 - Learn iplots
-- Array of plots challenge - get a linking scatterplot matrix, then try make a zoom-in plot. (have a look at ggobi, cranvas that does multiple co-ordinated views + shiny)
 - Achieve the trendline challenge using Javascript alone
 
 
 **Trendline challenge:**
 - Easily achievable using Plotly + Shiny (or anything with Shiny) - however you still face the problem of re-rendering the entire plot.
-- Plotly itself does not have statistical curves or statistcal functions to compute model fitting for trendlines (not designed to). Extensible by how much you know R (for data + model fitting) - you may need to get it in a correct 'format' before Plotly can do it.
-(Here's an [example](https://moderndata.plot.ly/regression-diagnostic-plots-using-r-and-plotly/ where it's managed to plot residuals and scale location plots!) making residual and scale location plots from Plotly and R.)
+- Plotly itself does not have statistical curves or statistical functions to compute model fitting for trendlines (not designed to). Extensible by how much you know R (for data + model fitting) - you may need to get it in a correct 'format' before Plotly can do it.
+(Here's an [example](https://moderndata.plot.ly/regression-diagnostic-plots-using-r-and-plotly/) making residual and scale location plots from Plotly and R.)
 - An even easier approach is using ggplotly(), which makes it simple using ggplot2 through stat_smooth()/geom_smooth() (ggvis is in a sense trying to achieve this via layer_model_predictions(), where it does everything for you)
 - Done with iNZightPlots + Shiny (just some simple trendline fitting - already established in iNZight Lite)
 - Not possible with crosstalk due to its limitations.
-
+- Possible Javascript solutions??
 
 **Boxplot challenge:**
-- This seems 'impossible' with plotly in R. With crosstalk, it seems somewhat possible, but it's not a reliable method (selecting over a box by eye).
-- It also seems impossible for ggvis  - hard to add/remove layers, and only allows very basic interactions.
+- This seems 'impossible' with plotly in R alone. With crosstalk, it seems somewhat possible, but it's not a reliable method (selecting over a box by eye).
+- It also seems impossible for ggvis  - hard to add/remove layers, and only allows very basic interactions. You could use brushing on it, but that's not reliable either.
 - Tried using a filter_slider with this, however you cannot define the points along the slider (so for example, if I wanted a slider that has tick points at it's minimum, maximum, median, LQ and UQ, it's not possible because the argument 'step' only takes in 1 value).
-- In terms of using plotly.JS alone, it is possible, but it appears clear that it's not designed to (the boxplot itself is defined as a single object, drawn by a single SVG path rather than individual lines/rectangles). You do also have to compute the statistics somehow...?
+- In terms of using plotly.JS alone, it is possible, but not designed to (the boxplot itself is defined as a single object, drawn by a single SVG path rather than individual lines/rectangles).
 
-- A possible idea is to use Shiny's sliders over the summary values of the box plot, which help filter which points are to be highlighted.
+**Array of plots challenge:**
+- A half-solution? Works on Shiny + d3scatter + crosstalk. Use crosstalk to do the linking between plots, and then shiny to facilitate the zooming in by using a modal. The problem is you'd have to specify a modal button for every single plot, and Shiny doesn't have capabilities of 'clicking' on an output plot. (You could do the same with Plotly + crosstalk + Shiny, but currently it seems like Plotly's got a bug with linking multiple plots together with crosstalk where it only links 1 of the plots.)
+- Using ggpairs to generate the scatterplot matrix + ggplotly has crosstalk embedded in easily links the matrix together, however because the entire plot is rendered as a single plot, hard to zoom into/ extract out a single plot.
+- I could see this being done manually where you construct your own HTML page and nest each plot in a < div > tag, but probably requires a lot more work (and maybe expert knowledge on how crosstalk works?). It might be hard to link up the plot if it were to be opened in a new page/window (not sure).
+- You can easily use crosstalk to link all the plots up
+- You could possibly do it with Shiny alone (but you have to co-ordinate links to every single plot, and that could get kind of messy, and a better knowledge on how the reactive programming model works.)
+- Managed to do linking with ggvis + Shiny, running into a little trouble trying to make it visible in a modal.
 
-**Array of plots challenge:** Haven't gotten round to trying it yet! I have started looking at iPlots (still reading up on functions and code).
-- An example of what kind of plots you'd like to look into?
 
 **Ideas and problems to investigate:**
 - How much 'math/stats' can JavaScript handle and would it be a good idea to make use of it (to create standalone plots), or let R do all the computation (and somehow link the two to drive a change in a trendline - in this case linked and not standalone, like Shiny - but avoid redraws). - get it talking to each other.
 - Ways to get R -> Browser + JS, JS -> R (look at the DOM package?)
-- A possible idea: Turn iNZightPlots into an HTMLWidget (using previous code + alot of 'restructuring') to facilitate in-plot interactions on iNZight Lite?
+- A possible idea: Turn iNZightPlots into an HTMLWidget (maybe using previous code + alot of 'restructuring') to facilitate in-plot interactions on iNZight Lite? - a bit of 'backwards logic'. Is the only way to incorporate JavaScript into a Shiny app is to turn something into an HTMLwidget?
 
 **Another possible reason why it may be hard to prevent re-rendering of plots:**
-- (Not sure if this can be considered an underlying problem...) In all cases of using plotly, ggvis, or even ggplot2, even though the plots generated are 'layers', it does not appear possible to isolate a single 'layer' and modify it without drawing the entire plot again. (Sometimes when we try to run a single 'layer', it draws an entirely different plot... which is not what we want, or complains an error.)
+- (Not sure if this can be considered an underlying problem?) In all cases of using plotly, ggvis, or even ggplot2, even though the plots generated are 'layers', it does not appear possible to isolate a single 'layer' and modify it without drawing the entire plot again. (Sometimes when we try to run a single 'layer', it draws an entirely different plot... which is not what we want, or complains an error.)
 You can add on layers, but you always have to refer back to the plot (either through %>%, or storing the plot as a variable).
 
 **A few minor mistakes + issues addressed (Week 5):**
@@ -73,6 +72,11 @@ Some notes from this presentation are recorded below:
 - Bidirectional links: have to be careful how you setup the reactives carefully.
 - Large datasets? - in browser rendering done by JavaScript, can get sluggish when interacting when you've got lots of points. (If you're dealing with large data -> do computation in R first, then scale. They intend to change to using C to do computation as it's alot faster than R. )
 - may not work on early version of R due to package dependencies
+
+Other things to note:
+- So apparently ggvis does not redraw the entire plot when you update data?
+- Link to a [stackoverflow](http://stackoverflow.com/questions/25011544/how-is-data-passed-from-reactive-shiny-expression-to-ggvis-plot/25060999#25060999) comment
+Might look into it just to make sure...  
 
 **Fast search: Crosstalk + Plotly + Shiny**
 
@@ -108,6 +112,7 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 
 *It is possible - need to learn Plotly's API + read on how to plug in custom JS for this.*
 - Not sure how long this could take, but will give it a go anyway!
+- Alot of issues of expanding interactivity for plotly are discussed under their Github repository. Here's all their ideas for [cross-filtering](https://github.com/plotly/plotly.js/issues/1316) that's appearing as a work in progress (might be helpful to know if I'm going to end up building something)
 
 **Plotly's API - PlotlyJS:**
  - Understanding the API and how a Plotly graph is assembled may be beneficial in testing whether we can add custom javascript interactions easily to certain elements.
@@ -130,18 +135,34 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - Fairly old technology, 2008.
 - features: linking, brushing, identifying points on multiple graphs
 
+**Co-ordinating multiple views using Shiny**
+- Most of this video was introducing interactivity that Shiny can do on baseplots and ggplot2 (what we investigated in week 3).
 
-**Co-ordinating multiple views with cranvas:** ??
+**Trelliscope package and trelliscopeJS:**
+- Looked into this as it was mentioned on the *'Navigating Many Views'* section in *Plotly for R*
+- Developed by Ryan Hafen, who also developed rbokeh.
+- Designed to explore trellis displays/facetting and large data sets in detail.
+- Has its own interface (trelliscope = native version, trelliscopeJS allows viewing on the web and sharing as it is an HTMLwidget built upon javascript library called trelliscopejs-lib)
+- Alot of complex features! (might take quite a bit of time to grasp how to use it as well...)
+- Appears to have capabilities of zooming into a plot, but no linking(?) (may need to confirm this)
+- Good example to learn from for if you really want to develop something with trellis graphics in detail for what kind of interactions and things that users might be looking for (It's a bit beyond me...).
+- Resources to look at in more detail:
+  - [Trelliscope tutorial](http://deltarho.org/docs-trelliscope/#introduction)
+  - [TrelliscopeJStutorial](https://hafen.github.io/trelliscopejs/#facet_trelliscope)
+  - [Quickstarts?](http://deltarho.org/quickstart.html)
+  - [CRAN documentation for trelliscope](https://cran.r-project.org/web/packages/trelliscope/trelliscope.pdf)
+  - [Trelliscope Introduction Video](https://www.youtube.com/watch?v=0u9G7XGUVXI)
 
-**Co-ordinating multiple views using Shiny** ??
 
 **JavaScript + Shiny:**
 - JavaScript tutorial on the Shiny website (this is more of a 'how to make an HTMLwidget' tutorial in order to use Shiny) - [JS Tutorials for making an HTMLWidget to use in Shiny](https://shiny.rstudio.com/tutorial/js-lesson1/)
+- RStudio appears to suggest that in order to incorporate JavaScript into Shiny apps, the solution (?) to make your own HTMLWidget. An HTMLWidget takes an existing JavaScript library and makes 'bindings' to R so that people can use that library through the R interface.
+- Comparing iNZightPlots to Plotly, rbokeh, ggvis: In all these cases we've been looking at - a JavaScript library is used to render the plot (which includes interactivity), whereas in iNZightPlots, we have R doing all the rendering but we're trying to attach interactions to it. Whether making an HTMLWidget would help? (a possible route would be to do something like what Plotly does with ggplot2: get a ggplot2 graph and then render it as a Plotly graph.)
+- In this case, might be possible to prevent redraws through interacting manually with JavaScript.
 - A possible idea: Turn previous project code (with alot of cleaning/restructuring... + new add-on functions for interactivity) into an HTMLWidget, to facilitate interactions into Shiny
 - Essentially (because they're all made by RStudio) - Shiny complements HTMLWidgets ('wrapping' JavaScript libraries for R users) well.
 -  Ways to try 'track progress on Shiny apps, manipulate inputs/outputs'  [Javascript Events in Shiny](https://shiny.rstudio.com/articles/js-events.html)
 - Taking a look at [shinyJS](https://github.com/daattali/shinyjs/blob/master/README.md) - might be useful in the future.
-
 
 #### CHALLENGES
 
@@ -150,7 +171,7 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - Trying to attempt it with Shiny + filter sliders.
 
 
-**Trendline challenge:** *code >> trendline-challenge.R or trendline-challenge.Rmd*
+**Trendline challenge:** *code >>  trendline-challenge.R or trendline-challenge.Rmd*
 - When you're coupling it with Shiny - it seems everything's doable (in an R sense).
 - Main advantages of using Shiny becomes much clearer in the sense where you have access to R to do statistical computation (such as computing models, lines, and you could probably go further with of what kind of trendline you want to plot - e.g. formulas, type of model, type of family distribution (GAM), span for loess...e.t.c)
 - Downside for using Shiny: recomputation takes time and it's inefficent (and sometimes Shiny lags + or is unstable), + can't do it on large datasets
@@ -159,8 +180,13 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - ggvis + Shiny: probably can achieve more models using other R packages that are made for modelling.
 
 
-**An advanced facetting example/array of plots challenge:**
-- Taking a simple example of the iris dataset...
+**An advanced facetting example/array of plots challenge:** *code >> array-challenge.R*
+- Taking a simple example of the iris dataset!
+- *plotly in R* has managed to make a linked scatterplot matrix using ggpairs() and plotly, which has crosstalk embedded in to facilitate the links between each plot. However, because it's rendered as a single plot object, not sure how you could zoom in/ select a single plot.       -[Example](https://cpsievert.github.io/plotly_book/linking-views-without-shiny.html)
+- Using crosstalk + d3scatter + shiny: you can view a single plot through adding a modal, and linking all the plots together easily using crosstalk. UI options and links are provided by Shiny.
+- Technically this should be doable with plotly as well, but currently there appears to be a bug with only uni-directional links available (only links to 1 plot).
+- Too hard to do it manually? You could have crosstalk linking everything together, and try to add in
+- Could be possible with Shiny alone, but requires work trying to link all the plots together (and if it's possible with Shiny, then most likely possible with ggvis.)
 
 
 ---
