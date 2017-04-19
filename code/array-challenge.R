@@ -287,6 +287,7 @@ bscols(widths = c(3, 3, 3, 3),
        pw4
 )
 
+## ------------------------------------------------------------------------------------------------------------------
 ## ggplotly? Just putting the scatterplot with a d3scatter plot together. 
 bscols( widths = NA,
   sl1,
@@ -294,29 +295,34 @@ bscols( widths = NA,
 )
 
 ##Co-ordinating linked views with Shiny alone, without using crosstalk??
+## ------------------------------------------------------------------------------------------------------------------
 ## Using ggvis + shiny? code adapted from ggvis' demo on linked brushing.
 library(ggvis)
 
 shinyApp(
   ui <- fluidPage(
     fluidRow(
-      column(6, ggvisOutput('plot1')),
-      column(6, ggvisOutput('plot2'))
+      column(3, ggvisOutput('plot1')),
+      column(3, ggvisOutput('plot2')),
+      column(3, ggvisOutput('plot3')),
+      column(3, ggvisOutput('plot4'))
     ),
     fluidRow(
-      column(6, ggvisOutput('plot3')),
-      column(6, ggvisOutput('plot4'))
+      column(3, ggvisOutput('plot5')),
+      column(3, ggvisOutput('plot6')),
+      column(3, ggvisOutput('plot7')),
+      column(3, ggvisOutput('plot8'))
     ),
     fluidRow(
       ## add a modal and see what happens?? Could I link them back to the other 4 plots?
-      column(12, actionButton("show", "Show plot1"))
+      column(12, actionButton("show", "Show plot1")),
+      column(12, ggvisOutput('plot0'))
     )
     
   ),
 
 server <- function(input, output, session) {
- 
-  
+
    #set an id:
   iris$id <- seq_len(nrow(iris))
   
@@ -327,43 +333,136 @@ server <- function(input, output, session) {
   ## If brushing is done on plot1, then plot2, 3, 4 should show the points that are selected.
   ## Could use a little refining if you could clear the brushing on one plot after brushing on another.
   ## Just simplifying it to a single row (since it appears that ggvis plots don't fit/adjust in the bootstrap columns)
-  ## seems like I can't just add a modal in, need to find out how to embed ggvis plot into modal.
+  ## seems like I can't just add ggvis output to a modal...
   
-  iris %>%
+  observeEvent(input$show, {
+    iris %>%
+        ggvis(~Sepal.Length, ~Sepal.Width, key := ~id) %>%
+        #then you layer on the points that are actually highlighted
+       layer_points(fill := lb$fill, fill.brush := "blue") %>%
+        set_options(width = 1120) %>%
+        lb$input() %>%
+        bind_shiny('plot0')
+   })
+  
+  
+ iris %>%
     ggvis(~Sepal.Length, ~Sepal.Width, key := ~id) %>%
     #then you layer on the points that are actually highlighted
-    layer_points(fill := lb$fill, fill.brush := "red") %>%
+    layer_points(fill := ~Species, fill.brush := "red") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Length:", iris$Sepal.Length, "<br>", "Sepal Width:", iris$Sepal.Width)
+    }, "hover") %>%
+    set_options(width = 300) %>%
     lb$input() %>%
   bind_shiny('plot1')
   
   #plot2:
   iris %>%
-    ggvis(~Sepal.Length, ~Petal.Width, key := ~id) %>%
+    ggvis(~Sepal.Length, ~Sepal.Length, key := ~id) %>%
     layer_points(fill := lb$fill, fill.brush := "red") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Length:", iris$Sepal.Length)
+    }, "hover") %>%
+    set_options(width = 300) %>%
     lb$input() %>%
-  bind_shiny('plot2')
+    bind_shiny('plot2')
+  
+
   
   #store whatever's selected as a reactive object for other plots to follow:
+  #this can be used if you wish to do uni-directional linking. Otherwise, you could use
+  #lb$input().
   selected <- lb$selected
   iris_selected <- reactive({
     iris[selected(), ]
     })
   
   #plot3: controlled by whatever's been highlighted
-  iris %>%
-    ggvis(~Sepal.Length, ~Petal.Length, key := ~id) %>%
-    layer_points() %>%
-    add_data(iris_selected) %>% ## add on an additional layer to show which are 'linked'
-    layer_points(fill := "red") %>%
-    bind_shiny('plot3')
+  #iris %>%
+   # ggvis(~Sepal.Length, ~Petal.Length, key := ~id) %>%
+   # layer_points() %>%
+   # add_data(iris_selected) %>% ## add on an additional layer to show which are 'linked'
+   # layer_points(fill := "red") %>%
+  # bind_shiny('plot3')
   
   #plot4:
+  #iris %>%
+  # ggvis(~Sepal.Length, ~Sepal.Length, key := ~id) %>%
+  #layer_points() %>%
+  #  add_data(iris_selected) %>%
+  # layer_points(fill := "red") %>%
+  #  bind_shiny('plot4')
+  
+  #plot3: multidirectional
   iris %>%
-    ggvis(~Sepal.Length, ~Sepal.Length, key := ~id) %>%
-    layer_points() %>%
-    add_data(iris_selected) %>%
-    layer_points(fill := "red") %>%
+    ggvis(~Sepal.Length, ~Petal.Width, key := ~id) %>%
+    layer_points(fill := lb$fill, fill.brush := "green") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Length:", iris$Sepal.Length, "<br>", "Petal Width:", iris$Petal.Width)
+    }, "hover") %>%
+    set_options(width = 300) %>%
+    lb$input() %>%
+    bind_shiny('plot3')
+ 
+  
+  #plot4: multidirectional
+  iris %>%
+    ggvis(~Sepal.Length, ~Petal.Length, key := ~id) %>%
+    layer_points(fill := lb$fill, fill.brush := "red") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Length:", iris$Sepal.Length, "<br>", "Petal Length:", iris$Petal.Length)
+    }, "hover") %>%
+    set_options(width = 300) %>%
+    lb$input() %>%
     bind_shiny('plot4')
+  
+  #and you could probably keep going for every kind of plot and maybe write a loop for generating 
+  # all these plots, somehow? 
+  iris %>%
+    ggvis(~Sepal.Width, ~Sepal.Width, key := ~id) %>%
+    #then you layer on the points that are actually highlighted
+    layer_points(fill := lb$fill, fill.brush := "red") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Width:", iris$Sepal.Width)
+    }, "hover") %>%
+    set_options(width = 300) %>%
+    lb$input() %>%
+    bind_shiny('plot5')
+  
+  #plot2:
+  iris %>%
+    ggvis(~Sepal.Width, ~Sepal.Length, key := ~id) %>%
+    layer_points(fill := lb$fill, fill.brush := "green") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Width:", iris$Sepal.Width, "<br>", "Sepal Length:", iris$Sepal.Length)
+    }, "hover") %>%
+    set_options(width = 300) %>%
+    lb$input() %>%
+    bind_shiny('plot6')
+  
+  iris %>%
+    ggvis(~Sepal.Width, ~Petal.Width, key := ~id) %>%
+    layer_points(fill := lb$fill, fill.brush := "red") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Width:", iris$Sepal.Width, "<br>", "Petal Width:", iris$Petal.Width)
+    }, "hover") %>%
+    set_options(width = 300) %>%
+    lb$input() %>%
+    bind_shiny('plot7')
+  
+  #plot4: multidirectional
+  iris %>%
+    ggvis(~Sepal.Width, ~Petal.Length, key := ~id) %>%
+    layer_points(fill := lb$fill, fill.brush := "red") %>%
+    add_tooltip(function(iris) {
+      paste0("Sepal Width:", iris$Sepal.Width, "<br>", "Petal Length:", iris$Petal.Length)
+    }, "hover") %>%
+    set_options(width = 300) %>%
+    lb$input() %>%
+    bind_shiny('plot8')
+
+ 
   
   }
 )
@@ -371,7 +470,7 @@ server <- function(input, output, session) {
 # I have a feeling ggvis isn't responsive in snapping to bootstrap layouts... yet 
 #(or somehow overrides fitting it within the 'column widths' specified under ui.)
 
-#---------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------------------
 
 ## could it work with base plots? I might come back to this if I have time...
 shinyApp(

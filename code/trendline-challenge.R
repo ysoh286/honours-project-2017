@@ -316,3 +316,12 @@ shinyApp(
 
 ## ------------------ JAVASCRIPT SOLUTIONS?? -------------------------
 
+## experimenting with plotly and onRender()?
+library(plotly)
+plot_ly(cocaine, x = ~weight, y = ~price, mode = "markers", type = "scatter") %>%
+add_lines(y = ~fitted(loess(price ~ weight, data = cocaine, span = 0.75, se = TRUE)), line = list(color = "red"))
+
+## ideally, onRender() is great for writing javascript in R and attaching events after a plot's been rendered.
+## Problem is: not familiar with which element to change. Probably need to learn Plotly API in more detail.
+
+

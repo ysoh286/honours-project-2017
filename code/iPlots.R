@@ -94,10 +94,18 @@ detach(income)
 ## ------------------------ CHALLENGES ----------------------
 
 ## I've left some of the challenges that use iPlots in this file here,
-## since iPlots runs on a different 'interface' JGR.
+## since iPlots runs on a different 'interface', JGR.
 
 ## ------------------ TRENDLINE CHALLENGE -------------------
 ## TODO: trendline challenge.
+
+iplot(weekly_hrs, weekly_income)
+iabline(lm(weekly_income~weekly_hrs, subset = subs))
+
+##remove and add a loess smoother instead:
+iobj.rm()
+##create loess curve:
+
 
 ## ---------------- ARRAY OF PLOTS CHALLENGE ----------------
 
