@@ -18,8 +18,6 @@ ggvis(income500, ~"All", ~weekly_hrs) %>% layer_boxplots(fill.hover := "red") %>
 # not sure if doable or actually supported? - I don't think so.
 
 
-
-
 #computing the boxplot values:
 #need to group_by first as compute_boxplot() can only take continuous variables.
 x <- income %>% group_by(sex) %>% compute_boxplot(~weekly_hrs)

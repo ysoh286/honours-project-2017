@@ -1,5 +1,132 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
+## Week 7 (20/04 - 04/05): Expressing thoughts
+
+**Q: Think about how you'd like to express a solution to the three challenges without thinking about existing tools (can be in pseudo-code, concepts, diagrams...)**
+
+- How would you develop your version to achieve interactivity that users want to use??
+- A system that shows what R objects correspond to what JavaScript objects (so for example, like how grid has grid.ls() and iPlots has iObj.list(), be able to a list of R objects with their corresponding JavaScript ids/object labels). For the user the R-object list might be useful, for developers that want to add customised interactions via JavaScript, they'd know exactly which objects to call. There could be a possibility of writing JavaScript in R directly (something like what onRender() from the htmlwidgets package does.))
+
+**Boxplots:**
+- If the box plot was built in layers: have functions that allow user to - link layers together, add layers, remove layers easily.
+- Also have a way to refer to plot objects as javascript objects (or match up their ids defined in R) in order to attach interactions easily
+
+- Imaginary pseudo-code:
+
+```
+
+boxplot(x, name.id)
+add_dotplot(x, align = l/r, share.axes = TRUE, id = )
+add_highlight(box, dot, range = c(boxMin, boxMed), event.type = c("hover", "click"), color = "red")
+
+#---------------- SOME DETAILS: ---------------------
+## construct the box plot:
+boxplot(x, y (factors if there are more than 1 box plot), name.id = )
+# name/id would allow an id group for the entire box plot.  Inside the boxplot constructed by 2 boxes (rect elements which are id as upperBox and lowerBox) and lines (line/polygon elements - minLine, maxLine)
+# plot object generated would have generated some accessible data such as minimum, maximum, median, LQ and UQ values
+
+## add dot plot to box plot:
+add_dotplot(x, y, align = l/r, share.axes = TRUE, id = )
+# - there would be a distinction between dotplot() and add_dotplot() - dotplot() would plot on a separate page/plot, add_dotplot() would be on the same axes
+# alignment is based upon the position of the last plotted object (in this case the boxplot)
+# layers could be automatically linked as they share the same axes
+
+link_layers(box, dot) # to link layers
+remove_layers(layer.name)
+add_layers(layer.name)
+# there would need to be a distinction between removing layers and individual objects (such as points) in a plot. You could remove more than 1 layer at once.
+
+## add event:
+add_highlight(box, dot, range = c(boxMin, boxMed), event.type = "hover", color = "red")
+# box = refers to box layer, dot = dot layer
+# if we get more complex with different no. of boxplots: could specify an id of a specific box in relation to its dotplot.
+# range = range to be highlighted or marked. Another way would be to specify javascript object (so in this case, lowerBox)
+## if a plot layer is known to be linked to another, find a way to identify its layers and suggest what kind of interactions are possible/available to be attached
+# event.type = click, hover, double click... etc. You could attach more than one event.
+
+
+```
+
+**Trendlines:**
+- Want something that easily adds/removes trendlines
+- Imaginary pseudo-code:
+
+```
+scatterplot(x, y, data = , group.id)
+add_trendline(modelFit, formula, model.type, id, ...)
+remove_trendline(id)
+update_trendline(id, modelFit, formula, model.type,...)
+
+
+#--------------- SOME DETAILS: ----------------------
+# create scatterplot:
+scatterplot(x, y, data = , group.id)
+
+# two ways you could do this: make a function that does all the modelling for you, or get a function that just plots only, and let the user choose what they wish to plot.
+add_trendline(modelFit, formula, model.type, id, ...)
+# ... could include graphical parameters such as color, stroke width, e.t.code
+
+# to remove trendlines
+remove_trendline(id)
+# or use remove_layer()
+
+# to update trendlines
+update_trendline(id = , modelFit, formula, model.type...)
+# or you could do removing and adding again
+
+# to add interactivity: additional arguments could be introduced, such as event.type
+show_labels(trendline.id, label = , event.type = "hover", ...)
+
+
+```
+
+**Array of plots:**
+
+```
+??
+
+#--------------- SOME DETAILS: ----------------------
+# In this case, its deciding whether you'd like to have a function that does the entire facetting/matrix for you, or to get it separately.
+
+# There could be a possibility of being able to detach plots in the matrix.
+
+
+```
+
+
+**Other ideas/doodles that just came to mind:** ...??
+
+Other to-dos to look into:
+- can we be in JS directing Shiny and getting prompts from Shiny ??
+- Find a way to get R to pass computation/translate it into Javascript (i.e for a trendline, pass all the data and co-ordinates to plot, pass to javascript, the use javascript to remove the element or update with new co-ordinates)...? Is there an easier way to do this??)
+- Investigate ways to extend/add custom javascript to Shiny applications/HTMLwidgets
+
+#### NOTES:
+
+Extra notes from meeting:
+- "What is the use of all this??" - all of these tools are great and they do things, but are they of any use to anyone?
+- Ideally, if I do get round to making something in the future: aim for something that users would want to use and meets their needs
+- Things that got left behind that were good interactive tools: Mondrian, iPlots (Java) - why did they get left behind and Shiny/RStudio's successful?    
+  - MODERN USER INTERFACE  
+  - Using the web as the playground
+  - Installation problem solved
+  -  accessible and sharable to all ( via a web server)
+- What do they achieve that these web tools/HTMLwidgets don't (without combining)?
+  - Linked brushing
+  - Zooming in (general purpose)
+  - Able to facilitate and handle LARGE datasets
+  - Share the same data on different plots (not just scatter plots only - but histograms, bar plots, box plots...)
+- Possible ideas: zooming into hexplots and grid bins  - get to a certain point it becomes scatter points and you can visualise it
+- Why do people use interactive visualisations rather than static?
+  - Data exploration
+  - "It looks cool" (not really a valid reason... but it gets people to look)
+  - Education purposes
+- Could you get something like iPlots working in a web browser (with multiple panels)
+
+**Tools that get bind R and JavaScript together:**
+-
+
+
 ---
 ## Week 5 & 6 (06/04- 20/04): Challenges
 
@@ -10,12 +137,6 @@ This document contains findings, examples, and all kinds of things related to th
 *- Recreate the trendline challenge with Plotly, ggvis, Shiny/Crosstalk, iplots*
 
 *- Array of plots challenge*
-
-On the to-do list for next week:
-- Achieve the trendline challenge without using Shiny.
-- Find a way to get R to pass computation/translate it into Javascript (i.e for a trendline, pass all the data and co-ordinates to plot, pass to javascript, the use javascript to remove the element or update with new co-ordinates)...? Is there an easier way to do this??)
-- Investigate ways to extend/add custom javascript to Shiny applications/HTMLwidgets
-- Any additional challenges that Chris and Paul would like to introduce or focus on
 
 **Trendline challenge:**
 - Easily achievable using Plotly + Shiny (or anything with Shiny) - however you still face the problem of re-rendering the entire plot.
@@ -156,7 +277,7 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - Has its own interface (trelliscope = native version, trelliscopeJS allows viewing on the web and sharing as it is an HTMLwidget built upon javascript library called trelliscopejs-lib)
 - Alot of complex features! (might take quite a bit of time to grasp how to use it as well...)
 - Appears to have capabilities of zooming into a plot, but no linking(?) (may need to confirm this)
-- Good example to learn from for if you really want to develop something with trellis graphics in detail for what kind of interactions and things that users might be looking for (It's a bit beyond me...).
+- Good example to learn from for if you really want to develop something with trellis graphics in detail for what kind of interactions and things that users might be looking for (It's a bit beyond me at the moment...)
 - Resources to look at in more detail:
   - [Trelliscope tutorial](http://deltarho.org/docs-trelliscope/#introduction)
   - [TrelliscopeJStutorial](https://hafen.github.io/trelliscopejs/#facet_trelliscope)

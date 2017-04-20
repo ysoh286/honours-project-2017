@@ -1,4 +1,28 @@
 
+2017-04-20
+----------
+
+TODO:
+
+  + think about how *you* would like to express a solution to the
+    3 challenges (rather than having to think in terms of how 
+    plotly/shiny/crosstalk work)
+    - pseudocode
+    - concepts
+    - diagrams ...
+
+
+2017-04-13
+----------
+
+TODO:
+
+  + R <-> Shiny <-> JS
+
+    - we can be in R directing Shiny and getting prompts from Shiny;
+      can we be in JS directing Shiny and getting prompts from Shiny ?
+
+
 2017-04-06
 ----------
 
