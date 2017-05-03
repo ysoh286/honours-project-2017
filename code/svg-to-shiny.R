@@ -42,14 +42,11 @@ shinyApp(
 
 # Adapted timely-portfolio's example:
 
-# this pretty much views the svg as one entire object.
 shinyApp(
   ui <- fluidPage(
     mainPanel(
       #render the svg:
       htmlOutput(outputId="svgOutput")
-      #add external javascript:
-      
     )
   ),
   
@@ -58,11 +55,12 @@ shinyApp(
     output$svgOutput <- renderText({
       #develop the iNZightPlot:
       dev.new(width=10, height = 10)
-      iNZightPlot(Sepal.Length, Sepal.Width, data = iris, colby = Species, pch = 19, trend = "linear")
+      iNZightPlots::iNZightPlot(Sepal.Length, Sepal.Width, data = iris, colby = Species, pch = 19, trend = "linear")
       #output to svg:
       svgdoc <- gridSVG::grid.export(name = NULL)$svg
       svgOutput <- capture.output(svgdoc)
       return(svgOutput)
+      dev.off()
     })
   }
 )
@@ -74,45 +72,26 @@ shinyApp(
 #what if I can break it up? Use a simpler plot:
 #What if I could render simple grid plot, and just change the trendline of it?
 
+library(lattice)
+
+#this doesn't work. It doesn't change the trendline and you need to render. 
+#Could it be because we're having to pass it through a device?
+
 shinyApp(
   ui <- fluidPage(
-    htmlOutput(output = "svgOutput"),
-    selectInput("trendline", label = "Select curve", choices = c("Loess" = "smooth", "Linear" = "r", "Cubic" = "spline"), seleced = "Loess")
+    HTML('<br>'),
+    htmlOutput(outputId="svgOutput"),
+    selectInput("trendline", label = "Select curve", choices = c("smooth", "r", "spline"), selected = "Loess")
   ),
   
   server <- function(input, output, session) (
     
-    #default lattice plot:
-    svgOutput <-  reactive({
-    lattice::xyplot(Petal.Length ~ Petal.Width, data = iris, col = c("red", "blue", "green"), pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
-    svgdoc <- gridSVG::grid.export(name = NULL)$svg
-    svgOutput <- capture.output(svgdoc)
-    return(svgOutput)
-    })
-    
-    output$svgOutput <- renderText({
-      #new:
-      lattice::xyplot(iris$Petal.Length ~ iris$Petal.Width, col = c("red", "blue", "green"), pch = 19, type = c("p", input$trendline), col.line = "orange", lwd = 3)
-      newsvg <- gridSVG::grid.export(name = NULL)$svg
-      
-      if (input$trendline == "smooth") {
-        trendLine <- XML::getNodeSet(newsvg, "//svg:g[@id='plot_01.loess.lines.panel.1.1.1']", c(svg="http://www.w3.org/2000/svg"))[[1]]
-        tLOut <- paste(capture.output(trendLine), collapse = "\n")
-        #replace:
-        tlLine <- grep("lines.panel.1.1.1", svgOutput)[1]
-        svgOutput[tlLine] <- tLOut
-      } else if (input$trendline == "r"){
-        newsvg <- gridSVG::grid.export(name = NULL)$svg
-        trendLine <- XML::getNodeSet(newsvg, "//svg:g[@id='plot_01.lmline.segments.panel.1.1.1']", c(svg = "http://www.w3.org/2000/svg"))[[1]]
-        tLOut <- paste(capture.output(trendLine), collapse = "\n")
-        tlLine <- grep("segments.panel.1.1.1", svgOutput)[1]
-        svgOutput[tlLine] <- tLOut
-      } else {
-        print(NULL)
-      }
+    output$svgOutput <- renderText({ 
+      lattice::xyplot(Petal.Length ~ Petal.Width, data = iris, col = c("red", "blue", "green"), pch = 19, type = c("p", input$trendline), col.line = "orange", lwd = 3)
+      svgdoc <- gridSVG::grid.export(name = NULL)$svg
+      svgOutput <- capture.output(svgdoc)
       return(svgOutput)
     })
-    
   )
 )
 

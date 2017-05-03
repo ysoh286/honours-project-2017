@@ -115,10 +115,10 @@ be moved around and viewed separately as well as together.
 
 [I'm still working on these, and figuring out the code at the same time...]
 - I wondered if we could render SVG in a Shiny app rather than using the renderPlot() function that Shiny has that renders static plots as png (which might be harder to control in terms of identifying what's on the plot) - since it's static and treats the plot as one single object, it makes sense to constantly 'redraw'.
-- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), and the trend line can be changed, however it's still re-rendering all the svg elements.
+- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), however it's only a static svg (can't seem to change easily).
 - There could be a possibility that this might be slower than trying to actually 'redraw' the plot because you're reproducing the svg output every time (might not make much of a difference? Not sure).
 - The idea (was) to produce a simple SVG plot using grid and gridSVG, separate the plot into svg components such as points, a trend line, legend (if there is one), axes as separate UI components.
-- Problem: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Might not be a good idea after all...?
+- Problems: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Might not be a good idea after all...?
 - Another idea: send model fitting co-ordinates from R through Shiny to the client(JavaScript) using an observer/handlers, then use exported mappings/functions generated from gridSVG to convert to SVG co-ordinates in JavaScript, then modify. (Haven't gotten round to actually trying this out yet!)
 
 - May need to further investigate Shiny's reactive programming model and how it updates things (should we use a reactive programming model like Shiny as well, or not?).
