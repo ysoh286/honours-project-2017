@@ -33,17 +33,32 @@
     jitter: 0.3,
     pointpos: -1.8,
     type: 'box',
+    boxmean: true,
+    hoverinfo: y,
+    orientation: h
   }
 ];
-var boxData = {
-  min: 0,
-  lq: 1,
-  med: 3,
-  uq: 9.25,
-  max: 21
-};
+
 
   Plotly.newPlot('boxplot', data);
+
+//try restyling the whole thing to red...:
+var values = data[0].y;
+
+    var update = {
+      opacity: 0.4,
+      'marker.color' : 'red'
+    };
+
+Plotly.restyle(boxplot, update);
+
+var boxplot = document.getElementById('boxplot');
+boxplot.on('plotly_hover', function(data) {
+  
+})
+
+// doing my own 'hack' for getting points to align.
+
 
 
 

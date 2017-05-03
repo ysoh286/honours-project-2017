@@ -1,0 +1,21 @@
+ Report Draft - Ideas:
+
+Aim:
+- Investigate current approaches for creating interactive data visualisations through R on the web (HTMLwidgets such as Plotly, rbokeh, the ggvis package, possibly trelliscopeJS? and tools to enhance these widgets such as Shiny, crosstalk)
+- Investigate tools that do interactive data visualisation, but are currently not on the web and their limitations and how they compare to those that are currently on the web
+- Could we design something better for users?
+
+Possible outline:
+- Why should we make a transition from static to interactive plots/data visuals?
+- Why the web?
+- Current solutions:
+-> Introductions to each of these HTMLwidgets/ packages (also give brief introduction to how the web works/browser rendering + DOM, and what an HTMLwidget does)
+->  Similarities and differences between each of these, and the main limitations for these (highlight these either by referencing to challenges and examples)
+-> Introductions to iPlots and Mondrian (which both run on Java) and why aren't they being used as much as Shiny, and investigate similarities and differences, + pros and cons for this
+-> Visualisations on the web that successfully visualise huge datasets
+- Identify what would users want from an interactive data visual, and how we could go about to solving these problems?
+
+
+
+
+- Build solution that aims to solve the limitations.

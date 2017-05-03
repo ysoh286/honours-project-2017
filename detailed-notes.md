@@ -1,15 +1,27 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
-## Week 7 (20/04 - 04/05): Expressing thoughts
+**Things to keep in mind:** When you get to a point where things start to take longer than expected, it's better to build your own.
+
+---
+
+## Week 7-8 (20/04 - 04/05): Expressing ideas
 
 **Q: Think about how you'd like to express a solution to the three challenges without thinking about existing tools (can be in pseudo-code, concepts, diagrams...)**
 
-- How would you develop your version to achieve interactivity that users want to use??
-- A system that shows what R objects correspond to what JavaScript objects (so for example, like how grid has grid.ls() and iPlots has iObj.list(), be able to a list of R objects with their corresponding JavaScript ids/object labels). For the user the R-object list might be useful, for developers that want to add customised interactions via JavaScript, they'd know exactly which objects to call. There could be a possibility of writing JavaScript in R directly (something like what onRender() from the htmlwidgets package does.))
+How would you develop your version to achieve interactivity that users want to use??
+
+- Assumption: a static plot with no interactivity attached is provided.
+- different functions for plotting, different functions for adding/removing interactivity
+- A function that shows which R objects correspond to which JavaScript/SVG elements/DOM objects (so for example, like how grid has grid.ls() and iPlots has iobj.list(), be able generate a list of R objects with their corresponding JavaScript ids/object labels). For the user the R-object list would be useful, for developers that want to add customised interactions via JavaScript, they'd know which objects to call. There could be a possibility of writing JavaScript in R directly (something like what onRender() from the htmlwidgets package does, and Shiny's JavaScript functions.))
+- Something that allows easy mapping and interchange between data and pixel co-ordinates
+- Differentiation between objects (points, lines, axes, titles...) that make up the plot, additional objects as layers (objects that make up a layer), and the entire plot itself (layers that make up a plot), so that interactivity can be customised in different ways
+
+- Some of these things are already present in the gridSVG package. There is a naming structure between grid objects and SVG elements generated, and there are functions + XML package that allow mappings/elements to be retrieved in both JS and R.
+
+*Most of these ideas are very similar to what existing tools might have already - such as combining iPlots/grid's ability to be able to return, add and remove ids and objects easily, event types from htmlwidgets that we've been looking at (specifically Plotly, crosstalk), and my basic knowledge of attaching simple interactions to SVG/DOM elements. Maybe these ideas are a bit too simplistic or requires more thought, and could be a challenge/complex to develop....*
 
 **Boxplots:**
 - If the box plot was built in layers: have functions that allow user to - link layers together, add layers, remove layers easily.
-- Also have a way to refer to plot objects as javascript objects (or match up their ids defined in R) in order to attach interactions easily
 
 - Imaginary pseudo-code:
 
@@ -19,36 +31,27 @@ boxplot(x, name.id)
 add_dotplot(x, align = l/r, share.axes = TRUE, id = )
 add_highlight(box, dot, range = c(boxMin, boxMed), event.type = c("hover", "click"), color = "red")
 
-#---------------- SOME DETAILS: ---------------------
-## construct the box plot:
-boxplot(x, y (factors if there are more than 1 box plot), name.id = )
-# name/id would allow an id group for the entire box plot.  Inside the boxplot constructed by 2 boxes (rect elements which are id as upperBox and lowerBox) and lines (line/polygon elements - minLine, maxLine)
-# plot object generated would have generated some accessible data such as minimum, maximum, median, LQ and UQ values
-
-## add dot plot to box plot:
-add_dotplot(x, y, align = l/r, share.axes = TRUE, id = )
-# - there would be a distinction between dotplot() and add_dotplot() - dotplot() would plot on a separate page/plot, add_dotplot() would be on the same axes
-# alignment is based upon the position of the last plotted object (in this case the boxplot)
-# layers could be automatically linked as they share the same axes
-
-link_layers(box, dot) # to link layers
+#possible functions for plot layer control
+link_layers(box, dot,...)
 remove_layers(layer.name)
 add_layers(layer.name)
-# there would need to be a distinction between removing layers and individual objects (such as points) in a plot. You could remove more than 1 layer at once.
-
-## add event:
-add_highlight(box, dot, range = c(boxMin, boxMed), event.type = "hover", color = "red")
-# box = refers to box layer, dot = dot layer
-# if we get more complex with different no. of boxplots: could specify an id of a specific box in relation to its dotplot.
-# range = range to be highlighted or marked. Another way would be to specify javascript object (so in this case, lowerBox)
-## if a plot layer is known to be linked to another, find a way to identify its layers and suggest what kind of interactions are possible/available to be attached
-# event.type = click, hover, double click... etc. You could attach more than one event.
-
-
 ```
+- construct the box plot (already exists), name/id would allow an id group for the entire box plot.  
+- Inside the boxplot constructed by 2 boxes (rect/polygon elements which are id as upperBox and lowerBox) and lines (line/polygon elements - minLine, maxLine) - to refer to a certain part: name.upperBox
+- plot object would have generated some accessible data such as minimum, maximum, median, LQ and UQ values
+- if dotplot() is to be plotted on the same axes (or simply, we could have one function but have argument 'share_axes' to determine linking and plotting) - by default it could be false.
+- If existing packages don't have this feature, then we could build a function that allows linking of layers(?)
+- alignment based upon the position of the last plotted object (in this case the boxplot)
+- layers could be automatically linked as they share the same axes (layers are simply groups of plot objects)
+- There would need to be a distinction between removing layers and individual objects (such as points) in a plot. You could remove more than 1 layer at once.
+- add_highlight() - box = refers to box layer, dot = dot layer
+- if we get more complex with different no. of boxplots: could specify an id of a specific box in relation to its dotplot.
+- range = range to be highlighted or marked. Another way would be to specify javascript object (so in this case, lowerBox) ('range' might not be a good word to describe this? interval?)
+- event.type = click, hover, double click... etc. You could attach more than one event.
+
 
 **Trendlines:**
-- Want something that easily adds/removes trendlines
+- Want something allows easy adding/removing of trendlines
 - Imaginary pseudo-code:
 
 ```
@@ -56,78 +59,185 @@ scatterplot(x, y, data = , group.id)
 add_trendline(modelFit, formula, model.type, id, ...)
 remove_trendline(id)
 update_trendline(id, modelFit, formula, model.type,...)
-
-
-#--------------- SOME DETAILS: ----------------------
-# create scatterplot:
-scatterplot(x, y, data = , group.id)
-
-# two ways you could do this: make a function that does all the modelling for you, or get a function that just plots only, and let the user choose what they wish to plot.
-add_trendline(modelFit, formula, model.type, id, ...)
-# ... could include graphical parameters such as color, stroke width, e.t.code
-
-# to remove trendlines
-remove_trendline(id)
-# or use remove_layer()
-
-# to update trendlines
-update_trendline(id = , modelFit, formula, model.type...)
-# or you could do removing and adding again
-
-# to add interactivity: additional arguments could be introduced, such as event.type
-show_labels(trendline.id, label = , event.type = "hover", ...)
-
+show_labels(trendline.id, label = , event.type = "hover", ...) #where the interactivity happens...
 
 ```
+- the functions scatterplot(), add_trendline(), remove_trendline() mirrors some of that in iPlots/grid where we can easily add/remove objects to a plot  by simply referring to an id that the user has assigned
+scatterplot(x, y, data = , group.id)
+-  in existing tools: either make a function that does all the modelling for you (too limited at times), or leave it up to the user to define their own model (more generic).
+- add_trendline(modelFit, formula, model.type, id, ...) - ... could include graphical parameters such as color, stroke width, e.t.c - this is more of a static plot function (so it could be something like abline()/lines() in base)
+- to update trendlines: update_trendline(id = , modelFit, formula, model.type...)
+With this, you could add in interactivity by attaching events and controlling what information is attached to the line (R^2 value, model fit, equation, ...e.t.c)
+- to add interactivity: additional arguments could be introduced, such as event.type
+- show_labels(trendline.id, label = , event.type = "hover", ...)
+
 
 **Array of plots:**
+```
+##somehow construct each plot separately, and then rearrange it in an array.
+
+arrange_plotMatrix(plot1, plot2, plot3..., nrows = , ncols = , group.id = plotMatrix)
+link_plotMatrix(groupid = plotMatrix)
+view_plot(plotid = plotMatrix)
+
+#Additional functions that could help:
+#to detach links from plots in a plot matrix:
+detach_link(plotid, groupid)
+
+#remove plots:
+remove_plot(plotid, groupid)
+
+#To customise linking between certain plots:
+link_plots(plot1, plot2,...)
 
 ```
-??
-
-#--------------- SOME DETAILS: ----------------------
-# In this case, its deciding whether you'd like to have a function that does the entire facetting/matrix for you, or to get it separately.
-
-# There could be a possibility of being able to detach plots in the matrix.
-
-
-```
+- for static plots, there's the option of either creating separate plots and arranging them into a matrix, or there's a function that constructs facet plots/scatterplot matrix/trellis display for you
+- May be able to detach plots in the matrix and their link if interactivity is attached.
+- link_plotMatrix(groupid) - a little vague, but does automatic linking between plots.
+What could happen is it could render the plots in 'panels', where each panel can
+be moved around and viewed separately as well as together.
+- view_plot() can be used to view a single plot in its own panel (or be able to zoom into one of the panels), but still has the links between the plot and the plot matrix. To detach the plot, use detach_link().
+- The challenge of expressing links between different plots (what would you use for something with a bar plot and a scatterplot? Find a way to aggregate data first before querying??)
 
 
-**Other ideas/doodles that just came to mind:** ...??
+**Other ideas...**
+- It's hard not to think about existing tools! But they do help provide some insight into what sort of things we'd like to have that might solve some of the problems we've been looking at + what might be achievable.
+- An easy approach to customise interactivity, but also achieve complexity (a possible stretch to producing animations on plots)
+- Something that can suggest suitable interaction between different plots (might be too complex)??
+- Could extend to simple DOM elements other than plots
+- SVG with big datasets: would need to aggregate data (since viewing several millions of points is impossible , and when you get to a certain point, be able to zoom in or elements change from bins to points.)
+- Possibility of storing data within the svg element tags to make mapping and attaching interactivity easier(?)
+- Would we want to use a reactive programming model like Shiny, but be able to rerender when necessary (e.g. A situation where if a plot does not change significantly, only updates certain values)?
+- Could you add and remove interactivity WITHOUT refreshing the entire browser/or need to rerun code to make the entire plot from scratch?
 
-Other to-dos to look into:
-- can we be in JS directing Shiny and getting prompts from Shiny ??
-- Find a way to get R to pass computation/translate it into Javascript (i.e for a trendline, pass all the data and co-ordinates to plot, pass to javascript, the use javascript to remove the element or update with new co-ordinates)...? Is there an easier way to do this??)
-- Investigate ways to extend/add custom javascript to Shiny applications/HTMLwidgets
+
+**Ongoing challenges:**
+
+[I'm still working on these, and figuring out the code at the same time...]
+- I wondered if we could render SVG in a Shiny app rather than using the renderPlot() function that Shiny has that renders static plots as png (which might be harder to control in terms of identifying what's on the plot) - since it's static and treats the plot as one single object, it makes sense to constantly 'redraw'.
+- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), and the trend line can be changed, however it's still re-rendering all the svg elements.
+- There could be a possibility that this might be slower than trying to actually 'redraw' the plot because you're reproducing the svg output every time (might not make much of a difference? Not sure).
+- The idea (was) to produce a simple SVG plot using grid and gridSVG, separate the plot into svg components such as points, a trend line, legend (if there is one), axes as separate UI components.
+- Problem: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Might not be a good idea after all...?
+- Another idea: send model fitting co-ordinates from R through Shiny to the client(JavaScript) using an observer/handlers, then use exported mappings/functions generated from gridSVG to convert to SVG co-ordinates in JavaScript, then modify. (Haven't gotten round to actually trying this out yet!)
+
+- May need to further investigate Shiny's reactive programming model and how it updates things (should we use a reactive programming model like Shiny as well, or not?).
+
+- You can send messages in JavaScript to Shiny and back. There's a blog post about how you can use these functions to send messages/data back and forth.
+  - JavaScript functions: Shiny.onInputChange() - used to send data from client(JS) to server(Shiny/R), Shiny.addCustomMessageHandler() - used to receive data from Shiny to JS
+  - Shiny functions (use of an observer): session$sendCustomMessage(), observe(), observeEvent()
+
+  *Still currently familiarizing myself with these functions...*
+
+- You can also write JavaScript in the UI component in Shiny since it's an HTML page, it's the same as writing between < script > tags using tags$script(), or using includeScripts() to link to external scripts
+- DOM Package: htmlPage() and HTML() in Shiny are similar in the sense you write pure html within the function and it renders on a web browser.
 
 #### NOTES:
 
-Extra notes from meeting:
+Extra notes from previous meeting:
 - "What is the use of all this??" - all of these tools are great and they do things, but are they of any use to anyone?
-- Ideally, if I do get round to making something in the future: aim for something that users would want to use and meets their needs
+- Ideally, if I do get round to making something in the future: aim for something that users would want to use and meets their needs (such as for teaching, or for trying to explain something in more detail)
 - Things that got left behind that were good interactive tools: Mondrian, iPlots (Java) - why did they get left behind and Shiny/RStudio's successful?    
   - MODERN USER INTERFACE  
   - Using the web as the playground
   - Installation problem solved
-  -  accessible and sharable to all ( via a web server)
+  - accessible and sharable to all (via a web server)
 - What do they achieve that these web tools/HTMLwidgets don't (without combining)?
   - Linked brushing
   - Zooming in (general purpose)
   - Able to facilitate and handle LARGE datasets
   - Share the same data on different plots (not just scatter plots only - but histograms, bar plots, box plots...)
+  - Query selection (subset points)
 - Possible ideas: zooming into hexplots and grid bins  - get to a certain point it becomes scatter points and you can visualise it
+- Successful visualisations that have large/big datasets - Google Maps (renders as 'tiles')
 - Why do people use interactive visualisations rather than static?
   - Data exploration
-  - "It looks cool" (not really a valid reason... but it gets people to look)
-  - Education purposes
-- Could you get something like iPlots working in a web browser (with multiple panels)
+  - "It looks cool" (not really a valid reason, but it gets people to look)
+  - Educational purposes
+- Could you get something like iPlots working in a web browser (with multiple panels - like TrelliscopeJS)
 
-**Tools that get bind R and JavaScript together:**
--
+**Challenge summary (Boxplot, Trendlines, Arrays):**
+- Shiny is great for anything that requires statistical computation (such as trendlines) as you've got a link back to R, and for building a modernized UI (Bootstrap  + HTML).
+- Crosstalk is great for linking plots together, but only present for Plotly and scatterplots. Instead, iPlots has an upperhand with linking capabilities that extend to different kinds of plots.
+- Plotly, rbokeh, highcharts, ggvis are good for incorporating 'basic' interactivity within the plot (especially when it comes to just a single plot - gives you basic information about that plot, points, zoom in, selection, basic stats...etc). It's more about making an 'easy' visual rather than using interactivity to find out more information and gaining more insight. (ie A selection done on the plot doesn't give you any information about it - does it have outliers? looking at the selected group as a whole? - couple it with Shiny and you're likely to get a lot further.) iPlots could get you further in terms of being able to return selections of plots.
+- It's hard to customise your own on-plot/in-plot interactions in (as found from the boxplot challenge) as most functions have a set event attached to them (or simply: you plug in data (generally in JSON format), and it just gives you a standard plot). These functions were designed to make plotting easy for the user without having to learn web technologies (HTML, CSS, JavaScript). As these JS libraries were originally built for a different program (such as JavaScript, Python, e.t.c), features may be limited (+ possible limitations of the creating an HTMLwidget package, if any).
+- Simple javascript solutions work well with on-plot interactions that do not require updating. This becomes a challenge when we try to devise a solution that requires updating of co-ordinates (such as manually changing the shape of a trendline), whereas these are easily achieved with Shiny but requires repeated rendering of the entire plot.
+- The approach during these challenges was to: find out which tool does what best, and then find a way to combine them. In some cases it worked well (as seen in the array challenge), other times it was hopeless (boxplot challenge) simply because the tools didn't have the capability or required more expertise and investigation.
 
+*(I do think it's taking me longer to try understand the Plotly API than trying to write my own solution for the boxplot challenge... but will keep it at the back of my mind if I ever do come back to it.)*
+
+**Alternatives to dealing with large datasets to be rendered on the browser:**
+- Unfortunately, SVG and DOM cannot handle large datasets well - speed starts to crawl.
+- Kruger's [performance](http://tommykrueger.com/projects/d3tests/performance-test.php) test example shows this problem (and it could eventually make your browser crash/freeze)
+- Use of canvas instead of SVG
+- Aggregate data first, then scale down when it gets finer (hex bins and grid squares to points))
+
+**Learning more about Shiny + JS:**
+- can we be in JS directing Shiny and getting prompts from Shiny ??
+- Shiny apps are designed for the end user, to share and explore findings in data
+- Prompting JavaScript? You can write JavaScript in R into Shiny apps in the UI section. This is because you should view the UI written in Shiny as an HTML page (which it is, as when you run fluidPage(), fluidRow() functions separately, they generate pages of HTML code with <div> tags to separate each component that the user has defined.)
+- Some ways to incorporate JS into Shiny are highlighted [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/).  *this blog post has been referred to in the Shiny repository.*
+
+**More about HTMLWidgets:**
+- [HTMLWidgets for R](http://www.htmlwidgets.org/)
+- [Vignettes - Development Intro](https://cran.r-project.org/web/packages/htmlwidgets/vignettes/develop_intro.html)
+- A pretty fun introduction to HTMLWidgets by YiHui Xie, RStudio
+
+- "the 'HTMLWidgets' package provides a framework for creating R bindings to JavaScript libraries" - this is used by developers to make their package
+- Varying degree of difficulty (depends how much you would like to do...)
+- An HTMLWidget is essentially an R package in itself
+- Consists of 3 components - dependencies (JS library/CSS you're depending on), R bindings (functions that end users (R users) call to provide input data in), JS bindings (JS that passes data and options from R binding to JS library)
+
+- ADVANTAGES:
+  - Simple and straightforward for R users to easily generate visualisations using specific JavaScript libraries
+  - Able to be used in all of RStudio's other works - such as RMarkdown reports, Shiny apps, FlexDashboard
+  - Can be saved as standalone web pages, makes sharing easy
+
+
+- DISADVANTAGES??
+
+*I think I might find this out if I manage to develop one. Maybe it might be really challenging, who knows. That might be a disadvantage already!*
+
+- Designed to streamline and make the process easier of having to deal with HTML, CSS, JavaScript together in R.
+- There could be a potential to make one of these for iNZight rather than using the current process (which involves: export iNZightPlot from R as an SVG using gridSVG, convert data to JSON, find out which elements to attach events to, use xtable to write an HTML table, write custom javascript/jQuery and CSS, and put it altogether in an HTML page.)
+
+**DOM package:**
+- Did try have a play with it, but it appears the only function that works is htmlPage(). Might have a go at it again on a Linux machine.
+- Looking a little similar (externally) to what Shiny's doing with rendering UI in its UI component...
+
+```
+Shiny notation for a paragraph:
+tags$p('Hello World') ---> <p> "Hello World" </p>
+        HTML("<p> Hello World </p>")
+
+DOM package notation:
+htmlPage("<p> Hello World </p>")
+```
+
+- Would be interesting if we could use this with gridSVG and play around with SVG elements (if we're planning to stick to vector graphics)
+
+**Mondrian:**
+- [Main page](http://www.theusrus.de/Mondrian/)
+- A possible reading to look into:
+- Another kind of software that uses JAVA programming
+- Looking very similar to iPlots (Mondrian doesn't require coding, but is rather catered for the end user.)
+- Supports features such as brushing, linking plots together, querying and visualisation of large datasets
+- Poissble to import R dataframes for analysis
+
+The interesting part is HOW does Mondrian and iPlots manage to do linking so 'effortlessly', and can that be translated onto the web? - might be too hard to tell from source code (unfortunately, I don't know Java.)
+Could we find tools that do similar things?
+- Linking a scatterplot to a bar plot [Demo](http://bl.ocks.org/curran/f4041cac02f19ee460dfe8b709dc24e7)
+  - this uses model.js, which is a 'reactive model library used for data visualisation'
+  - ^easily achievable in Shiny
+
+
+**Other ideas/inspiration...**
+- Build a web app which runs on React?
+- Grid panels!
+- Mike Bostock's introduction to D3.express which uses reactive programming on [Medium](https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0)
 
 ---
+
 ## Week 5 & 6 (06/04- 20/04): Challenges
 
 **Q: Do the following challenges.**
@@ -185,6 +295,7 @@ You can add on layers, but you always have to refer back to the plot (either thr
 
 #### NOTES:
 - Summary Tables:  Just to recap what I've learnt so far in the past month.
+
 *UPDATE: These have been moved to a separate file called 'summary-tables.md' found in this repository... they were getting too long.*
 
 **A bit more on ggvis and its interactivity:**
@@ -201,7 +312,7 @@ Some notes from this presentation are recorded below:
 Other things to note:
 - So apparently ggvis does not redraw the entire plot when you update data?
 - Link to a [stackoverflow](http://stackoverflow.com/questions/25011544/how-is-data-passed-from-reactive-shiny-expression-to-ggvis-plot/25060999#25060999) comment
-Might look into it just to make sure...  
+- Might look into it just to make sure...  
 
 **Fast search: Crosstalk + Plotly + Shiny**
 
@@ -210,8 +321,6 @@ Here are some working demo examples that use crosstalk, plotly and shiny togethe
 - [Basic demo app](https://github.com/ropensci/plotly/blob/51e159ba825b007657c1d7534825ef25afc7e7af/demo/shiny/basic/app.R)
 - [Using DT](https://github.com/ropensci/plotly/blob/51e159ba825b007657c1d7534825ef25afc7e7af/demo/shiny/DT/app.R)
 
-- You need to define the shared dataset/data outside of the shiny app in order for it to work... not sure why yet (maybe in order for crosstalk to work?).
-
 
 A few notes about crosstalk from Joe Cheng's presentation at the useR Conference 2016: [Youtube link](https://www.youtube.com/watch?v=IiRYmAGMtdo)
 - Crosstalk is designed to be a solution for co-ordinating multiple views of the same data (something along the lines of GGobi, cranvas - but on the web)
@@ -219,6 +328,8 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - Specific and has several limitations (summarised in the table above)
 - When you need to co-ordinate multiple views with Shiny, it's alot more complex (requires more thought + code in R), crosstalk allows it to be done easily and conveniently
 - Why would you use Shiny and crosstalk at the same time? When you need to co-ordinate views with a histogram, or aggregated data (able to read shared objects) - Shiny can be used to remove the limitations that crosstalk currently faces
+
+- Crosstalk acts like a 'messenger' - when the user selects/filters something, crosstalk gets that signal and communicates which objects have been selected (linked together by 'keys') to the javascript library(ies) - then the library decides how to render the selection/filter on the page.
 
 
 **Investigating crosstalk + Plotly in more detail:**
@@ -277,14 +388,17 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - Has its own interface (trelliscope = native version, trelliscopeJS allows viewing on the web and sharing as it is an HTMLwidget built upon javascript library called trelliscopejs-lib)
 - Alot of complex features! (might take quite a bit of time to grasp how to use it as well...)
 - Appears to have capabilities of zooming into a plot, but no linking(?) (may need to confirm this)
-- Good example to learn from for if you really want to develop something with trellis graphics in detail for what kind of interactions and things that users might be looking for (It's a bit beyond me at the moment...)
+- Good example to learn from for if you really want to develop something with trellis graphics in detail for what kind of interactions and things that users might be looking for (It's a bit beyond me to code up an example at the moment...)
+- A possible way of visualising lots of data at once
 - Resources to look at in more detail:
   - [Trelliscope tutorial](http://deltarho.org/docs-trelliscope/#introduction)
   - [TrelliscopeJStutorial](https://hafen.github.io/trelliscopejs/#facet_trelliscope)
   - [Quickstarts?](http://deltarho.org/quickstart.html)
   - [CRAN documentation for trelliscope](https://cran.r-project.org/web/packages/trelliscope/trelliscope.pdf)
   - [Trelliscope Introduction Video](https://www.youtube.com/watch?v=0u9G7XGUVXI)
-
+- Example demos:
+  - [Gapminder with Plotly](http://hafen.github.io/trelliscopejs-demo/gapminder_plotly/)
+  - A different use for trelliscope that's not statistical in any way - [Pokedex](http://hafen.github.io/trelliscopejs-demo/pokemon/)
 
 **JavaScript + Shiny:**
 - JavaScript tutorial on the Shiny website (this is more of a 'how to make an HTMLwidget' tutorial in order to use Shiny) - [JS Tutorials for making an HTMLWidget to use in Shiny](https://shiny.rstudio.com/tutorial/js-lesson1/)
