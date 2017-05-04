@@ -1,4 +1,36 @@
 
+2017-05-11
+----------
+
+DISCUSS:
+
+  + interactive graphics example (requiring stand-alone solution with
+    no R in the background)
+    - R-help 2017-04-23 from Chris Battiston
+      "trying to find a way to create a series of interconnected graphs where I have a filter (either a drop down or series of checkboxes) where when an option is selected, all graphs are updated to show that group’s data.  I need to keep these graphs internal to our organization, so can’t use Shiny etc.; I am also unable to run R or other products on my server (company policy)."
+
+  + implement a plotly parallelplot ?
+
+
+2017-05-04
+----------
+
+TODO:
+
+  + think about how *you* would like to express a solution to the
+    3 challenges (rather than having to think in terms of how 
+    plotly/shiny/crosstalk work)
+    - pseudocode
+    - concepts
+    - diagrams ...
+
+  + different implementations of plot with trend line plus slider (for
+    trend line parameter) WHERE ONLY the trend line is updated when
+    the slide moves
+    - Shiny + gridSVG + javascript (D3?)
+    - DOM + gridSVG + javascript (D3?)
+
+
 2017-04-20
 ----------
 

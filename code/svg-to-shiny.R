@@ -1,6 +1,7 @@
 library(XML)
 library(gridSVG)
 library(grid)
+library(shiny)
 
 ## testing things out:
 devtools::load_all('iNZightRegression')
@@ -46,7 +47,8 @@ shinyApp(
   ui <- fluidPage(
     mainPanel(
       #render the svg:
-      htmlOutput(outputId="svgOutput")
+      htmlOutput(outputId="svgOutput"),
+      selectInput("trendline", label = "Select curve", choices = c("linear", "quadratic"), selected = "linear")
     )
   ),
   
@@ -54,8 +56,8 @@ shinyApp(
     
     output$svgOutput <- renderText({
       #develop the iNZightPlot:
-      dev.new(width=10, height = 10)
-      iNZightPlots::iNZightPlot(Sepal.Length, Sepal.Width, data = iris, colby = Species, pch = 19, trend = "linear")
+      pdf(NULL)
+      iNZightPlots::iNZightPlot(Sepal.Length, Sepal.Width, data = iris, colby = Species, pch = 19, trend = input$trendline)
       #output to svg:
       svgdoc <- gridSVG::grid.export(name = NULL)$svg
       svgOutput <- capture.output(svgdoc)
@@ -67,33 +69,11 @@ shinyApp(
 
 # This literally attaches an SVG to the html page using Shiny. Avoids using renderPlot()...
 #But you still face the same problem of having to redraw the entire plot.
+#Rerenders the entire thing.
 
 #------------ ATTEMPTING to break SVG plot into different pieces for control ----------
 #what if I can break it up? Use a simpler plot:
 #What if I could render simple grid plot, and just change the trendline of it?
-
-library(lattice)
-
-#this doesn't work. It doesn't change the trendline and you need to render. 
-#Could it be because we're having to pass it through a device?
-
-shinyApp(
-  ui <- fluidPage(
-    HTML('<br>'),
-    htmlOutput(outputId="svgOutput"),
-    selectInput("trendline", label = "Select curve", choices = c("smooth", "r", "spline"), selected = "Loess")
-  ),
-  
-  server <- function(input, output, session) (
-    
-    output$svgOutput <- renderText({ 
-      lattice::xyplot(Petal.Length ~ Petal.Width, data = iris, col = c("red", "blue", "green"), pch = 19, type = c("p", input$trendline), col.line = "orange", lwd = 3)
-      svgdoc <- gridSVG::grid.export(name = NULL)$svg
-      svgOutput <- capture.output(svgdoc)
-      return(svgOutput)
-    })
-  )
-)
 
 
 # simple base plot using the iris data:

@@ -4,7 +4,7 @@ This document contains findings, examples, and all kinds of things related to th
 
 ---
 
-## Week 7-8 (20/04 - 04/05): Expressing ideas
+## Week 7-9 (20/04 - 04/11): Expressing ideas, SVG + Shiny/DOM + JS
 
 **Q: Think about how you'd like to express a solution to the three challenges without thinking about existing tools (can be in pseudo-code, concepts, diagrams...)**
 
@@ -111,18 +111,23 @@ be moved around and viewed separately as well as together.
 - Could you add and remove interactivity WITHOUT refreshing the entire browser/or need to rerun code to make the entire plot from scratch?
 
 
-**Ongoing challenges:**
+**Q: Trendline Challenge - implementation of a solution that does not rerender the entire plot (SVG+JS+DOM/Shiny)**
 
 [I'm still working on these, and figuring out the code at the same time...]
+
+**SVG+Shiny+JS:**
 - I wondered if we could render SVG in a Shiny app rather than using the renderPlot() function that Shiny has that renders static plots as png (which might be harder to control in terms of identifying what's on the plot) - since it's static and treats the plot as one single object, it makes sense to constantly 'redraw'.
-- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), however it's only a static svg (can't seem to change easily).
+- Shiny does things 'magically' (the reactive programming aspect of it is mindblowingly...complex.) May need to further investigate Shiny's reactive programming model and how it updates things (should we use a reactive programming model like Shiny as well, or not?).
+- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), however it's only a static svg and is updated as an entire object (same output generated as using renderPlot()).
 - There could be a possibility that this might be slower than trying to actually 'redraw' the plot because you're reproducing the svg output every time (might not make much of a difference? Not sure).
 - The idea (was) to produce a simple SVG plot using grid and gridSVG, separate the plot into svg components such as points, a trend line, legend (if there is one), axes as separate UI components.
-- Problems: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Might not be a good idea after all...?
+- Problems: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Even if you could separate it, it doesn't help as Shiny will need to reproduce all the svg output again (which essentially re-renders the entire plot).
+
 - Another idea: send model fitting co-ordinates from R through Shiny to the client(JavaScript) using an observer/handlers, then use exported mappings/functions generated from gridSVG to convert to SVG co-ordinates in JavaScript, then modify. (Haven't gotten round to actually trying this out yet!)
 
-- May need to further investigate Shiny's reactive programming model and how it updates things (should we use a reactive programming model like Shiny as well, or not?).
+**Using DOM?:** ??
 
+**JS + Shiny: How to communicate messages between client and server**
 - You can send messages in JavaScript to Shiny and back. There's a blog post about how you can use these functions to send messages/data back and forth.
   - JavaScript functions: Shiny.onInputChange() - used to send data from client(JS) to server(Shiny/R), Shiny.addCustomMessageHandler() - used to receive data from Shiny to JS
   - Shiny functions (use of an observer): session$sendCustomMessage(), observe(), observeEvent()
