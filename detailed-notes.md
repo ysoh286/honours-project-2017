@@ -4,13 +4,37 @@ This document contains findings, examples, and all kinds of things related to th
 
 ---
 
-## Week 7-9 (20/04 - 04/11): Expressing ideas, SVG + Shiny/DOM + JS
+## Week 7-9 (20/04 - 05/11): Expressing ideas, SVG + Shiny/DOM + JS
+
+**Q: Reattempting the trendline challenge -  implementation of a solution that does NOT redraw the entire plot (SVG+JS+DOM/Shiny)**
+
+**SVG+Shiny+JS:**
+- Since there is a way of sending data/messages between Shiny and the browser, we can send the co-ordinates of the data from R/Shiny and update the 'points' on the trendline in JS, which only changes the trend-line.
+- Can be done with iNZightPlots, but because there isn't a clear naming scheme, requires changing of tags and element names each time you change the plot. (Every time you change the svg output, the id of the trendline changes each time. - Could be on the 'other' to-do list if required.)
+- Things to be aware of: mapping between svg and data values, finding the correct viewport/panel. The change is much faster. Currently works on a single plot that's been defined in R before running Shiny.
+
+**Using DOM?:** (in progress)
+
+Similarities to Shiny:
+- DOM Package: htmlPage() and HTML() in Shiny are similar in the sense you can write pure html within the function and it renders on a web browser.
+
+**JS + Shiny: How to communicate messages between client and server**
+- You can send messages in JavaScript to Shiny and back. There's a blog post  [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/) about how you can use these functions to send messages/data back and forth.
+  - JavaScript functions: Shiny.onInputChange() - used to send data from client(JS) to server(Shiny/R), Shiny.addCustomMessageHandler() - used to receive data from Shiny to JS
+  - Shiny functions (use of an observer): session$sendCustomMessage(), observe(), observeEvent() - used to send data from Shiny to JS
+
+- You can also write JavaScript in the UI component in Shiny since it's an HTML page, it's the same as writing between < script > tags using tags$script(), or using includeScripts() to link to external scripts
+
 
 **Q: Think about how you'd like to express a solution to the three challenges without thinking about existing tools (can be in pseudo-code, concepts, diagrams...)**
 
-How would you develop your version to achieve interactivity that users want to use??
+How would you develop your version to achieve interactivity?
+
+- MAIN IDEA: Since there are many existing packages that produce static plots in R already, build upon one of these packages to incorporate interactivity in (or make a separate package specifically for adding events/interaction in).
 
 - Assumption: a static plot with no interactivity attached is provided.
+
+WHAT WOULD BE HELPFUL?
 - different functions for plotting, different functions for adding/removing interactivity
 - A function that shows which R objects correspond to which JavaScript/SVG elements/DOM objects (so for example, like how grid has grid.ls() and iPlots has iobj.list(), be able generate a list of R objects with their corresponding JavaScript ids/object labels). For the user the R-object list would be useful, for developers that want to add customised interactions via JavaScript, they'd know which objects to call. There could be a possibility of writing JavaScript in R directly (something like what onRender() from the htmlwidgets package does, and Shiny's JavaScript functions.))
 - Something that allows easy mapping and interchange between data and pixel co-ordinates
@@ -18,7 +42,18 @@ How would you develop your version to achieve interactivity that users want to u
 
 - Some of these things are already present in the gridSVG package. There is a naming structure between grid objects and SVG elements generated, and there are functions + XML package that allow mappings/elements to be retrieved in both JS and R.
 
-*Most of these ideas are very similar to what existing tools might have already - such as combining iPlots/grid's ability to be able to return, add and remove ids and objects easily, event types from htmlwidgets that we've been looking at (specifically Plotly, crosstalk), and my basic knowledge of attaching simple interactions to SVG/DOM elements. Maybe these ideas are a bit too simplistic or requires more thought, and could be a challenge/complex to develop....*
+*Most of these ideas are very similar to what existing tools might have already - such as combining iPlots/grid's ability to be able to return, add and remove ids and objects easily, event types from htmlwidgets that we've been looking at (specifically Plotly, crosstalk), and my basic knowledge of attaching simple interactions to SVG/DOM elements.*
+
+OTHER THINGS...
+- Would we want to include ui inputs (like sliders, filters, e.t.c) like what Shiny does that automatically links everything together? Or should we make something that focuses on on-plot/linking interactions?
+(One way would be to make an HTMLwidget that's compatible with Shiny.)
+- An easy approach to customise interactivity, but also achieve complexity (a possible stretch to producing animations on plots)
+- Something that can suggest suitable interaction between different plots (might be too complex)??
+- Could extend to simple DOM elements other than plots
+- SVG with big datasets: would need to aggregate data + create interactions that scale accordingly (zooming)
+- Possibility of storing data within the svg element tags to make mapping and attaching interactivity easier(?)
+- Would we want to use a reactive programming model like Shiny, but be able to rerender when necessary (e.g. A situation where if a plot does not change significantly, only updates certain values)?
+- Could you add and remove interactivity WITHOUT refreshing the entire browser/or need to rerun code to make the entire plot from scratch (could the DOM package achieve this)?
 
 **Boxplots:**
 - If the box plot was built in layers: have functions that allow user to - link layers together, add layers, remove layers easily.
@@ -58,14 +93,15 @@ add_layers(layer.name)
 scatterplot(x, y, data = , group.id)
 add_trendline(modelFit, formula, model.type, id, ...)
 remove_trendline(id)
+
+#functions where you could add interactivity:
 update_trendline(id, modelFit, formula, model.type,...)
-show_labels(trendline.id, label = , event.type = "hover", ...) #where the interactivity happens...
+show_labels(trendline.id, label = , event.type = "hover", ...)
 
 ```
 - the functions scatterplot(), add_trendline(), remove_trendline() mirrors some of that in iPlots/grid where we can easily add/remove objects to a plot  by simply referring to an id that the user has assigned
-scatterplot(x, y, data = , group.id)
 -  in existing tools: either make a function that does all the modelling for you (too limited at times), or leave it up to the user to define their own model (more generic).
-- add_trendline(modelFit, formula, model.type, id, ...) - ... could include graphical parameters such as color, stroke width, e.t.c - this is more of a static plot function (so it could be something like abline()/lines() in base)
+- add_trendline(modelFit, formula, model.type, id, ...) - ... could include graphical parameters such as color, stroke width, e.t.c - this is more of a static plot function
 - to update trendlines: update_trendline(id = , modelFit, formula, model.type...)
 With this, you could add in interactivity by attaching events and controlling what information is attached to the line (R^2 value, model fit, equation, ...e.t.c)
 - to add interactivity: additional arguments could be introduced, such as event.type
@@ -98,44 +134,6 @@ What could happen is it could render the plots in 'panels', where each panel can
 be moved around and viewed separately as well as together.
 - view_plot() can be used to view a single plot in its own panel (or be able to zoom into one of the panels), but still has the links between the plot and the plot matrix. To detach the plot, use detach_link().
 - The challenge of expressing links between different plots (what would you use for something with a bar plot and a scatterplot? Find a way to aggregate data first before querying??)
-
-
-**Other ideas...**
-- It's hard not to think about existing tools! But they do help provide some insight into what sort of things we'd like to have that might solve some of the problems we've been looking at + what might be achievable.
-- An easy approach to customise interactivity, but also achieve complexity (a possible stretch to producing animations on plots)
-- Something that can suggest suitable interaction between different plots (might be too complex)??
-- Could extend to simple DOM elements other than plots
-- SVG with big datasets: would need to aggregate data (since viewing several millions of points is impossible , and when you get to a certain point, be able to zoom in or elements change from bins to points.)
-- Possibility of storing data within the svg element tags to make mapping and attaching interactivity easier(?)
-- Would we want to use a reactive programming model like Shiny, but be able to rerender when necessary (e.g. A situation where if a plot does not change significantly, only updates certain values)?
-- Could you add and remove interactivity WITHOUT refreshing the entire browser/or need to rerun code to make the entire plot from scratch?
-
-
-**Q: Trendline Challenge - implementation of a solution that does not rerender the entire plot (SVG+JS+DOM/Shiny)**
-
-[I'm still working on these, and figuring out the code at the same time...]
-
-**SVG+Shiny+JS:**
-- I wondered if we could render SVG in a Shiny app rather than using the renderPlot() function that Shiny has that renders static plots as png (which might be harder to control in terms of identifying what's on the plot) - since it's static and treats the plot as one single object, it makes sense to constantly 'redraw'.
-- Shiny does things 'magically' (the reactive programming aspect of it is mindblowingly...complex.) May need to further investigate Shiny's reactive programming model and how it updates things (should we use a reactive programming model like Shiny as well, or not?).
-- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), however it's only a static svg and is updated as an entire object (same output generated as using renderPlot()).
-- There could be a possibility that this might be slower than trying to actually 'redraw' the plot because you're reproducing the svg output every time (might not make much of a difference? Not sure).
-- The idea (was) to produce a simple SVG plot using grid and gridSVG, separate the plot into svg components such as points, a trend line, legend (if there is one), axes as separate UI components.
-- Problems: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Even if you could separate it, it doesn't help as Shiny will need to reproduce all the svg output again (which essentially re-renders the entire plot).
-
-- Another idea: send model fitting co-ordinates from R through Shiny to the client(JavaScript) using an observer/handlers, then use exported mappings/functions generated from gridSVG to convert to SVG co-ordinates in JavaScript, then modify. (Haven't gotten round to actually trying this out yet!)
-
-**Using DOM?:** ??
-
-**JS + Shiny: How to communicate messages between client and server**
-- You can send messages in JavaScript to Shiny and back. There's a blog post about how you can use these functions to send messages/data back and forth.
-  - JavaScript functions: Shiny.onInputChange() - used to send data from client(JS) to server(Shiny/R), Shiny.addCustomMessageHandler() - used to receive data from Shiny to JS
-  - Shiny functions (use of an observer): session$sendCustomMessage(), observe(), observeEvent()
-
-  *Still currently familiarizing myself with these functions...*
-
-- You can also write JavaScript in the UI component in Shiny since it's an HTML page, it's the same as writing between < script > tags using tags$script(), or using includeScripts() to link to external scripts
-- DOM Package: htmlPage() and HTML() in Shiny are similar in the sense you write pure html within the function and it renders on a web browser.
 
 #### NOTES:
 
@@ -181,7 +179,44 @@ Extra notes from previous meeting:
 - can we be in JS directing Shiny and getting prompts from Shiny ??
 - Shiny apps are designed for the end user, to share and explore findings in data
 - Prompting JavaScript? You can write JavaScript in R into Shiny apps in the UI section. This is because you should view the UI written in Shiny as an HTML page (which it is, as when you run fluidPage(), fluidRow() functions separately, they generate pages of HTML code with <div> tags to separate each component that the user has defined.)
-- Some ways to incorporate JS into Shiny are highlighted [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/).  *this blog post has been referred to in the Shiny repository.*
+- Some ways to incorporate JS into Shiny are highlighted [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/).
+*This blog post has been referred to in the Shiny repository.*
+- You can send messages/data between Shiny/server and JS/client.
+- Functions: Shiny.onInputChange(), Shiny.addCustomMessageHandler()
+- session$sendCustomMessage(), observe()
+- Use of an observer:
+- More complex examples for reference: Chang's demo test apps
+
+**DOM package:** (in progress)
+- Paul's DOM package allows communication between R and the web browser.
+- Reports [v0.3](https://www.stat.auckland.ac.nz/~paul/Reports/DOM/v0.3/DOM-v0.3.html)
+- Alot more low-level and more flexible than compared to Shiny
+- ADVANTAGES: ??
+
+- DISADVANTAGES: ??
+
+- SIMILARITIES to Shiny:
+  - htmlPage(): Looking a little similar (externally) to what Shiny's doing with rendering UI in its UI component...
+
+```
+Shiny notation for a paragraph:
+tags$p('Hello World') ---> <p> "Hello World" </p>
+        HTML("<p> Hello World </p>")
+
+DOM package notation:
+htmlPage("<p> Hello World </p>")
+```
+
+- Would be interesting if we could use this with gridSVG and play around with SVG elements (if we're planning to stick to vector graphics)
+
+
+**Trendline Challenge Part II: SVG + Shiny/DOM + JS**
+- Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), however it's only a static svg and is updated as an entire object (same output generated as using renderPlot()).
+- There could be a possibility that this might be slower than trying to actually 'redraw' the plot because you're reproducing the svg output every time (might not make much of a difference? Not sure).
+- The idea (was) to produce a simple SVG plot using grid and gridSVG, separate the plot into svg components such as points, a trend line, legend (if there is one), axes as separate UI components.
+- Problems: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Even if you could separate it, it doesn't help as Shiny will need to reproduce all the svg output again (which essentially re-renders the entire plot).
+- Instead: send model fitting co-ordinates from R through Shiny to the client(JavaScript) using an observer/handlers, then use exported mappings/functions generated from gridSVG to convert to SVG co-ordinates in JavaScript or in R, then modify.
+
 
 **More about HTMLWidgets:**
 - [HTMLWidgets for R](http://www.htmlwidgets.org/)
@@ -198,36 +233,20 @@ Extra notes from previous meeting:
   - Able to be used in all of RStudio's other works - such as RMarkdown reports, Shiny apps, FlexDashboard
   - Can be saved as standalone web pages, makes sharing easy
 
-
 - DISADVANTAGES??
 
-*I think I might find this out if I manage to develop one. Maybe it might be really challenging, who knows. That might be a disadvantage already!*
+*I think I might find this out if I manage to develop one...*
 
 - Designed to streamline and make the process easier of having to deal with HTML, CSS, JavaScript together in R.
-- There could be a potential to make one of these for iNZight rather than using the current process (which involves: export iNZightPlot from R as an SVG using gridSVG, convert data to JSON, find out which elements to attach events to, use xtable to write an HTML table, write custom javascript/jQuery and CSS, and put it altogether in an HTML page.)
-
-**DOM package:**
-- Did try have a play with it, but it appears the only function that works is htmlPage(). Might have a go at it again on a Linux machine.
-- Looking a little similar (externally) to what Shiny's doing with rendering UI in its UI component...
-
-```
-Shiny notation for a paragraph:
-tags$p('Hello World') ---> <p> "Hello World" </p>
-        HTML("<p> Hello World </p>")
-
-DOM package notation:
-htmlPage("<p> Hello World </p>")
-```
-
-- Would be interesting if we could use this with gridSVG and play around with SVG elements (if we're planning to stick to vector graphics)
+- There could be a potential to make one of these for iNZight rather than using the current process (which involves: export iNZightPlot from R as an SVG using gridSVG, convert data to JSON, find out which elements to attach events to, use xtable to produce an HTML table, write custom javascript/jQuery and CSS, and put it altogether on an HTML page.)
 
 **Mondrian:**
 - [Main page](http://www.theusrus.de/Mondrian/)
-- A possible reading to look into:
+- A possible reading to look into:  Interactive Graphics for Data Analysis
 - Another kind of software that uses JAVA programming
 - Looking very similar to iPlots (Mondrian doesn't require coding, but is rather catered for the end user.)
 - Supports features such as brushing, linking plots together, querying and visualisation of large datasets
-- Poissble to import R dataframes for analysis
+- Possible to import R dataframes for analysis
 
 The interesting part is HOW does Mondrian and iPlots manage to do linking so 'effortlessly', and can that be translated onto the web? - might be too hard to tell from source code (unfortunately, I don't know Java.)
 Could we find tools that do similar things?
@@ -235,11 +254,23 @@ Could we find tools that do similar things?
   - this uses model.js, which is a 'reactive model library used for data visualisation'
   - ^easily achievable in Shiny
 
+**ggplot2 + ggiraph:**
+- Quick introduction to [ggiraph](https://davidgohel.github.io/ggiraph/articles/an_introduction.html)
+- [Github repository](https://github.com/davidgohel/ggiraph)
+- [Main page](http://davidgohel.github.io/ggiraph/)
+- [CRAN documentation](https://cran.r-project.org/web/packages/ggiraph/index.html)
+- The ggiraph package is designed to make ggplot2 interactive, and is an htmlwidget.
+- extends ggplot2 with interactive functions
+- tooltips (hovers + labels),  onclick (JS function whenever click occurs on an element), data_id (for use with Shiny)
+- Simplistic, has 'basic' interactivity covered - similar to the other htmlwidgets we've been looking at
+- Plotly might have more features with ggplotly() covered
+
 
 **Other ideas/inspiration...**
 - Build a web app which runs on React?
 - Grid panels!
 - Mike Bostock's introduction to D3.express which uses reactive programming on [Medium](https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0)
+- Time series [zoom](https://bl.ocks.org/jroetman/9b4c0599a4996edef0ab) - D3
 
 ---
 
@@ -445,6 +476,7 @@ A few notes about crosstalk from Joe Cheng's presentation at the useR Conference
 - Working with ggvis, but (not sure if this may be the problem) because it uses slightly different notation to render its output and bind to Shiny - running into trouble trying to bind it to a modal.
 - Other findings: ggvis + shiny can't work seem to work on rmarkdown?, ggvis plots do not scale to Bootstrap in Shiny (somehow overrides widths).
 
+- A d3 [example](http://mbostock.github.io/d3/talk/20111116/iris-splom.html) of linked scatterplot matrix
 
 
 

@@ -5,6 +5,7 @@
   #incorporate an SVG, and try manipulate it with some javascript in Shiny
   #'Think of the UI as an HTML page.'
 
+#some basics to incorporating HTML elements into Shiny
 library(shiny)
 
 shinyApp(
@@ -37,7 +38,7 @@ tags$div( #HTMLdiv
 
 #send data from client to server, process with R and then return - use Shiny.onInputChange
 
-# a simple example from the blog post:
+# a simple example (adapted from the blog post):
 shinyApp(
   ui <- fluidPage(
     tags$p(id="p1", "Click me!"),
@@ -50,7 +51,7 @@ shinyApp(
     ),
     #attempting to send data from server to client: requires a use of a handler function.
     tags$script('
-                Shiny.addCustomMessageHandler("myCallbackHandler", 
+                Shiny.addCustomMessageHandler("colorCall", 
                 function(color) {
                 document.getElementById("p1").style.backgroundColor = color;
                 });')),
@@ -65,7 +66,7 @@ server <- function(input, output, session) {
   observe({
     input$mydata
     color = rgb(runif(1), runif(1), runif(1))
-    session$sendCustomMessage(type = "myCallbackHandler", color)
+    session$sendCustomMessage(type = "colorCall", color)
   })
 })
 
@@ -75,10 +76,13 @@ server <- function(input, output, session) {
 
 
 #---------------------- incorporating javascript and building with Shiny -------------
+
 # You can also include scripts by using the includeScript function
-# I could simply combine iNZightPlots + my own custom files (external) and run it.
-#need to add SVG plot in.
-#TODO:: try incorporate iNZightPlot + JavaScript code.
+# Could I combine iNZightPlots + my own custom files (external) and run it.
+# need to add SVG plot in.
+# TODO:: try incorporate iNZightPlot + JavaScript code.
+
+
 
 ## looking at more complex examples: Winston Chang's testapp > message-handler-jsfile and inline:
 #https://github.com/wch/testapp/tree/master/message-handler-jsfile
