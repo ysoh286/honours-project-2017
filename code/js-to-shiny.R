@@ -82,7 +82,57 @@ server <- function(input, output, session) {
 # need to add SVG plot in.
 # TODO:: try incorporate iNZightPlot + JavaScript code.
 
+# render plot:
+library(iNZightPlots)
+library(gridSVG)
+library(grid)
 
+pdf(NULL)
+pl <- iNZightPlot(weekly_hrs, weekly_income, colby = ethnicity, data = income100, pch = 19)
+plot <- pl$all$all
+#get relevant data:
+xVal <- plot$x
+yVal <- plot$y
+tab <- cbind(as.data.frame(xVal), as.data.frame(yVal))
+names(tab) <- c(attributes(pl)$varnames$x, attributes(pl)$varnames$y)
+#colby variable:
+colby <- plot$colby
+tab <- cbind(tab, as.data.frame(colby))
+names(tab)[ncol(tab)] <- attributes(pl)$varnames$colby
+
+colGroupNo <- nlevels(plot$colby)
+namesJSON <- paste0("var names = ", jsonlite::toJSON(names(tab)), ";")
+tabJSON <- paste0("var tableData = ", jsonlite::toJSON(tab), ";")
+colGroupNo <- paste0("colGroupNo = ", colGroupNo, ";")
+
+#list all data:
+JSData <- list(names = namesJSON, tabs = tabJSON, colGroupNo = colGroupNo)
+#bind JSON to grid plot:
+gridSVG::grid.script(do.call("paste", c(JSData, sep="\n ")), inline = TRUE, name = "linkedJSONdata")
+#export as SVG - store in memory:
+svgdoc <- gridSVG::grid.export(NULL)$svg
+#svg as string:
+svg <- paste(capture.output(svgdoc), collapse = "\n")
+dev.off()
+
+#Shiny app:
+shinyApp(
+  ui <- fluidPage(
+    mainPanel(
+      HTML(svg),
+      includeCSS('prev/style.css'),
+      includeScript('prev/singleFunctions.js'),
+      includeScript('prev/dpsp-nt.js')
+    )
+  ),
+  
+  server <- function(input, output, session) {
+    #blank
+  }
+)
+
+# This works, but it's simply static. 
+# Would it be possible to connect it to the server side of Shiny??
 
 ## looking at more complex examples: Winston Chang's testapp > message-handler-jsfile and inline:
 #https://github.com/wch/testapp/tree/master/message-handler-jsfile

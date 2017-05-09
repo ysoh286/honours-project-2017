@@ -50,6 +50,7 @@ shinyApp(
 #could I do this using renderUI and uiOutput/htmlOutput?
 
 # Adapted timely-portfolio's example: changes the plot every time:
+# https://github.com/timelyportfolio/shiny-grid-svg-v2
 
 shinyApp(
   ui <- fluidPage(

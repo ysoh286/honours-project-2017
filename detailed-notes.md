@@ -1,6 +1,6 @@
 This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
 
-**Things to keep in mind:** When you get to a point where things start to take longer than expected, it's better to build your own.
+**Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
 ---
 
@@ -10,10 +10,12 @@ This document contains findings, examples, and all kinds of things related to th
 
 **SVG+Shiny+JS:**
 - Since there is a way of sending data/messages between Shiny and the browser, we can send the co-ordinates of the data from R/Shiny and update the 'points' on the trendline in JS, which only changes the trend-line.
-- Can be done with iNZightPlots, but because there isn't a clear naming scheme, requires changing of tags and element names each time you change the plot. (Every time you change the svg output, the id of the trendline changes each time. - Could be on the 'other' to-do list if required.)
-- Things to be aware of: mapping between svg and data values, finding the correct viewport/panel. The change is much faster. Currently works on a single plot that's been defined in R before running Shiny.
+- Can be done with iNZightPlots, but because there isn't a clear naming scheme, requires changing of tags and element names each time you change the plot. (Every time you change the svg output, the id of the trendline changes each time...)
+- Things to be aware of: mapping between svg and data values, finding the correct viewport/panel. The change is much faster. Currently works on a single plot that's been defined in R before running Shiny. Takes a little long when you try produce SVG output for a scatterplot with too many points...
 
 **Using DOM?:** (in progress)
+- Managed to render the plot
+- Still figuring out how to send data from R to browser and back...
 
 Similarities to Shiny:
 - DOM Package: htmlPage() and HTML() in Shiny are similar in the sense you can write pure html within the function and it renders on a web browser.
@@ -24,6 +26,7 @@ Similarities to Shiny:
   - Shiny functions (use of an observer): session$sendCustomMessage(), observe(), observeEvent() - used to send data from Shiny to JS
 
 - You can also write JavaScript in the UI component in Shiny since it's an HTML page, it's the same as writing between < script > tags using tags$script(), or using includeScripts() to link to external scripts
+- (in progress) Can I incorporate my code from last summer into an iNZightPlot that's linked to Shiny?
 
 
 **Q: Think about how you'd like to express a solution to the three challenges without thinking about existing tools (can be in pseudo-code, concepts, diagrams...)**
@@ -190,12 +193,23 @@ Extra notes from previous meeting:
 **DOM package:** (in progress)
 - Paul's DOM package allows communication between R and the web browser.
 - Reports [v0.3](https://www.stat.auckland.ac.nz/~paul/Reports/DOM/v0.3/DOM-v0.3.html)
-- Alot more low-level and more flexible than compared to Shiny
-- ADVANTAGES: ??
+- Alot more low-level and flexible than compared to Shiny
 
-- DISADVANTAGES: ??
+- What is greasemonkey?
+ - trivia: an informal word for 'mechanic'
+ - a Mozilla Firefox extension that allows you to customise a web page using JS via a user script.
+ - [Add-on to Firefox](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/)
 
-- SIMILARITIES to Shiny:
+
+- ADVANTAGES: You can throw things on a page, and remove things on the page without having to rerender/refresh the page...
+
+- DISADVANTAGES: Currently under development, several limitations listed [here](https://www.stat.auckland.ac.nz/~paul/Reports/DOM/Intro/DOM-Intro.html)
+  - Installation might not be as straightforward (for standalone HTML, might be fine but for when you want to send things back and forth from R  <-> browser - requires greasemonkey + FireFox)
+
+- COMPARISON to Shiny:
+  - Shiny has the advantage of being 'simplistic' to the user without introducing the web technologies behind it (you can actually get a little further with basic knowledge of CSS/HTML/JS), whereas DOM has got the advantage of being more flexible, but requires knowledge in these web technologies.
+  - Shiny can get complex in terms of dealing with its 'reactive' nature that appears to do 'magic'. Sometimes this is unwarranted for (especially when it just throws a bunch of errors at you and you have no idea why it runs fine in R, but not in Shiny...). Sometimes you don't want it to be reactive (like the trendline challenge).
+  - If you hate the bootstrap look: you can customise how things look in DOM.
   - htmlPage(): Looking a little similar (externally) to what Shiny's doing with rendering UI in its UI component...
 
 ```
@@ -207,8 +221,6 @@ DOM package notation:
 htmlPage("<p> Hello World </p>")
 ```
 
-- Would be interesting if we could use this with gridSVG and play around with SVG elements (if we're planning to stick to vector graphics)
-
 
 **Trendline Challenge Part II: SVG + Shiny/DOM + JS**
 - Managed to render an svg plot in Shiny simply just using the UI component (instead of viewing it as inputs and outputs), however it's only a static svg and is updated as an entire object (same output generated as using renderPlot()).
@@ -216,6 +228,11 @@ htmlPage("<p> Hello World </p>")
 - The idea (was) to produce a simple SVG plot using grid and gridSVG, separate the plot into svg components such as points, a trend line, legend (if there is one), axes as separate UI components.
 - Problems: trying to separate the components of the svg. There are nesting <g> elements that represent each viewport. Even if you could separate it, it doesn't help as Shiny will need to reproduce all the svg output again (which essentially re-renders the entire plot).
 - Instead: send model fitting co-ordinates from R through Shiny to the client(JavaScript) using an observer/handlers, then use exported mappings/functions generated from gridSVG to convert to SVG co-ordinates in JavaScript or in R, then modify.
+- Successful! See the lattice plot example under *code >> svg-to-shiny.R*
+- Limitations/thoughts: currently works with the plot pre-defined in R, how accurate is gridSVG in translating co-ordinates(?), works best when you've got a plot with a consistent naming scheme (for panels + locating elements)
+
+- DOM version: (in progress)
+  - Managed to render plot on the page
 
 
 **More about HTMLWidgets:**
@@ -235,7 +252,8 @@ htmlPage("<p> Hello World </p>")
 
 - DISADVANTAGES??
 
-*I think I might find this out if I manage to develop one...*
+*I think I might find this out if I manage to develop one...
+What's the limit for translating data from R to JSON and back?*
 
 - Designed to streamline and make the process easier of having to deal with HTML, CSS, JavaScript together in R.
 - There could be a potential to make one of these for iNZight rather than using the current process (which involves: export iNZightPlot from R as an SVG using gridSVG, convert data to JSON, find out which elements to attach events to, use xtable to produce an HTML table, write custom javascript/jQuery and CSS, and put it altogether on an HTML page.)
@@ -261,16 +279,37 @@ Could we find tools that do similar things?
 - [CRAN documentation](https://cran.r-project.org/web/packages/ggiraph/index.html)
 - The ggiraph package is designed to make ggplot2 interactive, and is an htmlwidget.
 - extends ggplot2 with interactive functions
-- tooltips (hovers + labels),  onclick (JS function whenever click occurs on an element), data_id (for use with Shiny)
+- has the following features: tooltips (hovers + labels),  onclick (JS function whenever click occurs on an element), data_id (for use with Shiny)
 - Simplistic, has 'basic' interactivity covered - similar to the other htmlwidgets we've been looking at
-- Plotly might have more features with ggplotly() covered
+- Plotly has more features with ggplotly() covered
+- How it works: you build upon a ggplot by adding interactive functions under ggiraph, and pass it through the ggiraph() function.
 
+```
+# a simple ggplot (scatterplot):
+g <- ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point()
+
+# add tooltips:
+g_int <- g + geom_point_interactive(aes(tooltip = Species), size = 2)
+
+#render:
+ggiraph(code = print(g_int), width = 0.7)
+
+```
+
+- Currently looking at source code to see how they've managed to render the ggplot into SVG. (looks like they used D3 to render the plot + additional JS to pass data through from R -> JS).
+- *I had a look at this to see how others have incorporated 'interactivity' on an originally static R plot. ggplot is built upon grid, similarly iNZightPlots is built upon grid.*
+- Are there any other packages out there that take a plot package originally for static plotting in R and have made them interactive on the web?
 
 **Other ideas/inspiration...**
 - Build a web app which runs on React?
 - Grid panels!
 - Mike Bostock's introduction to D3.express which uses reactive programming on [Medium](https://medium.com/@mbostock/a-better-way-to-code-2b1d2876a3a0)
 - Time series [zoom](https://bl.ocks.org/jroetman/9b4c0599a4996edef0ab) - D3
+
+**On the to-read list:**
+- [iPlots eXtreme - Simon Urbanek](https://link.springer.com/article/10.1007/s00180-011-0240-x)
+- Interactive Graphics for Data Analysis
+
 
 ---
 
