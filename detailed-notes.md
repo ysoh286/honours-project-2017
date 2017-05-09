@@ -10,15 +10,12 @@ This document contains findings, examples, and all kinds of things related to th
 
 **SVG+Shiny+JS:**
 - Since there is a way of sending data/messages between Shiny and the browser, we can send the co-ordinates of the data from R/Shiny and update the 'points' on the trendline in JS, which only changes the trend-line.
-- Can be done with iNZightPlots, but because there isn't a clear naming scheme, requires changing of tags and element names each time you change the plot. (Every time you change the svg output, the id of the trendline changes each time...)
+- Can be done with iNZightPlots, but because there isn't a clear naming scheme - requires changing of tags and element names each time you re-plot.
 - Things to be aware of: mapping between svg and data values, finding the correct viewport/panel. The change is much faster. Currently works on a single plot that's been defined in R before running Shiny. Takes a little long when you try produce SVG output for a scatterplot with too many points...
 
 **Using DOM?:** (in progress)
-- Managed to render the plot
-- Still figuring out how to send data from R to browser and back...
-
-Similarities to Shiny:
-- DOM Package: htmlPage() and HTML() in Shiny are similar in the sense you can write pure html within the function and it renders on a web browser.
+- Managed to render the plot, dropdown menu.
+- Still figuring out how to send data from R to browser and back and linking everything together...
 
 **JS + Shiny: How to communicate messages between client and server**
 - You can send messages in JavaScript to Shiny and back. There's a blog post  [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/) about how you can use these functions to send messages/data back and forth.
@@ -55,8 +52,7 @@ OTHER THINGS...
 - Could extend to simple DOM elements other than plots
 - SVG with big datasets: would need to aggregate data + create interactions that scale accordingly (zooming)
 - Possibility of storing data within the svg element tags to make mapping and attaching interactivity easier(?)
-- Would we want to use a reactive programming model like Shiny, but be able to rerender when necessary (e.g. A situation where if a plot does not change significantly, only updates certain values)?
-- Could you add and remove interactivity WITHOUT refreshing the entire browser/or need to rerun code to make the entire plot from scratch (could the DOM package achieve this)?
+- Could you add and remove interactivity WITHOUT refreshing the entire browser/or need to rerun code to make the entire plot from scratch?
 
 **Boxplots:**
 - If the box plot was built in layers: have functions that allow user to - link layers together, add layers, remove layers easily.
@@ -73,7 +69,9 @@ add_highlight(box, dot, range = c(boxMin, boxMed), event.type = c("hover", "clic
 link_layers(box, dot,...)
 remove_layers(layer.name)
 add_layers(layer.name)
+
 ```
+
 - construct the box plot (already exists), name/id would allow an id group for the entire box plot.  
 - Inside the boxplot constructed by 2 boxes (rect/polygon elements which are id as upperBox and lowerBox) and lines (line/polygon elements - minLine, maxLine) - to refer to a certain part: name.upperBox
 - plot object would have generated some accessible data such as minimum, maximum, median, LQ and UQ values
@@ -200,17 +198,22 @@ Extra notes from previous meeting:
  - a Mozilla Firefox extension that allows you to customise a web page using JS via a user script.
  - [Add-on to Firefox](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/)
 
-
 - ADVANTAGES: You can throw things on a page, and remove things on the page without having to rerender/refresh the page...
 
 - DISADVANTAGES: Currently under development, several limitations listed [here](https://www.stat.auckland.ac.nz/~paul/Reports/DOM/Intro/DOM-Intro.html)
   - Installation might not be as straightforward (for standalone HTML, might be fine but for when you want to send things back and forth from R  <-> browser - requires greasemonkey + FireFox)
+  - You can only run 1 page at a time.
+
 
 - COMPARISON to Shiny:
   - Shiny has the advantage of being 'simplistic' to the user without introducing the web technologies behind it (you can actually get a little further with basic knowledge of CSS/HTML/JS), whereas DOM has got the advantage of being more flexible, but requires knowledge in these web technologies.
   - Shiny can get complex in terms of dealing with its 'reactive' nature that appears to do 'magic'. Sometimes this is unwarranted for (especially when it just throws a bunch of errors at you and you have no idea why it runs fine in R, but not in Shiny...). Sometimes you don't want it to be reactive (like the trendline challenge).
   - If you hate the bootstrap look: you can customise how things look in DOM.
   - htmlPage(): Looking a little similar (externally) to what Shiny's doing with rendering UI in its UI component...
+
+  *Questions:
+  - Can you link external CSS/JS files in without having to set attributes for each element?
+  - Are the only things you can return in the RDom.Rcall() function things related to elt/css from the browser?*
 
 ```
 Shiny notation for a paragraph:
@@ -232,7 +235,8 @@ htmlPage("<p> Hello World </p>")
 - Limitations/thoughts: currently works with the plot pre-defined in R, how accurate is gridSVG in translating co-ordinates(?), works best when you've got a plot with a consistent naming scheme (for panels + locating elements)
 
 - DOM version: (in progress)
-  - Managed to render plot on the page
+  - Managed to render plot, dropdowns on the page
+  - Still figuring out how to link everything together....
 
 
 **More about HTMLWidgets:**
