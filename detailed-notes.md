@@ -11,11 +11,13 @@ This document contains findings, examples, and all kinds of things related to th
 **SVG+Shiny+JS:**
 - Since there is a way of sending data/messages between Shiny and the browser, we can send the co-ordinates of the data from R/Shiny and update the 'points' on the trendline in JS, which only changes the trend-line.
 - Can be done with iNZightPlots, but because there isn't a clear naming scheme - requires changing of tags and element names each time you re-plot.
-- Things to be aware of: mapping between svg and data values, finding the correct viewport/panel. The change is much faster. Currently works on a single plot that's been defined in R before running Shiny. Takes a little long when you try produce SVG output for a scatterplot with too many points...
+- Things to be aware of: mapping between svg and data values, finding the correct viewport/panel. The change is much faster. Currently works on a single plot that's been defined in R before running Shiny. Takes a little long when you try produce SVG for a scatterplot with several points...
 
 **Using DOM?:** (in progress)
 - Managed to render the plot, dropdown menu.
-- Still figuring out how to send data from R to browser and back and linking everything together...
+- Still figuring out how to link 'click' to change - send data from R to browser and back and linking everything together...?
+- *Ask Paul how does RDOM.Rcall() work with the setAttribute() function + if you have multiple <p> tags on a page, how do you locate exactly which to assign attributes to?
+Why is it that when you nest an svg in a div tag and call getElementById() to find the svg, it returns 0?*
 
 **JS + Shiny: How to communicate messages between client and server**
 - You can send messages in JavaScript to Shiny and back. There's a blog post  [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/) about how you can use these functions to send messages/data back and forth.

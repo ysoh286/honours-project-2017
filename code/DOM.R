@@ -7,7 +7,7 @@ library(DOM)
 ## going through his intro tutorial - look at  version: 0.3. 
 #https://www.stat.auckland.ac.nz/~paul/Reports/DOM/v0.3/DOM-v0.3.html
 ## DON'T LOOK AT 0.4! (unless you're playing with CSS)
-#this works for all browsers - Safari, Firefox, Chrome (testing on Mac OSX, R version 3.2.4).
+#this works on Firefox (testing on Mac OSX, R version 3.2.4).
 
 page <- htmlPage('<p> Hello World! </p>') 
 

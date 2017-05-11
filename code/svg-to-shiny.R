@@ -158,7 +158,7 @@ shinyApp(
       tags$script('
             Shiny.addCustomMessageHandler("testmessage",
             function(trendLine) {
-            document.getElementById("plot_01.loess.lines.panel.1.1.1.1").
+            console.log(document.getElementById("plot_01.loess.lines.panel.1.1.1.1"))
             });')
       
       )
@@ -241,7 +241,7 @@ new <- XML::newXMLNode("polyline",
                     "fill-opacity" = "1"
                   )) 
 #somehow this crashes RStudio TT_TT and won't run. 
-#Instead, I'm going to replace the points instead via JS.
+#Instead, I'm going to replace the points via JS.
 
 
 ##-------------- trial 2: attempting to change trendline  ----------------------
