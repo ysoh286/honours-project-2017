@@ -2,9 +2,58 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
+## Week 10 (11/05 - 18/05): WebGL + Trendline Challenge Part 3  
+
+**Q: Complete the DOM solution for trendline challenge, extend by adding brushing to generate a smoother over selected points with existing tools and investigate webGL/Plotly, D3, V8.**
+
+??
+
+TODOS:
+- Complete DOM solution
+- Brushed smoother (something like ggvis demo?)
+- WebGL,D3,V8
+- plotly parallel plot
+
+#### NOTES:
+
+**WebGL + Plotly**
+- [WebGL - MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) - includes a lot of tutorials + resources
+- [WebGL - Khronos](https://www.khronos.org/webgl/)
+- [WebGL Public Wiki page](https://www.khronos.org/webgl/wiki/Main_Page)
+-  Examples and inspiration - [Chrome Experiments](https://www.chromeexperiments.com/webgl)
+- "webGL (Web Graphics Library) is a JavaScript API for rendering interactive 3D/2D graphics within web browsers" - use of HTML5 canvas elements
+- Support for: Firefox, Google Chrome, Opera, Safari, IE 11+
+- [Plotly's use of webGL](https://plot.ly/r/webgl-vs-svg/) - ideally for rendering more elements on the browser (a solution for viewing large datasets?)
+- Their example of 1 million points doesn't show up very well when you zoom in + there is a slight lag. Not sure if users would be patient enough to wait...
+- Using webgl in R? there is a package called rgl!
+- [Intro to rgl](https://cran.r-project.org/web/packages/rgl/vignettes/WebGL.html)
+
+
+**V8**
+- [Introduction to V8 for R](https://cran.r-project.org/web/packages/V8/vignettes/v8_intro.html)
+- [Google's V8 - original source](https://developers.google.com/v8/intro)
+- [Repository](https://github.com/jeroen/V8)
+- "V8 is Google's open source, high performance JavaScript engine" - essentially, a way where you can write JavaScript in R.
+- It is an engine only - no window/browser window to link to
+- Features: able to load JavaScript libraries, easily interchange data from R -> JS via JSON (uses jsonlite), call functions, convert objects between R and JavaScript easily, 'interactive console' that can be run in R for debugging
+- Note that: DOM (Document Object Mode) objects are provided by the browser (ie Chrome, Firefox, RStudio's pane). V8 provides functions, data types, operators to be used.
+- OpenCPU allows R functions to be called in JS, while V8 does the opposite
+- Examples of how V8 can be used??
+- [V8: JavaScript and R - Presentation by Hans Borchers](http://hwborchers.lima-city.de/Presents/V8talk.html#1)
+  - Mentioned plotting libraries: plotly, rbokeh, vegalite?, googleVis
+  - Javascript packages cannot be used such as npm, but you can load libraries either locally or url/CDN
+  - Why would you use V8? For computation that cannot be vectorised in R + to run javascript in R (of course, you need to know some javascript!).
+
+
+**D3**
+??
+
+**Things to think about:**
+  - What if you could rethink a solution without assuming a static plot has been given?
+
 ---
 
-## Week 7-9 (20/04 - 05/11): Expressing ideas, SVG + Shiny/DOM + JS
+## Week 7-9 (20/04 - 11/05): Expressing ideas, SVG + Shiny/DOM + JS
 
 **Q: Reattempting the trendline challenge -  implementation of a solution that does NOT redraw the entire plot (SVG+JS+DOM/Shiny)**
 
@@ -16,8 +65,7 @@ This document contains findings, examples, and all kinds of things related to th
 **Using DOM?:** (in progress)
 - Managed to render the plot, dropdown menu.
 - Still figuring out how to link 'click' to change - send data from R to browser and back and linking everything together...?
-- *Ask Paul how does RDOM.Rcall() work with the setAttribute() function + if you have multiple <p> tags on a page, how do you locate exactly which to assign attributes to?
-Why is it that when you nest an svg in a div tag and call getElementById() to find the svg, it returns 0?*
+*Ask Paul how does RDOM.Rcall() work with the setAttribute() function + if you have multiple <p> tags on a page, how do you locate exactly which to assign attributes to? Why is it that when you nest an svg in a div tag and call getElementById() to find the svg, it returns 0?*
 
 **JS + Shiny: How to communicate messages between client and server**
 - You can send messages in JavaScript to Shiny and back. There's a blog post  [here](https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/) about how you can use these functions to send messages/data back and forth.

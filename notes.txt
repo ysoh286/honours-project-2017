@@ -1,5 +1,5 @@
 
-2017-05-11
+2017-05-18
 ----------
 
 DISCUSS:
@@ -10,6 +10,70 @@ DISCUSS:
       "trying to find a way to create a series of interconnected graphs where I have a filter (either a drop down or series of checkboxes) where when an option is selected, all graphs are updated to show that group’s data.  I need to keep these graphs internal to our organization, so can’t use Shiny etc.; I am also unable to run R or other products on my server (company policy)."
 
   + implement a plotly parallelplot ?
+
+  + start report draft
+    - background
+    - set of challenges
+
+
+2017-05-11
+----------
+
+DISCUSS:
+
+  + different implementations of plot with trend line plus slider (for
+    trend line parameter) WHERE ONLY the trend line is updated when
+    the slide moves
+    - Shiny + gridSVG + javascript (D3?)
+    - calculations (of smoother) remain in R
+    - updating of graphic shifted to the browser
+    - speed up of gridSVG would be useful
+
+  + Reflections on detailed-notes.md (Week 7-8)
+    - we could relax the static-plot assumption
+    - have you seen the V8 R package ?
+    - what is important (from reading your description):
+      + labels 
+      + coordinate systems
+      + functions to transform between coordinate systems
+      + hierarchies of objects
+      + layout mechanisms
+      + how to link objects
+      + events
+    - something that D3 adds is an emphasis on transitions
+      (from object A to object B, e.g., replacing a trend line)
+      + this is tricky when A and B have different number of points
+      + even trickier when A and B are different sorts of objects
+
+  + Tableau public
+    - Chris says it is really sluggish
+      (desktop version must be faster?)
+
+
+TODO:
+
+  + different implementations of plot with trend line plus slider (for
+    trend line parameter) WHERE ONLY the trend line is updated when
+    the slide moves
+    - DOM + gridSVG + javascript (D3?)
+
+  + extension of plot with trend line plus slider (for
+    trend line parameter) WHERE ONLY the trend line is updated when
+    the slide moves
+    - allow points to be selected on plot and smoother is only fitted
+      to selected points 
+      (i.e., direct interaction as well as the indirect interaction 
+       via the slider)
+
+  + look at WebGL (+ plotly) for faster graphics (for larger data)
+
+
+DONE:
+
+  + different implementations of plot with trend line plus slider (for
+    trend line parameter) WHERE ONLY the trend line is updated when
+    the slide moves
+    - Shiny + gridSVG + javascript (D3?)
 
 
 2017-05-04
