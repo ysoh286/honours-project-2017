@@ -371,6 +371,7 @@ shinyApp(
 
 #draw plot:
 
+income <- read.csv("~/Desktop/datasets/nzincome.csv", header = TRUE)
 income1000 <- income[1:1000,]
 
 pdf(NULL)
@@ -383,7 +384,7 @@ dev.off()
 svgOutput <- capture.output(all$svg)
 #get panel viewport to match co-ordinates correctly:
 #note: you need to change this every time you replot, since it's always different each time.
-panel <- "container::VP:TOPlayout::GRID.VP.4143::VP:PLOTlayout::GRID.VP.4144::GRID.VP.4145::VP:locate.these.points.1"
+panel <- "container::VP:TOPlayout::GRID.VP.167::VP:PLOTlayout::GRID.VP.168::GRID.VP.169::VP:locate.these.points.1"
 
 #store co-ordinates and load functions:
 gridSVG::gridSVGCoords(coords)
@@ -431,14 +432,14 @@ shinyApp(
                 Shiny.addCustomMessageHandler("colorCall", 
                 function(color) {
                 //you need to replace this every time since it changes name every time you replot.
-                var trendline = document.getElementById("GRID.lines.492.1.1");
+                var trendline = document.getElementById("GRID.lines.84.1.1");
                 trendline.style.stroke = color;
                 });'),
       tags$script('
                   Shiny.addCustomMessageHandler("trendlineCall",
                   function(pt) {
                 //you need to replace this every time since it changes name every time you replot.
-                  var trendline = document.getElementById("GRID.lines.492.1.1");
+                  var trendline = document.getElementById("GRID.lines.84.1.1");
                   trendline.setAttribute("points", pt);
                   });')
       

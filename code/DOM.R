@@ -70,8 +70,11 @@ appendChild(page,
 
 # a slider?
 appendChild( page,
-             child = htmlNode('<input id="slider" type="range" min = "0" max = "100" step = "10" />'),
+             child = htmlNode('<input name="sl" id="slider" type="range" min = "0" max = "100" step = "10" value = "50" />'),
              response = htmlNode())
+
+appendChild(page,
+            child = htmlNode('<output name = "slOut" id="sliderVal"></output>'))
 #doesn't show the steps though...
 
 # a search box?

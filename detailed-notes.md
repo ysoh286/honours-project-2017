@@ -2,32 +2,71 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
+TODOS:
+- Start learning D3!
+- Trendline challenge part 3
+- Get a better idea of how webGL works...
+
 ## Week 10 (11/05 - 18/05): WebGL + Trendline Challenge Part 3  
 
 **Q: Complete the DOM solution for trendline challenge, extend by adding brushing to generate a smoother over selected points with existing tools and investigate webGL/Plotly, D3, V8.**
 
-??
+In brief: webGL stands for 'Web Graphics Library'. It is generally used for rendering 2D and 3D graphics on a web browser.
 
-TODOS:
-- Complete DOM solution
-- Brushed smoother (something like ggvis demo?)
-- WebGL,D3,V8
-- plotly parallel plot
+The main reason for using webGL with Plotly/rbokeh
+is to increase performance and efficiency of rendering plots, primarily those with several data points. Other reasons include creating 'shading' and appearance effects in 3D plots.
+Things are rendered inside a canvas element (a single DOM element rather than SVG, which has several DOM elements) which acts as a 'drawing' board and renders everything in pixels).
+You can also use canvas elements to draw objects as well (considered as an HTML5 standard).
+There is a possibility of mixing the SVG + canvas together (as seen in a D3 example).
+
+Chris's idea taken from Mondrian:
+- There's a demo from rbokeh that manages to zoom into hexbins such that when it gets to a certain point it starts rendering as points [here](http://ryanhafen.com/blog/plot-lots-of-data) - scroll down to 'Javascript callback teaser'. However, it's developmental (but it means it's possible!)
+
+DOM solution: I've managed to be able to change the trendline by clicking on text that's on the page.
+I can render a slider, but the main problem is retrieving the correct slider value and sending it back to R...
+- Speed is still relatively quick
+Possible ideas for extending DOM:
+- A way of easily attaching external js/css files to a page (and possibly JavaScript libraries)
+- Returning dynamically changing values (as seen with the slider)??
+
+Still working on trendline challenge part 3.
 
 #### NOTES:
+
+**Plotly parallel plot:**
+- [Plotting a parallel plot in R](https://plot.ly/r/parallel-coordinates-plot/)
 
 **WebGL + Plotly**
 - [WebGL - MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) - includes a lot of tutorials + resources
 - [WebGL - Khronos](https://www.khronos.org/webgl/)
 - [WebGL Public Wiki page](https://www.khronos.org/webgl/wiki/Main_Page)
 -  Examples and inspiration - [Chrome Experiments](https://www.chromeexperiments.com/webgl)
-- "webGL (Web Graphics Library) is a JavaScript API for rendering interactive 3D/2D graphics within web browsers" - use of HTML5 canvas elements
+- "webGL (Web Graphics Library) is a JavaScript API for rendering interactive 3D/2D graphics within web browsers" - use of HTML5 canvas elements rather than SVG
+- webGL is generally for 3D graphics/game development
 - Support for: Firefox, Google Chrome, Opera, Safari, IE 11+
-- [Plotly's use of webGL](https://plot.ly/r/webgl-vs-svg/) - ideally for rendering more elements on the browser (a solution for viewing large datasets?)
-- Their example of 1 million points doesn't show up very well when you zoom in + there is a slight lag. Not sure if users would be patient enough to wait...
+- [Plotly's use of webGL](https://plot.ly/r/webgl-vs-svg/) - ideally for rendering more elements on the browser (a solution for viewing large datasets?) + to increase performance and efficiency. (they compared themselves to Highcharts [here](https://plot.ly/highcharts-alternative/))
+- Plotly uses something called stack.gl
+- Their example of 1 million points doesn't show up very well when you zoom in + there is a slight lag. Not sure if users would be patient enough to wait... (but when you load it locally, it's fast enough.)
+- webGL -> [stack.gl](http://stack.gl/)  used for scatter plots, heatmaps, and all 3D charting (other plots such as box plots, histograms ... not supported - don't need to since there render grouped elements = less!)
 - Using webgl in R? there is a package called rgl!
 - [Intro to rgl](https://cran.r-project.org/web/packages/rgl/vignettes/WebGL.html)
 
+**rbokeh + webGL:**
+- Generally under testing purposes?
+- Once again, main reason for using webGL - testing purposes on efficiency against original svg, appearances, and trying new things with it.
+- Hafen's [blog post](http://ryanhafen.com/blog/plot-lots-of-data) on using rbokeh and webgl together
+- The bokeh (Python) version: [Speeding Up with webgl](http://bokeh.pydata.org/en/latest/docs/user_guide/webgl.html)
+
+**What's the difference between canvas vs SVG vs webGL?**
+- webGL provides a context for canvas elements to be drawn (in 2D).
+- Difference between canvas and svg: (as explained in Chapter 16 of [Eloquent Javascript](http://eloquentjavascript.net/16_canvas.html))
+  - SVG = DOM elements (focusing on shapes)
+  - Canvas = single DOM element that renders a 'drawing' in a node
+  - Canvas converts shapes to pixels(raster!), doesn't remember what they represent whereas SVG - shapes are preserved, moved and resized any time.
+  - To draw things to the browser using webGL, you draw things within a canvas element (javascript code to draw from webgl, but it's inside a <canvas> element)
+  - To move a shape on canvas: clear it and then redraw.
+  - both use similar co-ordinate systems (top-left = 0,0)
+- An [example](https://bl.ocks.org/starcalibre/5dc0319ed4f92c4fd9f9) of a scatterplot using SVG and canvas together using D3
 
 **V8**
 - [Introduction to V8 for R](https://cran.r-project.org/web/packages/V8/vignettes/v8_intro.html)
@@ -42,14 +81,20 @@ TODOS:
 - [V8: JavaScript and R - Presentation by Hans Borchers](http://hwborchers.lima-city.de/Presents/V8talk.html#1)
   - Mentioned plotting libraries: plotly, rbokeh, vegalite?, googleVis
   - Javascript packages cannot be used such as npm, but you can load libraries either locally or url/CDN
-  - Why would you use V8? For computation that cannot be vectorised in R + to run javascript in R (of course, you need to know some javascript!).
+  - Why would you use V8? For computation that cannot be vectorised in R + run javascript in R (of course, you need to know some javascript!).
 
-
-**D3**
-??
+**Trendline challenge: Part 3**
+[in progress]
+- As we've seen in previous weeks (way back in Week 3), shiny can do it with base plots and ggplot2, and ggvis has got its own demo.
+- Could we replicate the same thing on SVG/grid using Shiny to communicate back and forth?
+ Possible steps:
+ - write JS to select points on brushing (modify brush)
+ - When selected store an array of point ids, send it back to R
+ - somehow match point ids to data? Or convert co-ordinates back into data? (can you do that with grid/gridSVG?)
 
 **Things to think about:**
   - What if you could rethink a solution without assuming a static plot has been given?
+  - Plotly can render [dropdowns](https://plot.ly/r/dropdowns/)/some basic UI controls in R without the use of Shiny - may need to revisit some of the challenges where a full javascript solution is given (somewhat standalone).
 
 ---
 
@@ -322,6 +367,11 @@ What's the limit for translating data from R to JSON and back?*
 
 The interesting part is HOW does Mondrian and iPlots manage to do linking so 'effortlessly', and can that be translated onto the web? - might be too hard to tell from source code (unfortunately, I don't know Java.)
 Could we find tools that do similar things?
+- Martin Theus' [home page](http://www.theusrus.de/Homepage_of_Martin_Theus.html)
+  - His talk on interactive graphics in [2006](http://www.theusrus.de/Talks/Talks/IGfS.pdf)
+  - His talk slides on Mondrian in [2008](http://www.theusrus.de/Talks/Talks/Mondrian.pdf)
+  - [More talks slides](http://www.theusrus.de/Talks/)
+  - Might investigate this more to see if we could make similar in JS/for the web?
 - Linking a scatterplot to a bar plot [Demo](http://bl.ocks.org/curran/f4041cac02f19ee460dfe8b709dc24e7)
   - this uses model.js, which is a 'reactive model library used for data visualisation'
   - ^easily achievable in Shiny
@@ -363,7 +413,7 @@ ggiraph(code = print(g_int), width = 0.7)
 **On the to-read list:**
 - [iPlots eXtreme - Simon Urbanek](https://link.springer.com/article/10.1007/s00180-011-0240-x)
 - Interactive Graphics for Data Analysis
-
+- GOLD (Graphics of Large Datasets) - Antony Unwin, Martin Theus, Heike Hofmann
 
 ---
 
