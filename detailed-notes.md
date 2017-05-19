@@ -2,41 +2,55 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-TODOS:
-- Start learning D3!
-- Trendline challenge part 3
-- Get a better idea of how webGL works...
+## Week 10-11 (11/05 - 25/05): Quick intro to WebGL, Trendline Challenge Part 3, Report Draft v0.1
 
-## Week 10 (11/05 - 18/05): WebGL + Trendline Challenge Part 3  
+TODOS:
+- Trendline challenge part 3.1 - raster + SVG?
+- Get a better idea of how webGL works (why aren't people using webGL more?) + can you interact with it in R?
+- report draft
+- complete DOM solution (...if it's possible)
 
 **Q: Complete the DOM solution for trendline challenge, extend by adding brushing to generate a smoother over selected points with existing tools and investigate webGL/Plotly, D3, V8.**
+
+TRENDLINE CHALLENGE PART 3: [in progress]
+Extending Shiny + gridSVG + JS
+- Able to directly draw a separate trendline based upon selected points
+- Reacts to the slider as well
+- Currently working on making underlying plot a raster + layer svg line on top.
 
 In brief: webGL stands for 'Web Graphics Library'. It is generally used for rendering 2D and 3D graphics on a web browser.
 
 The main reason for using webGL with Plotly/rbokeh
 is to increase performance and efficiency of rendering plots, primarily those with several data points. Other reasons include creating 'shading' and appearance effects in 3D plots.
-Things are rendered inside a canvas element (a single DOM element rather than SVG, which has several DOM elements) which acts as a 'drawing' board and renders everything in pixels).
-You can also use canvas elements to draw objects as well (considered as an HTML5 standard).
+Things are rendered inside a canvas element (a single DOM element rather than SVG, which has several DOM elements) which acts as a 'drawing' board and renders everything in pixels). This increases speed because there is only 1 single element, compared to several different elements to handle and render to the page.
+You can also use canvas elements to draw objects as well.
 There is a possibility of mixing the SVG + canvas together (as seen in a D3 example).
+
+ADVANTAGES of webGL:
+- Fast, efficient
+- low-level
+
+DISADVANTAGES webGL:
+- A pain to learn(a steep learning curve for those starting out?), maybe complex to implement (but rather, to save time: developers could use other javascript libraries that are built upon webGL)
+- raster, not vector
 
 Chris's idea taken from Mondrian:
 - There's a demo from rbokeh that manages to zoom into hexbins such that when it gets to a certain point it starts rendering as points [here](http://ryanhafen.com/blog/plot-lots-of-data) - scroll down to 'Javascript callback teaser'. However, it's developmental (but it means it's possible!)
 
-DOM solution: I've managed to be able to change the trendline by clicking on text that's on the page.
-I can render a slider, but the main problem is retrieving the correct slider value and sending it back to R...
+DOM package solution: I've managed to be able to change the trendline by clicking on text that's on the page.
+I can render a slider, but the main problem is sending the dynamically changed value to be used in the RDOM.RCall() function (or somehow retrieve it using the that specific function to facilitate the interaction we want to achieve) (static values are fine).
 - Speed is still relatively quick
+- You still have access to R while it's running (recall that one of the disadvantages to using Shiny is you don't have access to R when you're running your web application)
+
 Possible ideas for extending DOM:
 - A way of easily attaching external js/css files to a page (and possibly JavaScript libraries)
-- Returning dynamically changing values (as seen with the slider)??
-
-Still working on trendline challenge part 3.
 
 #### NOTES:
 
 **Plotly parallel plot:**
 - [Plotting a parallel plot in R](https://plot.ly/r/parallel-coordinates-plot/)
 
-**WebGL + Plotly**
+**WebGL**
 - [WebGL - MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) - includes a lot of tutorials + resources
 - [WebGL - Khronos](https://www.khronos.org/webgl/)
 - [WebGL Public Wiki page](https://www.khronos.org/webgl/wiki/Main_Page)
@@ -44,6 +58,9 @@ Still working on trendline challenge part 3.
 - "webGL (Web Graphics Library) is a JavaScript API for rendering interactive 3D/2D graphics within web browsers" - use of HTML5 canvas elements rather than SVG
 - webGL is generally for 3D graphics/game development
 - Support for: Firefox, Google Chrome, Opera, Safari, IE 11+
+- utilises GPU rather than just the CPU alone
+
+**Plotly + webGL:**
 - [Plotly's use of webGL](https://plot.ly/r/webgl-vs-svg/) - ideally for rendering more elements on the browser (a solution for viewing large datasets?) + to increase performance and efficiency. (they compared themselves to Highcharts [here](https://plot.ly/highcharts-alternative/))
 - Plotly uses something called stack.gl
 - Their example of 1 million points doesn't show up very well when you zoom in + there is a slight lag. Not sure if users would be patient enough to wait... (but when you load it locally, it's fast enough.)
@@ -60,7 +77,7 @@ Still working on trendline challenge part 3.
 **What's the difference between canvas vs SVG vs webGL?**
 - webGL provides a context for canvas elements to be drawn (in 2D).
 - Difference between canvas and svg: (as explained in Chapter 16 of [Eloquent Javascript](http://eloquentjavascript.net/16_canvas.html))
-  - SVG = DOM elements (focusing on shapes)
+  - SVG = DOM elements (focuses on shapes)
   - Canvas = single DOM element that renders a 'drawing' in a node
   - Canvas converts shapes to pixels(raster!), doesn't remember what they represent whereas SVG - shapes are preserved, moved and resized any time.
   - To draw things to the browser using webGL, you draw things within a canvas element (javascript code to draw from webgl, but it's inside a <canvas> element)
@@ -82,19 +99,24 @@ Still working on trendline challenge part 3.
   - Mentioned plotting libraries: plotly, rbokeh, vegalite?, googleVis
   - Javascript packages cannot be used such as npm, but you can load libraries either locally or url/CDN
   - Why would you use V8? For computation that cannot be vectorised in R + run javascript in R (of course, you need to know some javascript!).
+  *Because there's no link to a DOM/web browser, not ideal for what we want to achieve. Could be helpful if we need to run javascript in R on the backend/server side, but it's likely you can achieve more faster results by sending it straight to the browser. There's a possibility to use it for converting data objects into JavaScript objects, but this can already be achieved with R package jsonlite.*
 
 **Trendline challenge: Part 3**
-[in progress]
+
 - As we've seen in previous weeks (way back in Week 3), shiny can do it with base plots and ggplot2, and ggvis has got its own demo.
-- Could we replicate the same thing on SVG/grid using Shiny to communicate back and forth?
+- Could we replicate the same thing on SVG/grid using Shiny to communicate back and forth? YES + it's much more dynamic (though, if users need a less dynamic version, might have to modify some JS).
  Possible steps:
- - write JS to select points on brushing (modify brush)
- - When selected store an array of point ids, send it back to R
- - somehow match point ids to data? Or convert co-ordinates back into data? (can you do that with grid/gridSVG?)
+ - write JS to select points on brushing (modify brush) - used previous code for iNZightPlots, and it runs. (what could happen is I could write a generalized version of this and it could be applied to any gridSVG plot as long as: panels and where the points lie are well defined in the plot.)
+ - When selected store an array of point ids, send it back to R (using Shiny functions + JS functions)
+  - somehow match point ids to data? Or convert co-ordinates back into data?
+ - I've been able to send back just the indexes of the points which correspond to the data rows, provided that the gridSVG plot has plotted in ORDER of the data and that there are no missing values.
+ - Another alternative to try is to convert the co-ordinates using gridSVGCoords (not sure if you could do a from/to switch)
+ - Working on overlaying SVG on canvas [in progress]
+
 
 **Things to think about:**
   - What if you could rethink a solution without assuming a static plot has been given?
-  - Plotly can render [dropdowns](https://plot.ly/r/dropdowns/)/some basic UI controls in R without the use of Shiny - may need to revisit some of the challenges where a full javascript solution is given (somewhat standalone).
+  - Plotly can render [dropdowns](https://plot.ly/r/dropdowns/)/some basic UI controls in R without the use of Shiny - may need to revisit some of the challenges where a full javascript solution is given (somewhat standalone?).
 
 ---
 

@@ -33,11 +33,10 @@ dev.off()
 #get panel viewport to match co-ordinates correctly:
 panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
 
-# rendering on DOM:
+# render using DOM:
 page <- htmlPage()
 
-#add some divs:
-
+#add svg:
 appendChild(page,
             child = svgNode(XML::saveXML(svg)),
             ns = TRUE,
@@ -63,39 +62,39 @@ calculate  = function(...) {
   x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
   #get panel viewport to match co-ordinates correctly:
   panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-  
+
   if (grepl("Linear", list(...)[1])) {
     #linear model:
     linear <- lm(Petal.Length~Petal.Width, data = iris)
-    y <- linear$coefficients[1] + linear$coefficients[2]*x 
+    y <- linear$coefficients[1] + linear$coefficients[2]*x
   } else {
       #loess model:
       lo <- loess(Petal.Length~Petal.Width,data = iris)
        y <- predict(lo, x)
   }
 
-  
   #convert co-ordinates:
   svg_x <- viewportConvertX(panel, x, "native")
   svg_y <- viewportConvertY(panel, y, "native")
-  
+
   #create 'points' string:
   pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
-  
+
   #just testing that pt returns a string! :)
   #print(pt)
   return(pt)
-  
+
 }
 
 #write JS function to update point co-ordinates:
 appendChild(page,
-            child=javascript('sendCoords = function(pt) { 
+            child=javascript('sendCoords = function(pt) {
                              var svg = document.getElementsByTagName("svg")[0];
                              var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
                               trendline.setAttribute("points", pt);
                              }'))
 
+#set attributes:
 setAttribute(page,
              elt = css("p"),
              attrName = "onclick",
@@ -106,6 +105,7 @@ setAttribute(page,
              attrName = "onclick",
              attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], sendCoords)')
 
+
 #Currently works: when you click on "Linear" - it changes to a linear model
 # When you click on "Loess" - it changes to a loess model
 
@@ -113,41 +113,50 @@ setAttribute(page,
 
 page <- htmlPage()
 #add slider:
-appendChild( page,
-             child = htmlNode('<input name="sl" id="slider" type="range" min = "0" max = "1" step = "0.01" value = "0.5"/>'),
-             response = htmlNode())
+appendChild(page,
+            child = htmlNode('<input name="sl" id="slider" type="range" min = "0" max = "1" step = "0.01"/>'),
+            response = htmlNode())
 
-removeChild(page,
-       elt = css("input"))
+# getProperty 'value':
+# Note that: getAttribute refers to HTML, getProperty refers to JS
 
-#need to return the value that's selected
-hello <- function(elt, css) {
-  print(elt.value)
-}
 
-#wouldn't this work? 'value' = slider value - but it's failing- null not an object?? no idea.
+#Return this value!
+
+getProperty(page,
+            css("input"),
+            propName = "value",
+            response = nodePtr())
+
+appendChild(page,
+            child = htmlNode('<p> 0.5 </p>'))
+
+js <- ' change = function() {
+  var slider = document.getElementById("slider");
+  var p = document.getElementsByTagName("p")[0];
+  p.innerHTML = Number(slider.value).toFixed(2);
+}'
+
+appendChild(page,
+            child = javascript(js))
+
 setAttribute(page,
              elt = css("input"),
              attrName = "oninput",
-             attrValue = 'RDOM.Rcall("hello", this.value, [ "HTML" ], null)')
+             attrValue = "change()")
 
-appendChild(page,
-            child = javascript(value))
+
+# TODO: NEED TO SEND THE VALUE BACK TO R...
+# p now records the value of the slider.
+
+x <- getProperty(page,
+                 object = nodePtr(...),
+                 propName = "value")
 
 setAttribute(page,
              elt = css("input"),
-             attrName = "value",
-             attrValue = javascript("value()"))
-
-value <- "value = function() {
-  var sliderValue = document.getElementById('slider').value;
-  return(sliderValue);
-}"
-
-
-
-
-
+             attrName = "onchange",
+             attrValue = 'RDOM.Rcall("hello", this, [ "ptr" ], null)')
 
 
  #----------------------------------------------------
@@ -179,26 +188,26 @@ calculate  = function(trend) {
   x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
   #get panel viewport to match co-ordinates correctly:
   panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-  
+
   if (trend == "linear") {
     #linear model:
     linear <- lm(Petal.Length~Petal.Width, data = iris)
-    y <- linear$coefficients[1] + linear$coefficients[2]*x 
+    y <- linear$coefficients[1] + linear$coefficients[2]*x
   } else {
     #loess model:
     lo <- loess(Petal.Length~Petal.Width,data = iris)
     y <- predict(lo, x)
   }
-  
+
   #convert co-ordinates:
   svg_x <- viewportConvertX(panel, x, "native")
   svg_y <- viewportConvertY(panel, y, "native")
-  
+
   #create 'points' string:
   pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
-  
+
   return(pt)
-  
+
 }
 
 #Change color to green:
@@ -213,23 +222,30 @@ setAttribute(page, trendline, "points", calculate("loess"))
 cat = function(elt,css) {
 }
 
-#set attributes: 
-setAttribute(page, elt = css("p"), attrName = "onclick", 
+#set attributes:
+setAttribute(page, elt = css("p"), attrName = "onclick",
              attrValue = 'RDOM.Rcall("cat", [this], [ "HTML" ],null)')
 
 setAttribute(page, elt = css("span"), attrName = "onclick",
              attrValue = 'RDOM.Rcall("cat", [this], ["HTML"], null)')
 # Still not sure how this works...?
 
-#append JS?
-js <- 'highlight = function() {
-var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
-trendline.style.stroke = color;
-};'
-
-appendChild(page,
-            child = javascript(js))
-
-# This doesn't work. Returns nothing. 
+# This doesn't work. Returns nothing.
 # When you go to the console, it's like it won't return anything that's nested in a div.
 # Hence try use getElementById() without divs
+# It's interesting that when you nest things in divs, things don't become seen...
+# TODO: NEED TO LEARN WHAT'S THE DIFF BETWEEN A NODE, ATTRIBUTE, PROPERTY!
+
+#wouldn't this work? 'value' = slider value - but it's failing- null not an object?? no idea.
+setAttribute(page,
+             elt = css("input"),
+             attrName = "oninput",
+             attrValue = 'RDOM.Rcall("hello", this.value, [ "HTML" ], null)')
+
+appendChild(page,
+            child = javascript(value))
+
+setAttribute(page,
+             elt = css("input"),
+             attrName = "value",
+             attrValue = javascript("value()"))
