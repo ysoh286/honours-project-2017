@@ -17,11 +17,11 @@ Extending Shiny + gridSVG + JS
 - Able to directly draw a separate trendline based upon selected points
 - Reacts to the slider as well
 - Currently working on making underlying plot a raster + layer svg line on top (a possible way solution for large datasets rather than getting gridSVG to produce everything).
-    - managed to layer a raster in an svg, but it cannot render in Shiny, because there's a suspected [bug](https://github.com/rstudio/shiny/issues/1148) in the Shiny IDE when we try to render the raster image in. (It supposedly works on Linux but not on Windows - still testing!)
+    - managed to layer a raster in an svg, but having trouble rendering it in Shiny (it's failing to find the image.)
 
 DOM SOLUTION:
 - Current solution has a slider, but requires change by a click on the value for the trendline to change (not an automatic change when we select on the slider.)
-I can render a slider, but the main problem is sending the dynamically changed value back to R using the RDOM.RCall() function (or somehow retrieve it using the that specific function to facilitate the interaction we want to achieve) (static values are fine).
+Still having trouble sending the dynamically changed value back to R using the RDOM.RCall() function (or somehow retrieve it using the that specific function to facilitate the interaction we want to achieve - static values are fine).
 - Speed is still relatively quick
 - You still have access to R while it's running (recall that one of the disadvantages to using Shiny is you don't have access to R when you're running your web application)
 

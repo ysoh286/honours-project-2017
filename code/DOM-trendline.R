@@ -34,7 +34,7 @@ dev.off()
 panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
 
 # render using DOM:
-page <- htmlPage()
+page <- htmlPage() 
 
 #add svg:
 appendChild(page,
@@ -109,13 +109,14 @@ setAttribute(page,
 #Currently works: when you click on "Linear" - it changes to a linear model
 # When you click on "Loess" - it changes to a loess model
 
+#--------------------------- SLIDER --------------------------------
 ## What if we want to include a slider and somehow return the selected value?
 
 page <- htmlPage()
 #add slider:
 appendChild(page,
             child = htmlNode('<input name="sl" id="slider" type="range" min = "0" max = "1" step = "0.01"/>'),
-            response = htmlNode())
+            response = css())
 
 # getProperty 'value':
 # Note that: getAttribute refers to HTML, getProperty refers to JS
@@ -123,10 +124,6 @@ appendChild(page,
 
 #Return this value!
 
-getProperty(page,
-            css("input"),
-            propName = "value",
-            response = nodePtr())
 
 appendChild(page,
             child = htmlNode('<p> 0.5 </p>'))
@@ -146,8 +143,56 @@ setAttribute(page,
              attrValue = "change()")
 
 
-# TODO: NEED TO SEND THE VALUE BACK TO R...
-# p now records the value of the slider.
+calculate  = function(...) {
+  #x values:
+  x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
+  #get panel viewport to match co-ordinates correctly:
+  panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
+  
+  #get value from slider from (...);
+  cat(list(...))
+
+    #loess model:
+    lo <- loess(Petal.Length~Petal.Width,data = iris, span = value)
+    y <- predict(lo, x)
+  
+  #convert co-ordinates:
+  svg_x <- viewportConvertX(panel, x, "native")
+  svg_y <- viewportConvertY(panel, y, "native")
+  
+  #create 'points' string:
+  pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
+  
+  #just testing that pt returns a string! :)
+  #print(pt)
+  return(pt)
+  
+}
+
+hello = function(...) {
+  result <- list(...)
+  print(result[[1]])
+  index  <- gsub("\\>([0-9].[0-9][0-9])</p>", "\\1", result[[1]])
+  #this still doesn't work at the moment... 
+  print(index)
+}
+
+appendChild(page,
+            child=javascript('sendCoords = function(pt) {
+                             var svg = document.getElementsByTagName("svg")[0];
+                             var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
+                             trendline.setAttribute("points", pt);
+                             }'))
+
+setAttribute(page,
+             elt = css("p"),
+             attrName = "onclick",
+             attrValue = 'RDOM.Rcall("hello", this, [ "HTML" ], null)')
+
+# p now records the value of the slider, - to get the trendline to change, you still need 
+# to click on the text before it changes. (It's not dynamic relative to the slider)
+
+# TODO: NEED TO SEND THE VALUE BACK TO R straight from the slider.
 
 x <- getProperty(page,
                  object = nodePtr(...),
@@ -242,10 +287,3 @@ setAttribute(page,
              attrName = "oninput",
              attrValue = 'RDOM.Rcall("hello", this.value, [ "HTML" ], null)')
 
-appendChild(page,
-            child = javascript(value))
-
-setAttribute(page,
-             elt = css("input"),
-             attrName = "value",
-             attrValue = javascript("value()"))
