@@ -1,0 +1,404 @@
+---
+title: "Report Draft : Current approaches for web interactive plots in R"
+runtime: shiny
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+#load the following packages:
+library(plotly, quietly = TRUE)
+library(ggvis, quietly = TRUE)
+library(crosstalk, quietly = TRUE)
+library(shiny, quietly = TRUE)
+library(grid, quietly = TRUE)
+library(gridSVG, quietly = TRUE)
+library(DT, quietly = TRUE)
+library(lattice, quietly = TRUE)
+
+income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
+```
+
+### This is still a work in progress...
+
+---
+
+## Executive summary {#execsum}
+
+Approaches for creating interactive data visualisations have gained momentum in the present day. However many of these existing tools are limited in achieving interactivity on larger datasets and cannot handle more complex tasks such as customisation, querying and linking between different views of data. By using more flexible tools, we hope to combat these limitations and potentially create more impactful and fluid interactions for users to help them explore data from their own perspective.
+
+[ probably needs more...]
+
+---
+
+##  1 Introduction {#intro}
+The purpose of this report is to investigate current solutions for creating interactive data visualisations in R that can be accessible through the web. Interactive visualisations help inform and explain our data beyond static plots. We aim to identify key similarities and differences between existing tools and find ways to meet user needs.
+
+### Why web interactive? {#purpose}
+Interactive plots allow users to explore the data freely. Though it may be presented in a more visually appealing way, it may help explain a topic to a more general audience. As Murray (2012) suggests, static visualisations can only 'offer precomposed 'views' of data', where as interactive plots can provide us with different perspectives. To share our views and findings more easily, the web provides an ideal platform for communicating and exchanging information. It has become accessible to everyone without worrying about technical issues such as device compatibility and installation. We find web interactive visualisations are commonly used in teaching statistics, education, data journalism and is likely to continue to be demanded for in the future. 
+
+---
+
+## 2 Existing tools for interactive data visualisation
+
+Existing tools for creating fast web interactive plots in R can generally be classified as a class of R packages known as HTMLwidgets. For tools that do not follow that class, the ggvis and the Shiny package are popular alternatives where interactivity is driven in R. These will be discussed along with the limitations they hold.
+
+( In progress: include gridSVG + custom javascript, maybe rbokeh if further investigated)
+
+####HTMLWidgets 
+An HTMLWidget is an R package that allows users to have access to an existing javascript library through bindings between defined R functions and the JavaScript library (RStudio, 2014). These HTMLwidgets can serve different purposes depending on what the original javascript library does, such as Highcharter(Kunst, 2017) and rbokeh(Hafen, 2014) that generates plots using the HighCharters.js API (Highcharts) and the Bokeh.js API respectively, DataTable(SpryMedia Limited and RStudio, 2016) that generates interactive tables, and Leafet for interactive maps.
+
+The main HTMLwidget package that we have looked at in detail is plotly as it has focused on incorporating interactivity on a wide range of plots and is compatible with r packages Shiny and crosstalk (more details are discussed below).
+
+```{r, eval = FALSE, echo = FALSE}
+highcharter::hchart(iris, "scatter", hcaes(x = Petal.Width, y = Petal.Length, group = Species))
+```
+
+#####Plotly {#plotly}
+Plotly is a graphing library that uses the Plotly.JS API (Plotly Technologies, 2017) that is built upon D3. It is powerful in the sense that it can convert plots rendered in ggplot2 into interactive plots. It provides basic interactivity including tooltips, zooming and panning, selection of points, and subsetting of groups of data through its legend. We can also create and combine plots together, using the subplot() function, allowing users to create facetted plots manually. 
+
+
+```{r, echo = FALSE, comment = NA, warning = FALSE}
+
+plotly::plot_ly(data = iris, x = ~Sepal.Width, y = ~Sepal.Length, color = ~Species, type = "scatter", mode = "markers")
+```
+Figure 1: plotly plot of the iris dataset
+
+####ggvis {#ggvis}
+Another common data visualisation package is ggvis(Wickham, Chang 2016). This package utilises the Vega JavaScript library to render its plots but also uses Shiny to drive some of its interaction. These plots follow the "Grammar of Graphics" and aim to be an interactive visualisation tool for exploratory analysis. This package has an advantage over htmlwidgets, as it also expands upon using statistical functions for plotting, such as layer_model_predictions() for drawing trendlines using statistical modelling (see Figure 3). Furthermore, because some of the interactions are driven by Shiny, we can add 'inputs' that look similar to Shiny such as sliders and checkboxes to control and filter the plot, but also have the power to add tooltips.
+
+```{r, message = FALSE, echo = FALSE}
+ggvis(cocaine, ~weight, ~potency, fill = ~state) %>%
+    layer_points()
+```
+
+Figure 2: basic ggvis plot
+
+```{r, message = FALSE, echo = FALSE}
+ggvis(income, ~weekly_hrs, ~weekly_income, fill = ~sex) %>%
+  layer_points() %>%
+  layer_smooths(stroke:= "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess smoother" )) %>%
+  layer_model_predictions(stroke:="blue",
+                          model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"),
+                          se = input_checkbox(value = FALSE, label = "Show standard errors"))
+
+```
+
+Figure 3: Change a trendline with a slider and filters using ggvis alone
+
+However, we are limited to basic interactivity as we are not able to link layers of plot objects together. Furthermore, ggvis plots are fundamentally slow when it comes to rendering plots with several data points as the DOM cannot handle several SVG elements at once (Chang, 2014). To date, the ggvis package is still under development, with more features to come in the near future.
+
+By considering both plotly and ggvis alone, we find that there these solutions only provide interactive plots quickly to the user with basic functionalities such as tooltips, zoom and pan and subsetting. They do not provide more information about the data, or can be linked to any other plot. It is hard to customise their interactions as the functions that create these plots are well defined unless we know the original JavaScript API well. ggvis can go further by adding basic user interface options such as filters and sliders to control parts of the plot, but only to a certain extent. Fortunately, interactivity can be extended with these packages by coupling it with  Shiny or crosstalk.
+
+####Crosstalk {#crosstalk}
+Crosstalk is an add-on package that allows HTMLwidgets to cross-communicate with each other. As Cheng (2016) explains, it is designed to link and co-ordinate different views of the same data. Data is converted into a 'shared' object (via V6), which has a corresponding key for each row observation. When selection occurs, crosstalk sends messages between HTMLwidgets to communicate what has been selected and the bounded HTMLwidgets will respond accordingly. This is all happens on the browser, where crosstalk acts as a 'messenger' between HTMLwidgets.
+
+```{r, message = FALSE, echo = FALSE, warning = FALSE}
+shared_iris <- SharedData$new(iris)
+p1 <- plot_ly(shared_iris, x = ~Petal.Length, y = ~Petal.Width, color = ~Species, type = "scatter")
+p2 <-  plot_ly(shared_iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species, type="scatter")
+p <- subplot(p1, p2)
+bscols(
+  widths = NA, #need to check on this
+  p,
+  datatable(shared_iris)
+  )
+```
+Figure 4: Linked brushing between two Plotly plots and a data table
+
+```{r, message = FALSE, echo = FALSE, warning = FALSE}
+
+shared_iris <- SharedData$new(iris)
+GGally::ggpairs(iris, aes(color = Species)) %>% ggplotly()
+
+```
+
+Figure 5: A ggplot2 (rendered as Plotly) scatterplot matrix linked together with crosstalk
+
+```{r, message = FALSE, echo = FALSE}
+shared_income <- SharedData$new(income)
+bscols(
+  widths = c(6, NA),
+  list(filter_checkbox("sex", "Gender", shared_income, ~sex, inline  = TRUE),
+       filter_slider("weekly_hrs", "Weekly Hours", shared_income, ~weekly_hrs),
+       filter_select("ethnicity", "Ethnicity", shared_income, ~ethnicity)),
+  plot_ly(shared_income, x = ~weekly_hrs, y = ~weekly_income, color = ~sex, type = "scatter", mode = "markers")
+)
+```
+
+Figure 6: Filtering in groups 
+
+However, crosstalk has several limitations. As Cheng (2016) points out, the current interactions that it only supports are linked brushing and filtering that can only be done on data in a 'row-observation' format. This means that it cannot be used on aggregate data such as linking a histogram to a scatterplot. Furthermore, it is currently only supported for a limited number of HTMLwidgets so far - Plotly, dataTable and Leaflet. This is because the implementation of crosstalk is relatively complex. From a developer's point of view, it requires creating bindings between crosstalk and the HTMLwidget itself and customizing interactions accordingly on how it reacts upon selection and filtering. Despite still being under development, it is promising as other HTMLwidget developers have expressed interest in linking their packages with crosstalk to create more informative visualisations.
+
+####Shiny {#shiny}
+Shiny is an R package that build web applications through R (RStudio, 2012). It provides a connection of using R as a server and the browser as a client, such that R outputs are rendered on a web page. This allows users to be able to code in R without the need of learning the other main web technologies HTML, CSS and JavaScript. A Shiny app can be viewed links between 'inputs' (what is being sent to R whenever the end user interacts with different parts of the page) and 'outputs'  (what the end user sees on the page) that update whenever an input is changed.
+There are many different ways to use Shiny to create more interactive data visualisations - we can simply just use Shiny to create interactive plots or extend interactivity in HTMLwidgets and other R packages.
+
+#####Interactivity with Shiny alone 
+Shiny can provide some interactivity to plots. 
+
+```{r, message = FALSE, echo = FALSE}
+shinyApp(
+  
+ui <- basicPage(
+  plotOutput("plot1", brush = "plot1_brush"),
+  plotOutput("plot2"),
+  tableOutput("table")
+),
+
+server <- function(input, output) {
+
+  selected <- reactive({
+    iris_brushed <- brushedPoints(iris, input$plot1_brush)
+    if (nrow(iris_brushed) == 0) {
+      iris_brushed = iris }
+      iris_brushed
+  })
+
+  output$plot1 <- renderPlot({
+    ggplot(iris, aes(x = Petal.Width, y = Petal.Length, color = Species)) + geom_point()
+  })
+
+  print(selected)
+  output$plot2 <- renderPlot({
+    ggplot(selected(), aes(x = Sepal.Width, y = Sepal.Length, color = Species)) + geom_point()
+  })
+
+  output$table <- renderTable({
+    selected()
+  })
+
+})
+
+```
+
+Figure 7: Linked brushing on a plot from ggplot2
+
+Above is an example of achieving linked brushing between two plots and a table. With Shiny, we are able to easily link plots together with other objects. This is done simply by attaching a 'plot_brush' input, and using the brushedPoints() function to return what has been selected to R. As we select on part of the plot, we see this change occur and the other plot and the table updates and renders what has been selected. Other basic interactions include the addition of clicks (plot_click) and hovers (plot_hover).
+
+```{r, message = FALSE, echo = FALSE}
+
+ui <- basicPage(
+  plotOutput("plot", brush = "plot_brush", hover = "plot_hover"),
+  verbatimTextOutput("text"),
+  tableOutput("income_table")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    ggplot(income100, aes(x = weekly_hrs, y= weekly_income, color = sex)) + geom_point() + facet_grid(.~ethnicity)
+  })
+  
+  output$text <- renderText({
+    paste0("You've hovering on:", input$plot_hover, sep = " ")
+  })
+
+  output$income_table <- renderTable({
+    brushedPoints(income100, input$plot_brush, xvar = "weekly_hrs", yvar = "weekly_income")
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+Figure 8: Facetted ggplot with linked brushing and hovers
+
+However, these basic interactive tools only work on base R plots or plots rendered using ggplot2, and work best on scatter plots. This is because the pixel co-ordinates of the plot are correctly mapped to the data. When we try this on a lattice plot as seen below, this mapping condition fails as the co-ordinates system differs between the data and the plot itself. It is possible to create your own mappings to a plot or image, however it may be complex to develop.
+
+```{r, message = FALSE, echo = FALSE}
+income100 <- income[1:100, ]
+
+shinyApp(
+  ui <- basicPage(
+  plotOutput("plot", click = "plot_click", brush = "plot_brush"),
+  verbatimTextOutput("info"),
+  tableOutput("income_table")
+),
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    x <- income100$weekly_hrs
+    y <- income100$weekly_income
+    xyplot(y~x,  main = "Lattice scatterplot of nzincome", ylab ="Weekly income", xlab = "Weekly hrs")
+  })
+
+  output$info <- renderText({
+    paste0("Weekly_hrs=", input$plot_click$x, "\n Weekly_income=", input$plot_click$y)
+  })
+
+  output$income_table <- renderTable({
+    brushedPoints(income100, input$plot_brush, xvar = "weekly_hrs", yvar = "weekly_income")
+  })
+
+}
+)
+
+```
+
+Figure 9: Linked brushing on a lattice plot that fails to produce correct mapping
+
+With Shiny alone, we can achieve some basic interactivity along with user interface options that are outside of the plot that can change what we want to see. Despite being limited to plot interactions (clicks, brushes and hovers), we can link these plot interactions to other parts that may give us more information about the data. However, these methods only work for plots that are rendered in base R graphics and ggplot2, and cannot be extended onto other R plots.
+
+#####Extending interactivity with Plotly, ggvis and Shiny
+
+Although Shiny is great at facilitating interactions from outside of a plot, it is limited in facilitating interactions within a plot. It does not have all the capabilities that plotly provides. When we combine the two together, there is a little more flexibility in customising interaction.
+
+```{r, message = FALSE, echo = FALSE}
+ui <- fluidPage(
+  fluidRow(
+    column(4, plotlyOutput("sourceplot")),
+    column(4, plotlyOutput("boxplot")),
+    column(4, plotlyOutput("histogram"))
+  ),
+  tableOutput("table")
+)
+
+server <- function(input, output) {
+
+  #scatterplot
+  output$sourceplot <- renderPlotly({
+    plot_ly(income, x = ~weekly_hrs, y = ~weekly_income, color = ~sex, type = "scatter", mode = "markers", source = "source") %>%
+      layout(dragmode = "select")
+  })
+
+  #render a box plot based upon the selection from scatterplot
+  output$boxplot <- renderPlotly({
+    s = event_data('plotly_selected', source = "source")
+    selected_data <- income[s[["pointNumber"]], ]
+    plot_ly(selected_data, x = ~weekly_hrs, type = "box")
+  })
+
+  #render a histogram based upon selection from scatterplot
+  output$histogram <- renderPlotly({
+    s = event_data('plotly_selected', source = "source")
+    selected_data <- income[s[["pointNumber"]], ]
+    plot_ly(selected_data, x = ~weekly_hrs, type = "histogram")
+  })
+
+  #render table results
+  output$table <- renderTable({
+    event_data('plotly_selected', source = "source")
+  })
+
+}
+
+shinyApp(ui, server)
+
+```
+
+Figure 10: a Shiny app with a Plotly plot with linked brushing
+
+In the example above, we can easily embed plots into Shiny using the plotlyOutput() function. The plotly package also has their own way of co-ordinating linked brushing and in-plot interactions to other Shiny outputs under a function called event_data(). By combining it with Shiny, we are able to link different plots together and to the data itself that is displayed as a table below.These in-plot interactions are very similar to what Shiny provides for base plots and ggplot2 such as brushing for selection, hovering, and clicking. These work well on scatter plots, but not on other kinds of plots that plotly can provide. These can help generate or change different outputs on the page, but not within themselves. By combining the two together, we get 'on-plot' functionalities from the HTMLwidget, with 'off-plot' driven interactions from Shiny. 
+
+```{r, message = FALSE, echo = FALSE}
+shinyApp(
+  
+  ui <- basicPage(
+  #need to use ggvis output for this
+  ggvisOutput("plot"),
+  tableOutput("brushed_data")
+  #ideally, want to show brushed data through the table
+),
+
+server <- function(input, output, session) {
+
+  #create an id for each row of data
+  iris <- cbind(iris, id = seq_len(nrow(iris)))
+
+  #creating a linked brush object
+  lb <- linked_brush(iris$id, "blue")
+
+  #selecting brushed values:
+  selected <- lb$selected
+
+  #making the dataset reactive to the brush
+  iris_selected <- reactive({
+    if (!any(selected())) return(iris)
+    iris[selected(), ]
+  })
+
+    iris %>%
+      ggvis(~Petal.Length, ~Petal.Width, fill = ~Species) %>%
+      layer_points(fill.brush := "blue") %>%
+      #takes linked brushing input
+      lb$input() %>%
+      #adds the selected data points on top of the plot
+      add_data(iris_selected) %>%
+      bind_shiny("plot")
+
+    output$brushed_data <- renderTable({
+      iris_selected()
+    })
+
+})
+
+```
+
+Figure 11: an example of linked brushing between ggvis plots
+
+When we can combine ggvis and Shiny together we get similar results. ggvis has its own functions that allow for similar interactions to be achieved, but these interactions are limited in a sense to what is common in HTMLwidgets and Shiny. 
+
+The main advantage of using Shiny is that it establishes a connection to R to allow for statistical computing to occur, while leaving the browser to drive on-plot interactions. This allows us to be able to link different views of data easily. Furthermore, RStudio has provided ways to be able to host and share these shiny apps via a Shiny server. However, we are still limited in the sense that for every time we launch a Shiny app, we do not have access to R as it runs that session. Additionally, Shiny has a tendency to rerender entire objects whenever an 'input' changes. This may lead to unnecessary computations and may slow down the experience for the user. Despite this, it remains a popular tool for creating interactive web visualisations.
+
+#####A comparison to non-web interactive tools:
+
+The interactions that Shiny achieves are not interactions on the plot itself, but rather an interaction driven outside of the plot that causes it to change. With HTMLwidgets and ggvis, we are unable to easily customize our own interactions into the plot. Furthermore, there are always complications on trying to link different plots together. Many of the tools discussed above provide co-ordinated links to scatter plots. This is a major disadvantage in comparison to older non-web interactive tools such as iPlots and Mondrian.
+
+[need to include iPlots + Mondrian introduction]
+
+```{r, echo = FALSE, eval = FALSE}
+#note that this should run in JGR
+# need to include code in for this section
+
+```
+
+
+Figure 12: Several windows of iPlots that all link together
+
+The disadvantages with using these tools is that it requires installation of software. Both iPlots and Mondrian require Java in order to run its interface and produce its plots. Despite being able to handle large queries and seamlessly link many plots together, it does not look visually appealling, which may deter users to use something with a more modernistic feel like Shiny. Furthermore, the results generated cannot be easily to shared with others. With these tools, we find that there is a gap between existing tools on the web.
+
+###Stretching limitations with other tools: [this section is still in progress!]
+
+A clear limitation that is present in the existing tools above is the idea of letting the user customise and make their own interactions on the plot.
+
+[insert figure/html link here]
+
+Figure 13: An example of a customised box plot interaction on an iNZight plot using gridSVG, JavaScript 
+
+One such example is highlighting only part of a box plot to show certain values between the median and the lower quartile. While this can be easily achieved with more flexible and lower level tools such as gridSVG and custom JavaScript, it is not with the existing tools discussed above. 
+
+[other things to include: extending Shiny by rendering SVG to allow mapping and linked brushing on grid plots, prevent redraws and more responsive interactivity by using 'custom JavaScript messaging', DOM?]
+
+---
+
+##Conclusion
+There is more that can be achieved in expanding interactive graphics to create better data visualisations for users. Despite having many tools available such as HTMLwidgets and Shiny, we find that they all achieve similar results without allowing the user to further extend or customize unless they have knowledge of the main web techologies involved. Options are even more limited when it comes to dealing with large datasets, querying or linking plots which are handled effortlessly with non-web solutions. We find that there is potential in creating more meaningful web visualisations in the future.
+
+---
+
+##References
+
+[in progress]
+
+Murray - Interactive Data Visualisation for the Web 2012. 
+Cheng - Crosstalk. UseR Conference 2016 + crosstalk webpage
+...
+
+---
+
+## Extras:
+A few extra terms explained briefly.
+
+The 3 main web technologies:
+
+Hyper Text Markup Language (HTML): language used to describe content on a webpage. Elements are defined in '< >' known as tags.
+
+Cascading Style Sheets(CSS): language that controls the style, appearance and presentation on a webpage
+
+JavaScript: a programming language that is widely used to drive interactivity on the web and other functionalities
+
+Document Object Model (DOM): a programming interface between HTML and XML.
+
+These definitions are referenced from the Mozilla Development Network (MDN).
+
+

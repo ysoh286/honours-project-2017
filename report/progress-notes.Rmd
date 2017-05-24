@@ -1,12 +1,10 @@
 ---
-title: "Summary Paths + Notes"
-output: html_notebook
+title: "Progress Track"
+output: html_document
 ---
 
+
 ## The 'Progress' table:
-
-: Progress
-
 
 | WeekNo. | Q | A | Things investigated |
 | ---: | ---------------------: | ----------------------------------: | -----------------: |
@@ -17,10 +15,3 @@ output: html_notebook
 |5-6| Challenges: box plot, array of plots, trendline | **Trendline:** easily achievable with any of the following (Plotly, ggvis, rbokeh, iNZightPlots...) + Shiny - however, still rerendering the entire plot every time. Plotly does not have statistical curves or functions. Another way: use ggplot2 -> ggplotly(). iPlots via code (not through UI). **Boxplot:** impossible for any. In theory, it is possible (since they are all JS libraries) but requires expertise and knowledge of API. Achievable using iNZightPlots/gridSVG/custom JS. **Array of plots:** Shiny + Crosstalk + Plotly/D3scatter, however can't get to link to pop-up window or to retain selection. ggvis + Shiny requires linking up of plots to be done individually + does not clear brushing after use. | Summary tables, ggvis + interactivity, examples of Crosstalk + Shiny + Plotly, confirming Plotly + Crosstalk communication, Plotly API, iPlots, rggobi, Co-ordinating multiple views using Shiny, trelliscope/trelliscopeJS for trellis displays + large datasets, JavaScript in Shiny via making an HTMLWidget, shinyJS, incorporating events in Shiny |
 |7-9| Think about how you'd like to express a solution to the three challenges without thinking about existing tools + can you do the trendline challenge without rerendering entire plot? | A main idea of creating a package that allows interactive functions to be added to static plots. | Rendering SVG in Shiny, sending messages/data between JS <-> Shiny, Introducing DOM, challenge summary, Shiny's reactive programming model, HTMLWidgets, Mondrian, ggplot2 + ggiraph |
 |10 | ?? | ?? | ??|
-
----
-
-## Summary Notes: 
-These notes have been organized into different topics and technologies.
-
-TODO!

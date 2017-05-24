@@ -16,8 +16,24 @@ TRENDLINE CHALLENGE PART 3: [in progress]
 Extending Shiny + gridSVG + JS
 - Able to directly draw a separate trendline based upon selected points
 - Reacts to the slider as well
-- Currently working on making underlying plot a raster + layer svg line on top.
+- Currently working on making underlying plot a raster + layer svg line on top (a possible way solution for large datasets rather than getting gridSVG to produce everything).
+    - managed to layer a raster in an svg, but it cannot render in Shiny, because there's a suspected [bug](https://github.com/rstudio/shiny/issues/1148) in the Shiny IDE when we try to render the raster image in. (It supposedly works on Linux but not on Windows - still testing!)
 
+DOM SOLUTION:
+- Current solution has a slider, but requires change by a click on the value for the trendline to change (not an automatic change when we select on the slider.)
+I can render a slider, but the main problem is sending the dynamically changed value back to R using the RDOM.RCall() function (or somehow retrieve it using the that specific function to facilitate the interaction we want to achieve) (static values are fine).
+- Speed is still relatively quick
+- You still have access to R while it's running (recall that one of the disadvantages to using Shiny is you don't have access to R when you're running your web application)
+
+REPORT DRAFT:
+- Written some of it, but it's not complete...
+- Not sure if I should include a section on explaining main web technologies used (HTML, CSS, JS, SVG, Canvas, possibly webgl)
+- The problem with hosting this online is Shiny - trying to find a way to host the Shiny apps that are embedded in the report.
+- RPubs can host R Markdown files online, but they don't drive Shiny apps - things that require Shiny are generally just static images
+- Shinyapps.io's free account only allows 5 apps to be hosted for a limited time of 25 hours
+- The other alternative is to build my own Shiny server and host the apps on there and somehow link it back to an HTML page of the report (most likely will have a go at this during the mid semester break.)
+
+WEBGL:
 In brief: webGL stands for 'Web Graphics Library'. It is generally used for rendering 2D and 3D graphics on a web browser.
 
 The main reason for using webGL with Plotly/rbokeh
@@ -33,14 +49,10 @@ ADVANTAGES of webGL:
 DISADVANTAGES webGL:
 - A pain to learn(a steep learning curve for those starting out?), maybe complex to implement (but rather, to save time: developers could use other javascript libraries that are built upon webGL)
 - raster, not vector
+- The main disadvantage appears to be a cost to the developer (takes too long?), but there are ways to combat this by using JavaScript libraries that are built upon webGl (such as three.js, stack.gl, ...) but make it easier to code up.
 
 Chris's idea taken from Mondrian:
 - There's a demo from rbokeh that manages to zoom into hexbins such that when it gets to a certain point it starts rendering as points [here](http://ryanhafen.com/blog/plot-lots-of-data) - scroll down to 'Javascript callback teaser'. However, it's developmental (but it means it's possible!)
-
-DOM package solution: I've managed to be able to change the trendline by clicking on text that's on the page.
-I can render a slider, but the main problem is sending the dynamically changed value to be used in the RDOM.RCall() function (or somehow retrieve it using the that specific function to facilitate the interaction we want to achieve) (static values are fine).
-- Speed is still relatively quick
-- You still have access to R while it's running (recall that one of the disadvantages to using Shiny is you don't have access to R when you're running your web application)
 
 Possible ideas for extending DOM:
 - A way of easily attaching external js/css files to a page (and possibly JavaScript libraries)
