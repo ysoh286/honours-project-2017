@@ -35,6 +35,10 @@ plot_ly(data = air2008, x = ~Distance, y = ~AirTime, type = "scattergl", mode = 
 plot_ly(x = ~rnorm(1000000), type = "histogram")
 # this still renders as an svg.
 
+#don't run this one! So there is a certain point - this is 10 million? and it's still.... processing
+plot_ly(x = ~rnorm(10000000), y = ~rnorm(10000000), type = "scattergl", mode = "markers")
+#there's a certain point when it gets slow.
+
 # Note that plotly chooses to do webgl for the following: 3D charts, heatmaps and scatterplots...
 # It makes sense in that the other plots deal with grouped data/ or somehow have less svg elements to render.
 
