@@ -21,12 +21,11 @@ svgOutput <- capture.output(all$svg)
 #get panel viewport to match co-ordinates correctly:
 panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
 
-
-lattice::xyplot(Petal.Length ~ Petal.Width, data = iris, col = cols[iris$Species], pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
-grid.export('~/Desktop/plot.svg')
-
 #load co-ordinates:
 gridSVG::gridSVGCoords(coords)
+
+#trying out gridSVG conversion functions:
+viewportConvertWidth(panel, 300, "svg", "native")
 
 #build shiny app:
 shinyApp(
@@ -88,7 +87,8 @@ shinyApp(
                 var newSmooth = document.getElementById("newSmooth");
                 if (newSmooth == null || undefined) {
                 var newSmooth = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                newSmooth.setAttribute("stroke", "orange");
+                newSmooth.setAttribute("stroke", "black");
+                newSmooth.setAttribute("stroke-width", "5");
                 newSmooth.setAttribute("id", "newSmooth");
                 var panel = document.getElementById("plot_01.loess.lines.panel.1.1.1");
                 panel.appendChild(newSmooth);

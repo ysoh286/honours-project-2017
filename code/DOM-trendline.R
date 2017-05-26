@@ -29,10 +29,6 @@ coords <- svgdoc$coords
 gridSVG::gridSVGCoords(coords)
 dev.off()
 
-#find panel:
-#get panel viewport to match co-ordinates correctly:
-panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-
 # render using DOM:
 page <- htmlPage() 
 
@@ -42,6 +38,13 @@ appendChild(page,
             ns = TRUE,
             response = svgNode())
 
+# get trendline;
+trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
+setAttribute(page,
+            trendline,
+             "points",
+             "0,0")
+
 # add text for selecting linear and loess:
 # try using <p> text instead of dropdowns for the moment...
 
@@ -50,10 +53,6 @@ appendChild(page,
 
 appendChild(page,
             child = htmlNode('<p><span> Loess </span></p>'))
-
-# Is it possible to append to the same class?
-trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
-svgElt <- getElementsByTagName(page, "svg", response = nodePtr())
 
 #write R function to recalculate!
 
@@ -80,8 +79,6 @@ calculate  = function(...) {
   #create 'points' string:
   pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
 
-  #just testing that pt returns a string! :)
-  #print(pt)
   return(pt)
 
 }
@@ -113,6 +110,16 @@ setAttribute(page,
 ## What if we want to include a slider and somehow return the selected value?
 
 page <- htmlPage()
+
+#add svg:
+appendChild(page,
+            child = svgNode(XML::saveXML(svg)),
+            ns = TRUE,
+            response = svgNode())
+
+#identify trendline
+trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
+
 #add slider:
 appendChild(page,
             child = htmlNode('<input name="sl" id="slider" type="range" min = "0" max = "1" step = "0.01"/>'),
@@ -121,39 +128,19 @@ appendChild(page,
 # getProperty 'value':
 # Note that: getAttribute refers to HTML, getProperty refers to JS
 
+sliderValue <- function(ptr) {
+  value <- getProperty(page, ptr, "value", async = TRUE, callback = calcSmooth) 
+}
 
-#Return this value!
-
-
-appendChild(page,
-            child = htmlNode('<p> 0.5 </p>'))
-
-js <- ' change = function() {
-  var slider = document.getElementById("slider");
-  var p = document.getElementsByTagName("p")[0];
-  p.innerHTML = Number(slider.value).toFixed(2);
-}'
-
-appendChild(page,
-            child = javascript(js))
-
-setAttribute(page,
-             elt = css("input"),
-             attrName = "oninput",
-             attrValue = "change()")
-
-
-calculate  = function(...) {
+calcSmooth <- function(value) {
+  
   #x values:
   x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
   #get panel viewport to match co-ordinates correctly:
   panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
   
-  #get value from slider from (...);
-  cat(list(...))
-
-    #loess model:
-    lo <- loess(Petal.Length~Petal.Width,data = iris, span = value)
+    #loess model only:
+    lo <- loess(Petal.Length~Petal.Width, data = iris, span = as.numeric(value))
     y <- predict(lo, x)
   
   #convert co-ordinates:
@@ -163,49 +150,24 @@ calculate  = function(...) {
   #create 'points' string:
   pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
   
-  #just testing that pt returns a string! :)
-  #print(pt)
-  return(pt)
-  
+  # update points:
+  setAttribute(page,
+               trendline,
+               "points",
+               pt,
+               async = TRUE)
 }
 
-hello = function(...) {
-  result <- list(...)
-  print(result[[1]])
-  index  <- gsub("\\>([0-9].[0-9][0-9])</p>", "\\1", result[[1]])
-  #this still doesn't work at the moment... 
-  print(index)
-}
-
-appendChild(page,
-            child=javascript('sendCoords = function(pt) {
-                             var svg = document.getElementsByTagName("svg")[0];
-                             var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
-                             trendline.setAttribute("points", pt);
-                             }'))
-
-setAttribute(page,
-             elt = css("p"),
-             attrName = "onclick",
-             attrValue = 'RDOM.Rcall("hello", this, [ "HTML" ], null)')
-
-# p now records the value of the slider, - to get the trendline to change, you still need 
-# to click on the text before it changes. (It's not dynamic relative to the slider)
-
-# TODO: NEED TO SEND THE VALUE BACK TO R straight from the slider.
-
-x <- getProperty(page,
-                 object = nodePtr(...),
-                 propName = "value")
-
+#you can change the attrName = "onchange" if you want the change to be seen after the 
+# user has released the slider.
 setAttribute(page,
              elt = css("input"),
-             attrName = "onchange",
-             attrValue = 'RDOM.Rcall("hello", this, [ "ptr" ], null)')
+             attrName = "oninput",
+             attrValue = 'RDOM.Rcall("sliderValue", this, [ "ptr" ], null)')
 
 
  #----------------------------------------------------
-# there's a slight complication on trying to link dropdowns...
+# You could start adding dropdowns... maybe a future thing to experiment with.
 # render a dropdown menu:
 appendChild(page,
             child = htmlNode('<div id = "dropdown"> </div>'))
@@ -261,6 +223,26 @@ setAttribute(page, trendline, "stroke", "green")
 #Change the trendline:
 setAttribute(page, trendline, "points", calculate("linear"))
 setAttribute(page, trendline, "points", calculate("loess"))
+
+
+#an alternative way to return the value of the slider...! (but it blocks oninput)
+
+appendChild(page,
+            child = htmlNode('<p> 0.5 </p>'))
+
+js <- ' change = function() {
+  var slider = document.getElementById("slider");
+  var p = document.getElementsByTagName("p")[0];
+  p.innerHTML = Number(slider.value).toFixed(2);
+}'
+
+appendChild(page,
+            child = javascript(js))
+
+setAttribute(page,
+             elt = css("input"),
+             attrName = "oninput",
+             attrValue = "change()")
 
 ---------------------------------------------------------
 #Using RDOM.Rcall?

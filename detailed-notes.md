@@ -2,13 +2,26 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-## Week 10-11 (11/05 - 25/05): Quick intro to WebGL, Trendline Challenge Part 3, Report Draft v0.1
+## Week 13(01/06 - 15/06): BREAK - student nightmare of exams are under way.
+
+## Week 12 (25/05 - 01/06): More on webGL/Canvas, Wrap up trendline challenge
+
+**Wrap up these things before you go on break for the next week for exams/tests :(**
 
 TODOS:
-- Trendline challenge part 3.1 - raster + SVG?
-- Get a better idea of how webGL works (why aren't people using webGL more?) + can you interact with it in R?
-- report draft
-- complete DOM solution (...if it's possible)
+Report Draft updates:
+- amend with Paul's feedback
+- Add in iPlots + Mondrian introduction
+- Add/delete some figures that may/not be useful
+- Try using Shinyapps.io?
+WebGL + Canvas - run a speed test + is it easy to talk back to R?
+- Shiny + JS + gridSVG + PNG trendline solution for dealing with large datasets
+
+DONE:
+- Completed simple DOM solution for trendline reacting to slider! (don't know if you want to extend it further??)
+
+
+## Week 10-11 (11/05 - 25/05): Quick intro to WebGL, Trendline Challenge Part 3, Report Draft v0.1
 
 **Q: Complete the DOM solution for trendline challenge, extend by adding brushing to generate a smoother over selected points with existing tools and investigate webGL/Plotly, D3, V8.**
 
@@ -20,8 +33,7 @@ Extending Shiny + gridSVG + JS
     - managed to layer a raster in an svg, but having trouble rendering it in Shiny (it's failing to find the image.)
 
 DOM SOLUTION:
-- Current solution has a slider, but requires change by a click on the value for the trendline to change (not an automatic change when we select on the slider.)
-Still having trouble sending the dynamically changed value back to R using the RDOM.RCall() function (or somehow retrieve it using the that specific function to facilitate the interaction we want to achieve - static values are fine).
+- **UPDATE:** Fixed! The trendline now reacts to the slider... and it's more responsive than Shiny!
 - Speed is still relatively quick
 - You still have access to R while it's running (recall that one of the disadvantages to using Shiny is you don't have access to R when you're running your web application)
 
@@ -46,10 +58,12 @@ ADVANTAGES of webGL:
 - Fast, efficient
 - low-level
 
-DISADVANTAGES webGL:
+DISADVANTAGES of webGL:
 - A pain to learn(a steep learning curve for those starting out?), maybe complex to implement (but rather, to save time: developers could use other javascript libraries that are built upon webGL)
 - raster, not vector
-- The main disadvantage appears to be a cost to the developer (takes too long?), but there are ways to combat this by using JavaScript libraries that are built upon webGl (such as three.js, stack.gl, ...) but make it easier to code up.
+- The main disadvantage appears to be a cost to the developer (takes too long?), but there are ways to combat this by using JavaScript libraries that are built upon webGl (such as three.js, stack.gl, ...) but make it easier to code.
+- Because everything's written in JavaScript, and nested in one single DOM element, you may not manipulate it easily on the page (it's like anything that should be driven in that canvas, should be written there. It's like its own separate world on the webpage?)
+
 
 Chris's idea taken from Mondrian:
 - There's a demo from rbokeh that manages to zoom into hexbins such that when it gets to a certain point it starts rendering as points [here](http://ryanhafen.com/blog/plot-lots-of-data) - scroll down to 'Javascript callback teaser'. However, it's developmental (but it means it's possible!)
