@@ -2,23 +2,117 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-## Week 13(01/06 - 15/06): BREAK - student nightmare of exams are under way.
+TODOS after exams:
+- Update report draft and keep writing
+- Set up own shiny server/or use Shinyapps.io
 
 ## Week 12 (25/05 - 01/06): More on webGL/Canvas, Wrap up trendline challenge
 
 **Wrap up these things before you go on break for the next week for exams/tests :(**
 
 TODOS:
-Report Draft updates:
-- amend with Paul's feedback
-- Add in iPlots + Mondrian introduction
-- Add/delete some figures that may/not be useful
-- Try using Shinyapps.io?
-WebGL + Canvas - run a speed test + is it easy to talk back to R?
-- Shiny + JS + gridSVG + PNG trendline solution for dealing with large datasets
+- Shiny + JS + gridSVG + PNG trend line solution for dealing with large datasets
 
 DONE:
-- Completed simple DOM solution for trendline reacting to slider! (don't know if you want to extend it further??)
+- Completed simple DOM solution for trend line reacting to slider! (don't know if you want to extend it further??)
+- Update report draft (still need to look for more references for Introduction)
+- Speed test: there is a significant difference in speed when comparing webGL and SVG loading on the webpage
+
+| Render Type  | 11K    | 50K    | 100K    | 500K     | 1M     |
+| :----------  | :----- | :----- | :------ | :------- | :----- |
+| Plotly SVG   |   2.05 | 6.40   |  11.98  |  1 min+  |   -    |
+| Plotly webGL |   1.65 |  1.60  |   1.75  |   3.26   | 4.00   |
+| rbokeh canvas|        |  4.04+ |  -      |     -    |    -   |
+| rbokeh webGL |        |  0.954 |  1.23   |   3.36   | 6.02   |
+| raw webGL    |        |        |         |          |        |   |
+
+  - These values are recorded in seconds.
+  - 11K = 11,000 points
+  - '-' signifies that it took too long  (the user probably would've just given up.)
+For rbokeh canvas, it was relatively slow. In theory it should be faster than SVG as it's only rendering raster images and does not take up too much memory as once its drawn something it's totally forgotten about it.
+
+In general for loading lots of data: SVG < HTML canvas < webGL
+
+- Because we can nest a canvas element in an svg element, we might be able to map co-ordinates of the SVG system into the webGL co-ordinate system (requires data to be sent to the GPU first).
+
+What's really happening in trendline challenge 3.1 ('the loess caterpillar'):
+  1. When the user brushes over selected points (interaction written in JavaScript on the browser),
+    the indexes of the points are sent back to R through the JavaScript function Shiny.onInputChange().
+  2. R receives these indexes and we can use them to trace them back to the rows in the dataframe (We expect the indexes of the points to match up to the rows of the data frame. A limitation of this method is if we have missing data.) Then, we subset this dataset as our selected dataset, and run through it the loess model to generate a set of x and y/fitted values.
+  3. Once this is done, we use gridSVG's co-ordinate system to translate these values into SVG co-ordinates in R. After that, we can send these co-ordinates back to the browser.
+  4. Once the browser receives these values, it updates the points of the line with a new set of points, which appears on the page.
+
+This is a general idea for using gridSVG and Shiny together along with its functions for sending data back and forth so far - the same applies to how we changed main trendline without redrawing the entire plot. Could possibly extend to more situations/challenges??
+
+
+#### NOTES:
+**More about webgl:**
+- Notes are from [webgl fundamentals ](https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html) & [Ming's WebGL tutorial](http://my2iu.blogspot.co.nz/2011/11/webgl-pre-tutorial-part-1.html)
+- Generally used for rendering 3D plots rather than 2D (though possible)
+- Idea based upon communication between CPU and GPU (send data to the GPU once and kept on there to minimize this communication, try make them work independently)
+- Draws points, lines... e.t.c based upon code supplied, runs on GPU (Graphics Processing Unit)
+- Code provided must be in pairs of functions (a vertex shader, fragment shader - each are written in C/C++ like -language called GLSL) [co-ordinates + colors]
+  - The vertex shader computes vertex positions and reduces amount of communication between CPU and GPU. (where does it draw?)
+  -  The fragment shader computes colors for each pixel drawn (how does it draw?)
+- Any data must be passed through to the GPU
+-  A downside for webGL is a single program to render a single object can be very long (generally, there is code to set up the GL environment that has to be called before we can start using it).
+- Another downside: Browser compatibility. It is not supported on all browsers, whereas HTML5 Canvas and SVG are more likely to be available and accessible. You must know JavaScript to write in webGL.
+
+**Speed testing in R on plotly, rbokeh**
+
+ These were done in R with plotly and rbokeh.
+ Note that rbokeh renders as canvas elements or webgl. Plotly has the option of rendering as SVG or webgl (using stack.gl).
+ Either 5 to 10 iterations were done for a different number of points.
+
+The problem with measuring in R is that they do not record the time it takes when the widget appears on the web page.
+(i.e with system.time() and microbenchmark(), we get values in microseconds, but they don't reflect the actual time it loads the widget on the browser (so it comes back saying it's done, but when we actually plot a single plot, it returns a blank page... until several seconds later). I'm guessing these functions aren't suitable as they record performances within R.)
+
+The speeds recorded in R are roughly the same for plotly whether its webgl or SVG (0.002-0.003s). Rbokeh was slower at 0.45s, but would increase to 0.80s as the number of points increased.
+
+I've taken the loading times (how long it takes to load on the page for the user to start interacting with it) as a measure instead.
+
+- 11,000 points:
+  - For plotly, we compared the svg and the webgl version and find that there are not much differences in time.
+
+  - Plotly SVG: 2.09s, 2.06s, 2.11s, 1.93s, 2.41s, 1.99s, 1.92s, 1.94s, 2.14s, 2.09s
+  - Plotly webGL: 1.64s, 1.43s, 1.85s, 1.41s, 1.78s, 1.48s, 1.97s
+  - rbokeh canvas: ??
+  - rbokeh webGL: ??
+
+  - gridSVG is way too slow... even with 1 iteration of 10000 points takes too long in R.
+
+  - rbokeh is relatively slower than plotly.
+
+- 50,000 points:
+  - Plotly SVG: 6.65s, 6.82s, 6.47s, 6.45s, 6.47s, 6.47s, 6.78s, 6.45s, 5.78s, 5.69s
+  - Plotly webGL: 1.56s, 1.54s, 1.50s, 1.62s, 1.41s, 1.69s, 1.52s, 1.74s, 1.69s, 1.69s
+  - rbokeh canvas: 4.04s, 4.01s, 4.01s, 4.06s, 4.08s (does take longer than recorded values to appear on the page.)
+  - rbokeh webGL: 790ms, 949ms, 901ms, 836ms, 937ms, 1.05s, 1.12s, 990ms, 925ms, 1.04s
+
+- 100,000 points:
+  - Plotly SVG: 12.12s, 12.10s, 13.35s, 11.30s, 11.0s, 12.02s
+  - Plotly webGL: 1.61s, 1.86s, 2.01s, 1.78s, 1.51s
+  - rbokeh canvas: it's pretty slow as well (probably mirrors that of SVG, but it considered slightly faster than SVG)
+  - rbokeh webGL: 1.13s, 1.16s, 1.24s, 1.23s, 1.37s
+
+- 500,000 points:
+  - Plotly SVG: 1 minute, and longer... (the user probably would've just given up by then)
+  - Plotly webGL: 3.41s, 5.20s, 3.08s, 2.37s, 2.39s, 3.13s
+  - rbokeh webGL: 3.18s, 3.59s, 3.27s, 3.24s, 3.52s, 3.34s
+
+- 1,000,000 points:
+  - Plotly webGL: 3.84s, 4.23s, 4.02s, 3.89s, 3.89s, 4.17s
+  - rbokeh webGL: 5.72s, 6.19s, 5.91s, 6.12s, 5.96s, 6.23s
+
+From this we can conclude that webGL is much better at dealing with large datasets than compared to SVG. Differences can be seen even at the 50K mark, where times roughly tripled, even more so when we increase the number of points. HTML5 Canvas could be considered slightly faster than SVG, but still not as efficient as webGL.
+[Tested on Google Chrome, Mac OS 10.12]
+
+- This is coherent with a paper that compares the differences in rendering in Canvas, webGL, SVG (they've done more thorough tests!)
+
+A simple test with webgl itself?
+
+**More notes on DOM:**
+ASYNCHRONOUS.
 
 
 ## Week 10-11 (11/05 - 25/05): Quick intro to WebGL, Trendline Challenge Part 3, Report Draft v0.1
