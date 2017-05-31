@@ -15,7 +15,7 @@ library(gridSVG, quietly = TRUE)
 library(DT, quietly = TRUE)
 library(lattice, quietly = TRUE)
 
-income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
+income <- read.csv('nzincome.csv', header = TRUE)
 ```
 
 ### This is still a work in progress...

@@ -1,0 +1,67 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf760
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww7380\viewh14280\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 - Limitations/thoughts: currently works with the plot pre-defined in R, how accurate is gridSVG in translating co-ordinates(?), works best when you've got a plot with a consistent naming scheme (for panels + locating elements)\
+\
+- If you're familiar to HTML/CSS/JS, you may be able to extend it further, but may not be recommended \
+- Runs on a reactive programming model (which automatically updates everything whenever something changes)\
+- Disadvantages: Speed and efficiency,  rerunning of code that can slow things down (especially with large datasets)\
+- 'render' functions are prepackaged, which makes it easy to use, but hard to customise\
+- The ability to write JavaScript into Shiny is another way of communicating between R and the browser (using relative JS functions and Shiny functions: Shiny.onInputChange(), session$sendCustomMessage(), observe()) - as a way of not having to render the entire plot again.https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/\
+- Simplistic interactivity with Shiny via base plots and ggplot2 - linked brushing (based upon a mapping condition  between png and the thing, so it's not ideal in a sense to apply it to a different R-plot such as lattice, grid)\
+- Generic compared to crosstalk, allows 'out-plot' interactions\
+- Can be used with crosstalk (V6 objects)\
+\
+**Another possible reason why it may be hard to prevent re-rendering of plots:**\
+- (Not sure if this can be considered an underlying problem?) In all cases of using plotly, ggvis, or even ggplot2, even though the plots generated are 'layers', it does not appear possible to isolate a single 'layer' and modify it without drawing the entire plot again. (Sometimes when we try to run a single 'layer', it draws an entirely different plot... which is not what we want, or complains an error.)\
+You can add on layers, but you always have to refer back to the plot (either through %>%, or storing the plot as a variable). Regardless, Shiny will always(?) manage to rerender the entire plot.\
+\
+\
+- What do they achieve that these web tools/HTMLwidgets don't (without combining)?\
+  - Linked brushing\
+  - Zooming in (general purpose)\
+  - Able to facilitate and handle LARGE datasets\
+  - Share the same data on different plots (not just scatter plots only - but histograms, bar plots, box plots...)\
+  - Query selection (subset points)\
+\
+**iPlots:**\
+- [iPlots page](http://rosuda.org/software/iPlots/)\
+\
+**Mondrian:**\
+- [Main page](http://www.theusrus.de/Mondrian/)\
+- A possible reading to look into:  Interactive Graphics for Data Analysis\
+- Another kind of software that uses JAVA programming\
+- Looking very similar to iPlots (Mondrian doesn't require coding, but is rather catered for the end user.)\
+- Supports features such as brushing, linking plots together, querying and visualisation of large datasets\
+- Possible to import R dataframes for analysis\
+\
+The interesting part is HOW does Mondrian and iPlots manage to do linking so 'effortlessly', and can that be translated onto the web? - might be too hard to tell from source code (unfortunately, I don't know Java.)\
+Could we find tools that do similar things?\
+- Martin Theus' [home page](http://www.theusrus.de/Homepage_of_Martin_Theus.html)\
+  - His talk on interactive graphics in [2006](http://www.theusrus.de/Talks/Talks/IGfS.pdf)\
+  - His talk slides on Mondrian in [2008](http://www.theusrus.de/Talks/Talks/Mondrian.pdf)\
+  - [More talks slides](http://www.theusrus.de/Talks/)\
+  - Might investigate this more to see if we could make similar in JS/for the web?\
+- Linking a scatterplot to a bar plot [Demo](http://bl.ocks.org/curran/f4041cac02f19ee460dfe8b709dc24e7)\
+  - this uses model.js, which is a 'reactive model library used for data visualisation'\
+  - ^easily achievable in Shiny\
+\
+\
+\
+---\
+\
+##findings:\
+**Challenge summary (Boxplot, Trendlines, Arrays):**\
+- Shiny is great for anything that requires statistical computation (such as trendlines) as you've got a link back to R, and for building a modernized UI (Bootstrap  + HTML).\
+- Crosstalk is great for linking plots together, but only present for Plotly and scatterplots. Instead, iPlots has an upperhand with linking capabilities that extend to different kinds of plots.\
+- Plotly, rbokeh, highcharts, ggvis are good for incorporating 'basic' interactivity within the plot (especially when it comes to just a single plot - gives you basic information about that plot, points, zoom in, selection, basic stats...etc). It's more about making an 'easy' visual rather than using interactivity to find out more information and gaining more insight. (ie A selection done on the plot doesn't give you any information about it - does it have outliers? looking at the selected group as a whole? - couple it with Shiny and you're likely to get a lot further.) iPlots could get you further in terms of being able to return selections of plots.\
+- It's hard to customise your own on-plot/in-plot interactions in (as found from the boxplot challenge) as most functions have a set event attached to them (or simply: you plug in data (generally in JSON format), and it just gives you a standard plot). These functions were designed to make plotting easy for the user without having to learn web technologies (HTML, CSS, JavaScript). As these JS libraries were originally built for a different program (such as JavaScript, Python, e.t.c), features may be limited (+ possible limitations of the creating an HTMLwidget package, if any).\
+- Simple javascript solutions work well with on-plot interactions that do not require updating. This becomes a challenge when we try to devise a solution that requires updating of co-ordinates (such as manually changing the shape of a trendline), whereas these are easily achieved with Shiny but requires repeated rendering of the entire plot.\
+- The approach during these challenges was to: find out which tool does what best, and then find a way to combine them. In some cases it worked well (as seen in the array challenge), other times it was hopeless (boxplot challenge) simply because the tools didn't have the capability or required more expertise and investigation.\
+\
+\
+}
