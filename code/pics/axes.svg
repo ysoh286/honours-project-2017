@@ -788,7 +788,7 @@ var getSVGMappings = function(name, type, result) {
               <g id="graphics-plot-1-box-1.1">
                 <polygon id="graphics-plot-1-box-1.1.1" points="78.72,97.92 820.68,97.92 820.68,474.28 78.72,474.28" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="1" fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-linejoin="round" stroke-opacity="1" fill-opacity="0"/>
 			<g id = "image">
-		  <image x = "78.72" y = "77.92" width = "741.96" height = "376.36" transform="translate(0, 553) scale(1, -1)" xlink:href="/Rplot.png" />
+		  <image x = "78.72" y = "77.92" width = "741.96" height = "376.36" transform="translate(0, 553) scale(1, -1)" xlink:href="http://raw.githubusercontent.com/ysoh286/honours-project-2017/master/code/pics/Rplot.png" />
 		  	<!--<image xlink:href="Rplot01.png" x = "86.68" y = "70.68" width = "735.65" height = "435.65" transform="translate(0, 553) scale(1, -1)"/> -->
 		  </g>
 			  </g>

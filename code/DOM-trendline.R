@@ -10,6 +10,8 @@
 # add javascript
 # try send data from R to js and back?
 
+#todo: might DRY this if I get round to it.
+
 #load:
 library(DOM)
 library(XML)
@@ -49,10 +51,39 @@ setAttribute(page,
 # try using <p> text instead of dropdowns for the moment...
 
 appendChild(page,
-            child = htmlNode('<p> Linear </p>'))
+            child = htmlNode('<p id="linear"> Linear </p>'))
 
 appendChild(page,
-            child = htmlNode('<p><span> Loess </span></p>'))
+            child = htmlNode('<p id="loess"> Loess </p>'))
+
+js <- 'highlight = function(i) {
+       var spanText = document.getElementsByTagName("p")[i]
+spanText.style.color = "red";
+};
+
+normal = function(i) {
+var spanText = document.getElementsByTagName("p")[i]
+spanText.style.color = "blue";
+}'
+
+appendChild(page,
+            child = javascript(js))
+setAttribute(page,
+             elt = css("#linear"), 
+             attrName = "onmouseover",
+             attrValue = 'highlight(0)')
+setAttribute(page,
+             elt = css("#linear"), 
+             attrName = "onmouseout",
+             attrValue = 'normal(0)')
+setAttribute(page,
+             elt = css("#loess"), 
+             attrName = "onmouseover",
+             attrValue = 'highlight(1)')
+setAttribute(page, 
+             elt = css("#loess"),
+             attrName = "onmouseout",
+             attrValue = "normal(1)")
 
 #write R function to recalculate!
 
@@ -93,29 +124,19 @@ appendChild(page,
 
 #set attributes:
 setAttribute(page,
-             elt = css("p"),
+             elt = css("#linear"),
              attrName = "onclick",
              attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], sendCoords)')
 
 setAttribute(page,
-             elt = css("span"),
+             elt = css("#loess"),
              attrName = "onclick",
              attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], sendCoords)')
-
 
 #Currently works: when you click on "Linear" - it changes to a linear model
 # When you click on "Loess" - it changes to a loess model
 
-#--------------------------- SLIDER --------------------------------
-## What if we want to include a slider and somehow return the selected value?
-
-page <- htmlPage()
-
-#add svg:
-appendChild(page,
-            child = svgNode(XML::saveXML(svg)),
-            ns = TRUE,
-            response = svgNode())
+# ADD A SLIDER TO CONTROL LOESS:
 
 #identify trendline
 trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
@@ -124,6 +145,8 @@ trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response 
 appendChild(page,
             child = htmlNode('<input name="sl" id="slider" type="range" min = "0" max = "1" step = "0.01"/>'),
             response = css())
+
+appendChild(page, htmlNode('<p id="para"></p>'))
 
 # getProperty 'value':
 # Note that: getAttribute refers to HTML, getProperty refers to JS
@@ -134,14 +157,17 @@ sliderValue <- function(ptr) {
 
 calcSmooth <- function(value) {
   
+  newPara <- htmlNode(paste('<p id="para">', value, '</p>'))
+  replaceChild(page, newPara, css("#para"), async=TRUE)
+  
   #x values:
   x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
   #get panel viewport to match co-ordinates correctly:
   panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
   
-    #loess model only:
-    lo <- loess(Petal.Length~Petal.Width, data = iris, span = as.numeric(value))
-    y <- predict(lo, x)
+  #loess model only:
+  lo <- loess(Petal.Length~Petal.Width, data = iris, span = as.numeric(value))
+  y <- predict(lo, x)
   
   #convert co-ordinates:
   svg_x <- viewportConvertX(panel, x, "native")
@@ -166,7 +192,15 @@ setAttribute(page,
              attrValue = 'RDOM.Rcall("sliderValue", this, [ "ptr" ], null)')
 
 
- #----------------------------------------------------
+ #------------------------- IDEAS... ---------------------------
+
+#extending the challenge: could you send back values selected from the browser?
+# add more JS:
+appendChild(page,
+            child = javascript(paste(readLines("js/linked-brush-lattice.js"), collapse=  "\n")))
+
+
+
 # You could start adding dropdowns... maybe a future thing to experiment with.
 # render a dropdown menu:
 appendChild(page,
@@ -228,7 +262,7 @@ setAttribute(page, trendline, "points", calculate("loess"))
 #an alternative way to return the value of the slider...! (but it blocks oninput)
 
 appendChild(page,
-            child = htmlNode('<p> 0.5 </p>'))
+            child = htmlNode('<p id="sliderValue"> 0.5 </p>'))
 
 js <- ' change = function() {
   var slider = document.getElementById("slider");
@@ -246,26 +280,7 @@ setAttribute(page,
 
 ---------------------------------------------------------
 #Using RDOM.Rcall?
-cat = function(elt,css) {
-}
-
-#set attributes:
-setAttribute(page, elt = css("p"), attrName = "onclick",
-             attrValue = 'RDOM.Rcall("cat", [this], [ "HTML" ],null)')
-
-setAttribute(page, elt = css("span"), attrName = "onclick",
-             attrValue = 'RDOM.Rcall("cat", [this], ["HTML"], null)')
-# Still not sure how this works...?
-
-# This doesn't work. Returns nothing.
-# When you go to the console, it's like it won't return anything that's nested in a div.
+# When you go to the console, it's like it won't return anything that's nested in a div...?
 # Hence try use getElementById() without divs
 # It's interesting that when you nest things in divs, things don't become seen...
-# TODO: NEED TO LEARN WHAT'S THE DIFF BETWEEN A NODE, ATTRIBUTE, PROPERTY!
-
-#wouldn't this work? 'value' = slider value - but it's failing- null not an object?? no idea.
-setAttribute(page,
-             elt = css("input"),
-             attrName = "oninput",
-             attrValue = 'RDOM.Rcall("hello", this.value, [ "HTML" ], null)')
-
+## TODO: NEED TO LEARN WHAT'S THE DIFF BETWEEN A NODE, ATTRIBUTE, PROPERTY!

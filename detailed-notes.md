@@ -3,51 +3,83 @@ This document contains findings, examples, and all kinds of things related to th
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
 TODOS after exams:
-- Update report draft and keep writing
-- Set up own shiny server/or use Shinyapps.io
+- Update report draft and keep writing - (still need to look for references to back up Introduction + fill in other sections)
+- Fix mapping of SVG to PNG
+- Learn more webGL + canvas if needed.
 
 ## Week 12 (25/05 - 01/06): More on webGL/Canvas, Wrap up trendline challenge
 
-**Wrap up these things before you go on break for the next week for exams/tests :(**
+**Wrap up these things before you go on break for exams/tests :(**
 
-TODOS:
-- Shiny + JS + gridSVG + PNG trend line solution for dealing with large datasets
+- **Report Draft** is live for testing purposes here:
+https://ysoh286.shinyapps.io/report-draft/
+ (it's not complete, but surprisingly it renders all the shiny apps in one go. It does take a while to load and requires a strong internet connection ...otherwise it keeps disconnecting.)
+ - Might not need to set up a server after all! :)
 
-DONE:
-- Completed simple DOM solution for trend line reacting to slider! (don't know if you want to extend it further??)
-- Update report draft (still need to look for more references for Introduction)
-- Speed test: there is a significant difference in speed when comparing webGL and SVG loading on the webpage
+
+- Completed simple **DOM solution for trend line** reacting to slider!
+- Advantages over Shiny: retain connection to R, you can keep adding/removing things on the page (unlike Shiny, where you have to stop the entire app and then rerun it if you change something.) You don't have to worry about the 'magic' behind Shiny (the whole concept of making things 'reactive'). It is a little faster and a lot more responsive (I'm guessing Shiny has a lot of things going on behind the scenes. They've got Bootstrap, jQuery e.t.c to make things look nicer, but you could probably add that in DOM which might make it easier to customize).
+
+- The thing with Shiny is they tend to emphasize what can be done in R as their main audience is R users. Most of their tutorials are focused on using R. For those of us who do know web tech, what makes Shiny generic is that they do have functions available to stretch it further (but probably not commonly used).
+
+- **Simple speed test:** there is a significant difference in speed when comparing webGL, canvas and SVG loading on the webpage
 
 | Render Type  | 11K    | 50K    | 100K    | 500K     | 1M     |
 | :----------  | :----- | :----- | :------ | :------- | :----- |
 | Plotly SVG   |   2.05 | 6.40   |  11.98  |  1 min+  |   -    |
-| Plotly webGL |   1.65 |  1.60  |   1.75  |   3.26   | 4.00   |
+| Plotly webGL (stack.gl) |   1.65 |  1.60  |   1.75  |   3.26   | 4.00   |
 | rbokeh canvas|        |  4.04+ |  -      |     -    |    -   |
 | rbokeh webGL |        |  0.954 |  1.23   |   3.36   | 6.02   |
-| raw webGL    |        |        |         |          |        |   |
+| raw webGL*    |   0.12   |   0.165  |    0.255    |    0.713      |    1.26    |  
+| raw canvas** |  0.0306 | 0.0538  |  0.0726  |  0.551  |   1.03   |
 
-  - These values are recorded in seconds.
+\* just random points (vertices), no axes, no other libraries
+
+** This shouldn't be less than webgl, but it's probably because I've done a simple test of plotting very small rectangles that look like points (may not be a fair comparison). BUT: what we find is that it gets a lot slower beyond 100K mark, and webGL may have the advantage on dealing with much more content.
+  - These values are recorded in seconds and are the loading times recorded in the browser.
   - 11K = 11,000 points
   - '-' signifies that it took too long  (the user probably would've just given up.)
-For rbokeh canvas, it was relatively slow. In theory it should be faster than SVG as it's only rendering raster images and does not take up too much memory as once its drawn something it's totally forgotten about it.
+For rbokeh canvas, it's relatively slow. In theory it should be faster than SVG as it's only rendering raster images and does not take up too much memory as once its drawn something it's totally forgotten about it (whereas svg retains information).
 
-In general for loading lots of data: SVG < HTML canvas < webGL
+Loading lots of data: SVG < HTML canvas < webGL
 
+WebGL is great for visualising large datasets, but it's going to take a while to learn from scratch. Just setting up can take several lines of code.
+- You could start making visualisations that go from 2D to 3D, back and forth. Transitions are more fluid.
 - Because we can nest a canvas element in an svg element, we might be able to map co-ordinates of the SVG system into the webGL co-ordinate system (requires data to be sent to the GPU first).
+- We can only attach event handlers (to interact with the canvas) if we nest it in an SVG.
+- Downsides: SECURITY RISK? This is debatable, but some browsers actually block the use of webGL simply because of this reason. This also creates a minor browser compatibility problem (not surprisingly, IE doesn't support webGL very well).
 
-What's really happening in trendline challenge 3.1 ('the loess caterpillar'):
+What's really happening in **trendline challenge 3.1** ('the loess caterpillar'):
   1. When the user brushes over selected points (interaction written in JavaScript on the browser),
     the indexes of the points are sent back to R through the JavaScript function Shiny.onInputChange().
-  2. R receives these indexes and we can use them to trace them back to the rows in the dataframe (We expect the indexes of the points to match up to the rows of the data frame. A limitation of this method is if we have missing data.) Then, we subset this dataset as our selected dataset, and run through it the loess model to generate a set of x and y/fitted values.
+  2. R receives these indexes and we can use them to trace them back to the rows in the dataframe (We expect the indexes of the points to match up to the rows of the data frame. A limitation of this method is if we have missing data.) Then, we subset this as our selected dataset, and run through it the loess model to generate a set of x and y/fitted values.
   3. Once this is done, we use gridSVG's co-ordinate system to translate these values into SVG co-ordinates in R. After that, we can send these co-ordinates back to the browser.
   4. Once the browser receives these values, it updates the points of the line with a new set of points, which appears on the page.
 
-This is a general idea for using gridSVG and Shiny together along with its functions for sending data back and forth so far - the same applies to how we changed main trendline without redrawing the entire plot. Could possibly extend to more situations/challenges??
+This could be a general idea for using gridSVG and Shiny together along with its functions for sending data back and forth so far - the same applies to how we changed main trendline without redrawing the entire plot. Could possibly extend to more situations/challenges??
 
+Disadvantages of doing this:
+- gridSVG is relatively slow, especially when we get to over 1000 points. (Currently only preloaded svg has been tested)
+
+... so we tried this:
+
+**Shiny + JS + gridSVG + PNG trend line solution** for dealing with large datasets:
+- Almost there! There's some incorrect mapping going on between the selection box, and the translation of co-ordinates.
+- Caveats:
+  - To nest an PNG inside an SVG element we use the <image> tag. However, this requires a URL of the png (ie you have to put your image up on the web somewhere) otherwise Shiny (or DOM) can't read it (xlink:href).
+  - Placing the PNG inside the svg takes a while to figure out to get it in the right place
+  - Mapping situation: If the PNG is in the right place and we're using the right co-ordinate system (ie viewport for converting SVG co-ordinates back into 'native' data points), in theory everything should align...
+
+  WHAT DIFFERS IN THIS COMPARED TO SVG:
+  - Because the points are rendered as a png, we now can't return the indexes of the points. Rather, we return the co-ordinates of the bounding selection box. These get translated into data points which we can use to filter out the values that lie within the box.
+
+- Possible other solutions to work on that might be more viable (but all require correct mapping):
+    - render canvas elements inside the svg (need to match canvas co-ordinates to SVG)
+    - render webGL elements inside svg
 
 #### NOTES:
 **More about webgl:**
-- Notes are from [webgl fundamentals ](https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html) & [Ming's WebGL tutorial](http://my2iu.blogspot.co.nz/2011/11/webgl-pre-tutorial-part-1.html)
+- Notes are from [webgl fundamentals ](https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html), [Ming's WebGL tutorial](http://my2iu.blogspot.co.nz/2011/11/webgl-pre-tutorial-part-1.html), [TutorialsPoint](https://www.tutorialspoint.com/webgl/webgl_basics.htm)
 - Generally used for rendering 3D plots rather than 2D (though possible)
 - Idea based upon communication between CPU and GPU (send data to the GPU once and kept on there to minimize this communication, try make them work independently)
 - Draws points, lines... e.t.c based upon code supplied, runs on GPU (Graphics Processing Unit)
@@ -55,8 +87,45 @@ This is a general idea for using gridSVG and Shiny together along with its funct
   - The vertex shader computes vertex positions and reduces amount of communication between CPU and GPU. (where does it draw?)
   -  The fragment shader computes colors for each pixel drawn (how does it draw?)
 - Any data must be passed through to the GPU
+
+GPU:
+- "single chip processor with ... rendering engine that can process minimum of 10 million polygons per second"
+- accelerates creation of images in a frame buffer
+
+COORDINATE SYSTEM in WEBGL:
+- Operates on a 3D co-ordinate system (x,y,z - z signifies depth)
+- restricted to (1,1,1) and (-1,-1,-1)
+- To draw something: use vertices - these are stored in JavaScript arrays which are passed to the webgl pipeline using a 'vertex buffer'.
+- Buffer: memory areas of webgl that hold data
+  - Vertex buffer object: data corresponding to vertices
+  - Index buffer object: data about the indices
+  - Frame buffer: portion of memory to hold the scene data (contains width, height of the surface, color, depth)
+- To draw 2D/3D objects - use drawArrays(), or drawElements()
+  - for 3D objects, requires a mesh (to draw more than one primitive polygon)
+
+THE NEED FOR SHADER PROGRAMS:
+- This is needed so that it reduces the amount of communication between the GPU and the CPU
+- These programs are used to draw these elements
+- Vertex shader: called on every vertex, transforms geometry from 1 place to another
+- Fragment shader: creating surfaces - runs on all pixels of every 'fragment' (fill in pixels, textures...)
+  - Attributes: hold input values of vertex shader program - point vertex buffer objects per vertex data.
+  - Uniforms: hold input data for vertex and fragment shaders (light position, texture co-ordinates)
+  - Varyings: variables to pass from vertex -> fragment
+
+STEPS:
+- Initialize webGL environment
+- Create arrays
+- Create buffer objects as parameters
+- Write shader programs
+- Create attributes, Uniforms, transformation matrix if required
+
+Vertices -> Vertex Shader -> Primitive Assembly -> Rasterisation -> Pixel Shader -> Frame Buffer.
+
+DRAWBACKS:
 -  A downside for webGL is a single program to render a single object can be very long (generally, there is code to set up the GL environment that has to be called before we can start using it).
-- Another downside: Browser compatibility. It is not supported on all browsers, whereas HTML5 Canvas and SVG are more likely to be available and accessible. You must know JavaScript to write in webGL.
+- Minor issue: Browser compatibility. HTML5 Canvas and SVG are more likely to be available and accessible.
+- You must know JavaScript to write in webGL
+- webGL poses a security risk (however, debatable).
 
 **Speed testing in R on plotly, rbokeh**
 
@@ -104,15 +173,26 @@ I've taken the loading times (how long it takes to load on the page for the user
   - Plotly webGL: 3.84s, 4.23s, 4.02s, 3.89s, 3.89s, 4.17s
   - rbokeh webGL: 5.72s, 6.19s, 5.91s, 6.12s, 5.96s, 6.23s
 
-From this we can conclude that webGL is much better at dealing with large datasets than compared to SVG. Differences can be seen even at the 50K mark, where times roughly tripled, even more so when we increase the number of points. HTML5 Canvas could be considered slightly faster than SVG, but still not as efficient as webGL.
+From this we can conclude that webGL is better at dealing with large datasets than compared to SVG. Differences can be seen even at the 50K mark, where times roughly tripled, even more so when we increase the number of points. HTML5 Canvas could be considered slightly faster than SVG, but still not as efficient as webGL.
 [Tested on Google Chrome, Mac OS 10.12]
 
-- This is coherent with a paper that compares the differences in rendering in Canvas, webGL, SVG (they've done more thorough tests!)
+**More notes on speed with webGL and comparisons:**
+- This is coherent with a [paper](http://valt.cs.tufts.edu/pdf/kee2012comparing.pdf) that compares the differences in rendering in Canvas, webGL, SVG (they've done more thorough tests!). Some notes:
+  - they tested a parallel co-ordinates plot to render large amounts of data on the following: SVG, HTML5 Canvas, HTML5 Canvas with WebGL, Processing.js(a library that connects to the Processing program), KineticJS (an HTML5Canvas library)
+  - They found that webGL is the best in performance and speed, however has the highest cost to the developer (a hefty 205 lines of code, in comparison to SVG which requires 29, 56 in canvas...)
+  - They suggest that if performance is not an issue, use canvas rather than SVG (despite SVG being easier to implement)
+  - The use of libraries don't make it any better or faster.
+- Other developers have tested D3, Canvas and SVG for speed as well:
+  - Peter Beshai's [examples](https://bocoup.com/blog/smoothly-animate-thousands-of-points-with-html5-canvas-and-d3) with canvas and D3 suggest that canvas alone is great for up to 10,000 points, but beyond that - webGL's a better option. (this is somewhat present in testing rbokeh's time to render in canvas.)
+  - He uses regl (which is something built on top of webGL) to render  > 10,000 points [here](http://peterbeshai.com/beautifully-animate-points-with-webgl-and-regl.html).
 
-A simple test with webgl itself?
 
-**More notes on DOM:**
-ASYNCHRONOUS.
+**Tips on DOM:**
+MAKE THINGS ASYNCHRONOUS!
+- With RDOM.Rcall(), any requests to the browser -> ASYNC = TRUE.
+- In order to use values returned by the requests to the browser - need to use a callback function.
+- You can do this async + callback in sequence, but you cannot do a javascript 'callback' on the RDOM.Rcall() function.
+- Know the difference between a side effect and a value for a function
 
 
 ## Week 10-11 (11/05 - 25/05): Quick intro to WebGL, Trendline Challenge Part 3, Report Draft v0.1
@@ -157,7 +237,6 @@ DISADVANTAGES of webGL:
 - raster, not vector
 - The main disadvantage appears to be a cost to the developer (takes too long?), but there are ways to combat this by using JavaScript libraries that are built upon webGl (such as three.js, stack.gl, ...) but make it easier to code.
 - Because everything's written in JavaScript, and nested in one single DOM element, you may not manipulate it easily on the page (it's like anything that should be driven in that canvas, should be written there. It's like its own separate world on the webpage?)
-
 
 Chris's idea taken from Mondrian:
 - There's a demo from rbokeh that manages to zoom into hexbins such that when it gets to a certain point it starts rendering as points [here](http://ryanhafen.com/blog/plot-lots-of-data) - scroll down to 'Javascript callback teaser'. However, it's developmental (but it means it's possible!)
