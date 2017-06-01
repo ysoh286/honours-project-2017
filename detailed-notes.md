@@ -7,6 +7,14 @@ TODOS after exams:
 - Fix mapping of SVG to PNG
 - Learn more webGL + canvas if needed.
 
+---
+
+## ON BREAK (01/06 - 22/06)
+
+Tests/Exams are underway. :(
+
+---
+
 ## Week 12 (25/05 - 01/06): More on webGL/Canvas, Wrap up trendline challenge
 
 **Wrap up these things before you go on break for exams/tests :(**
@@ -14,8 +22,7 @@ TODOS after exams:
 - **Report Draft** is live for testing purposes here:
 https://ysoh286.shinyapps.io/report-draft/
  (it's not complete, but surprisingly it renders all the shiny apps in one go. It does take a while to load and requires a strong internet connection ...otherwise it keeps disconnecting.)
- - Might not need to set up a server after all! :)
-
+ - I might still need to use the uni's server anyway because this is only live for 25 hours/month.
 
 - Completed simple **DOM solution for trend line** reacting to slider!
 - Advantages over Shiny: retain connection to R, you can keep adding/removing things on the page (unlike Shiny, where you have to stop the entire app and then rerun it if you change something.) You don't have to worry about the 'magic' behind Shiny (the whole concept of making things 'reactive'). It is a little faster and a lot more responsive (I'm guessing Shiny has a lot of things going on behind the scenes. They've got Bootstrap, jQuery e.t.c to make things look nicer, but you could probably add that in DOM which might make it easier to customize).
@@ -66,7 +73,7 @@ Disadvantages of doing this:
 **Shiny + JS + gridSVG + PNG trend line solution** for dealing with large datasets:
 - Almost there! There's some incorrect mapping going on between the selection box, and the translation of co-ordinates.
 - Caveats:
-  - To nest an PNG inside an SVG element we use the <image> tag. However, this requires a URL of the png (ie you have to put your image up on the web somewhere) otherwise Shiny (or DOM) can't read it (xlink:href).
+  - To nest an PNG inside an SVG element we use the < image > tag. However, this requires a URL of the png (ie you have to put your image up on the web somewhere) otherwise Shiny (or DOM) can't read it (xlink:href).
   - Placing the PNG inside the svg takes a while to figure out to get it in the right place
   - Mapping situation: If the PNG is in the right place and we're using the right co-ordinate system (ie viewport for converting SVG co-ordinates back into 'native' data points), in theory everything should align...
 
