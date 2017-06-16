@@ -2,16 +2,65 @@ This document contains findings, examples, and all kinds of things related to th
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-TODOS after exams:
-- Update report draft and keep writing - (still need to look for references to back up Introduction + fill in other sections)
-- Fix mapping of SVG to PNG
-- Learn more webGL + canvas if needed.
+**Report draft progress: Writing...** Still needs the uni server - shinyapps.io only gives 25hrs/month before it automatically 'undeploys' the app.
+- Is there a specific structure that has to be adhered to when writing??
+
+
+TODOS:
+- Redo the png-trendline problem
+- Keep writing
+
 
 ---
 
 ## ON BREAK (01/06 - 22/06)
 
 Tests/Exams are underway. :(
+
+Things to think about:
+
+REVIEW:
+1. The need for interactive visuals?
+2. What do users want?
+3. What problems have we found with existing tools and how can we solve them?
+
+
+- The problem we never got round to discussing (but was in Paul's meeting notes):
+    >  "trying to find a way to create a series of interconnected graphs where I have a filter (either a drop down or series of checkboxes) where when an option is selected, all graphs are updated to show that group’s data.  I need to keep these graphs internal to our organization, so can’t use Shiny etc.; I am also unable to run R or other products on my server (company policy)."
+    - R-help 2017-04-23 from Chris Battiston
+
+    - A proposed 'quick' solution: This could be done with crosstalk + plotly. However, that's only on the assumption that the 'interconnected' graphs deal with scatter plots/row observational data. Filters and checkboxes can be facilitated through crosstalk. The only problem is that if these graphs require displays of aggregated data (like histograms), then there might not be a viable solution.
+    - You could probably do it in iPlots (but it's not made with the 'end user' in mind + not easily shareable). But you can't install stuff, so not an option.
+    - The 'complicated' solution that's outside of R: code up all the links with D3?? (not sure if this is possible, but [model.js](http://bl.ocks.org/curran/f4041cac02f19ee460dfe8b709dc24e7) looks promising)
+
+- it comes back to that problem of being able to link different kinds of plots (not just scatterplots) easily without using Shiny
+
+
+Other stuff...
+  - Could we mix D3 with Shiny/DOM? (D3 has canvas + SVG support)
+  - No R interface to D3? (maybe too large to scale)
+  - Use of a higher-level library built upon webGL/canvas (Pixi)
+  - Use bookdown/learnr packages to generate an online 'book' format for report (with navigation + references) for submission (might be easier(?) to replicate on print rather than rewrite with knitr/Rnw file)
+   - to investigate: might not able to connect to Shiny(?)
+   - Might still submit a print version in case if technology fails upon us...
+
+
+ - Using an 'interactive layer' like iPlots and Mondrian (e.g. if you have a histogram linked to a scatter plot, and you brush on the histogram, the 'interactive' layer shows what you've selected on top of the plot - might still require redraws on top? Not sure.)
+  - would this be replicable with SVG/canvas?
+  - Somehow need to link aggregate data with row-observational data (D3 has something called crossfilters for handling large data?)
+
+
+PixiJS:
+- [Main page](https://www.pixijs.com) + [Examples](https://pixijs.github.io/examples/#/basics/basic.js)
+- Could try use this to render plots??
+- 2D WebGL renderer that uses canvas as a fallback (if webGL is not supported)
+
+
+   Other tools for interactive data viz outside of R that are commonly used:
+   - Tableau (an [example](http://lenkiefer.com/2017/06/05/tableau-dash) that looks at housing data)
+   - D3 (an [example](http://students.brown.edu/seeing-theory/index.html) that teaches statistics and probability )
+   - The benefits of combining React + D3 - [blog post](https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71)
+
 
 ---
 
@@ -31,6 +80,9 @@ https://ysoh286.shinyapps.io/report-draft/
 
 - **Simple speed test:** there is a significant difference in speed when comparing webGL, canvas and SVG loading on the webpage
 
+Note that this simple test is NOT a fair comparison. It's like comparing apples with oranges (especially when each of these are different in their own way). It is hard to monitor the speed from when the code is run in R to when it reaches and loads the browser (might require more expertise on the computing side to really know what's happening). Alternative would be to state from other studies that have focused on looking at this in detail.
+This test simply illustrates the following: SVG < HTMLCanvas < WebGL in rendering many points with speed.
+
 | Render Type  | 11K    | 50K    | 100K    | 500K     | 1M     |
 | :----------  | :----- | :----- | :------ | :------- | :----- |
 | Plotly SVG   |   2.05 | 6.40   |  11.98  |  1 min+  |   -    |
@@ -42,7 +94,7 @@ https://ysoh286.shinyapps.io/report-draft/
 
 \* just random points (vertices), no axes, no other libraries
 
-** This shouldn't be less than webgl, but it's probably because I've done a simple test of plotting very small rectangles that look like points (may not be a fair comparison). BUT: what we find is that it gets a lot slower beyond 100K mark, and webGL may have the advantage on dealing with much more content.
+** This shouldn't be less than webgl, but it's probably because I've done a simple test of plotting very small rectangles that look like points ( the webgl version may be rendering other things... hence may not be a fair comparison). BUT: what we find is that it gets a lot slower beyond 100K mark, and webGL may have the advantage on dealing with much more content.
   - These values are recorded in seconds and are the loading times recorded in the browser.
   - 11K = 11,000 points
   - '-' signifies that it took too long  (the user probably would've just given up.)
@@ -73,8 +125,8 @@ Disadvantages of doing this:
 **Shiny + JS + gridSVG + PNG trend line solution** for dealing with large datasets:
 - Almost there! There's some incorrect mapping going on between the selection box, and the translation of co-ordinates.
 - Caveats:
-  - To nest an PNG inside an SVG element we use the < image > tag. However, this requires a URL of the png (ie you have to put your image up on the web somewhere) otherwise Shiny (or DOM) can't read it (xlink:href).
-  - Placing the PNG inside the svg takes a while to figure out to get it in the right place
+  - To nest an PNG inside an SVG element we use the < image > tag. However, this requires a URL of the png (ie you have to put your image up on the web somewhere/ or change the tag(not sure if ``` data:image/png base64; ``` would work )) otherwise Shiny (or DOM) can't read it (xlink:href).
+  - Placing the PNG inside the svg takes a while to figure out to get it in the right place (is there a better way of putting things together using R for better 'accuracy'? (like what iNZightMaps does...))
   - Mapping situation: If the PNG is in the right place and we're using the right co-ordinate system (ie viewport for converting SVG co-ordinates back into 'native' data points), in theory everything should align...
 
   WHAT DIFFERS IN THIS COMPARED TO SVG:

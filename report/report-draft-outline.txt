@@ -19,3 +19,71 @@ Possible outline:
 
 
 - Build solution that aims to solve the limitations.
+
+---
+
+Current Structure:
+1 - Introduction - why web interactive? why make from static to interactive? Motivation?
+2 - Problem/aim addressed? What do users want? Is there a way of making your own interactive visuals easily?
+3 - Existing tools for creating web interactive plots in R
+  These are tools that automatically generate web interactive plots and only require knowledge of R
+    - HTMLWidgets
+      - Plotly
+      - rbokeh
+    - ggvis
+    - crosstalk
+    - shiny
+  For each, discuss the pros and cons for each.
+  - Comparison to non-web tools: iPlots (Mondrian/rggobi/cranvas??)
+4 - Extending limitations with other tools
+  These tools require a knowledge of web tech - HTML/CSS/JS/DOM manipulation
+    - gridSVG
+    - DOM
+  Discuss which limitations have been solved, while what has appeared.
+  - Ways in which we could try and solve these limitations?
+  - Other tools that are outside of R that could help or achieve what we want
+5 - Proposed solutions
+
+
+6 - Conclusion
+
+
+---
+
+SUMMARY: SEMESTER 1
+
+Aim: Existing approaches for incorporating interactivity into plots + what might be good for iNZight?
+
+Tools investigated:
+- HTMLWidgets (plotly, rbokeh, highcharter...)
+- ggvis
+- crosstalk
+- Shiny
+- DOM
+- gridSVG
+- iPlots, Mondrian
+
+Problems found:
+- Hard to customise own interactions into plot
+- hard to extend plots or to build upon a plot (generally standalone solutions, except for gridSVG)
+- you can build layers on top of a plot, but you can't modify a single layer without replotting
+- Large dataset handling (SVG/DOM fails)
+- Linking + brushing on scatter plots only, but not on other plots
+- Unnecessary redraws with Shiny (may lag on the user side if we are dealing with a large data set)
+- Maintaining connection between R and the browser to drive interactions?
+- Mapping conditions between plot components + data
+
+Proposed solutions/extensions:
+- Combining Shiny + HTMLWidgets/ggvis gives on-plot interactions + off-plot interactions
+- Combining Shiny/DOM + gridSVG allows for interaction with grid and grid-based plots, prevent redrawing (linked brushing) + communication between R and the browser
+- Use of canvas element/webGL to handle rendering of large datasets
+- Lower level tools such as gridSVG, D3 may be better for customising interactions
+
+WHAT DO WE NEED TO ACHIEVE WHAT USERS WANT?
+-
+
+
+Questionable?
+- Linking different kinds of plots together (without REDRAWS from Shiny, but more 'fluid' like iPlots)
+- Is it necessary to have a 'reactive' programming model like Shiny?
+- Crosstalk + Shiny use a 'key' for each row/observation to link scatter plots together?

@@ -1,4 +1,58 @@
 
+2017-06-01
+----------
+
+DISCUSS:
+
+  + CeR setting up RStudio Server for Yu Han's report
+    - Yu Han has her report on shinyapps.io !
+
+  + canvas option
+    - are there higher-level javascript APIs that provide access
+      to objects (as well as fast rendering) ?
+
+      e.g., https://pixijs.github.io/examples/#/basics/basic.js ?
+
+  + next meeting after exam (22 June)
+
+
+2017-05-25
+----------
+
+DISCUSS:
+
+  + WebGL
+    - main disadvantage is burden on developer
+      but will this just disappear over time ?
+      (as people develop higher-level javascript interfaces)
+
+  + report draft
+    - nice start
+    - need to set up an RStudio server
+      (Paul talking to Abhinav)
+
+  + Danny Kaplan's live documents (for teaching)
+
+    https://dtkaplan.github.io/USCOTS-2017/
+    https://github.com/dtkaplan?tab=repositories
+
+    - based on RStudio's new 'learnr' package (?)
+    
+
+TODO:
+
+  + keep going on challenges 
+    - Shiny + gridSVG + js
+    - DOM 
+
+  + do simple WebGL speed test
+
+  + Paul read report draft and feed back
+  
+  + Paul attempt to get DOM example to work
+    - HTML slider -> RDOM.Rcall() -> 'DOM' -> HTML text showing slider value
+
+
 2017-05-18
 ----------
 
