@@ -1,66 +1,121 @@
-This document contains findings, examples, and all kinds of things related to the project. Will be updated weekly...
+This document contains findings, examples, thoughts, ideas, and all kinds of things related (and the occasional 'unrelated') to the project. Will be updated weekly...
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress: Writing...** Still needs the uni server - shinyapps.io only gives 25hrs/month before it automatically 'undeploys' the app.
+**Report draft progress: Writing...** - still needs the uni server - shinyapps.io only gives 25hrs/month before it automatically 'undeploys' the app.
 - Is there a specific structure that has to be adhered to when writing??
-
+- would bookdown format be a better option? not sure if it can connect to Shiny(?)
+    - Might still submit a print version in case if technology fails upon us...
 
 TODOS:
 - Redo the png-trendline problem
 - Keep writing
-
+- What's the problem I'm trying to answer??
 
 ---
 
-## ON BREAK (01/06 - 22/06)
+## BREAK (01/06 - 22/06)
 
 Tests/Exams are underway. :(
 
-Things to think about:
+#### EXTRA NOTES for optional reading:
 
-REVIEW:
-1. The need for interactive visuals?
-2. What do users want?
-3. What problems have we found with existing tools and how can we solve them?
+**1. The need for interactive visuals and what do users want?**
+
+ *Need to update with a reading list/ lit review + find more!*
+
+- purpose of communicating information (find patterns, anomalies, correlations, way of telling a 'story')
+
+[Interactive Dynamics for Visual Analysis](http://delivery.acm.org/10.1145/2150000/2146416/p30-heer.pdf?ip=115.188.161.170&id=2146416&acc=OPEN&key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E6D218144511F3437&CFID=950138527&CFTOKEN=46582027&__acm__=1497854556_76ceca42ddbba2362a573b31d17930dc) - Jeffrey Heer, Ben Shneiderman
+
+[What's in a good visualisation?](http://www.improving-visualisation.org/case-studies/id=6)
+
+A [blog post]((https://www.vis4.net/blog/posts/in-defense-of-interactive-graphics/) on why interactive visuals are great (but more focused on designing interactives):
+- "You should not hide important content behind interactions" -tooltips for numbers, and more 'details' for the more interested user
+- A way to allow users to explore the entire data set (if you have lots of data)
+- In cases of 'scenario analysis' - users can see how their data changes
+- A sense of trust/transparency through the data? (in journalism, it might bring more truth to readers)
+
+An [argument](https://medium.com/@dominikus/the-end-of-interactive-visualizations-52c585dcafcb) for why interactive graphics aren't helpful (more of an indication of what should be avoided/or what's NOT helpful when you design an interactive visual):
+- "If you make a tooltip or rollover, assume no one will ever see it." - 85% of page visitors ignore them, or miss out on hidden information.
+- "Interaction lets you do more." - user 'personalizes' tools
+- "Interaction enables people to adjust a visualisation to their own needs, ask different questions"
+- Different definitions of 'interactivity' - Tufte's diagram on paper is 'interactive' in the sense that it makes the user HAVE to look INTO the data to find what they want.
+- "Data visualists spend too much time about achieving interactions rather than finding uses for them"
+- Think about: who's your audience, how much time do they have, what are their goals? Does interaction help?
+
+Common interactions:
+- Brushing
+- Identification
+- scaling
+- linking
+
+- People spend more time on analysing the data, and need tools to help them visualise the data easily (hence a boom in HTMLwidgets and R interfaces to JavaScript libraries) - Sievert points this out in a recent [blog post]().
+- What if you could create your own interactive visual in R more deeply rather than just generate standard plots? (e.g. to specific problems such as explaining 'rejection sampling' in Bayesian statistics, or Chris's animation for explaining bar charts...) - The current solution for this is you have to learn D3 or some JavaScript library outside of R, or work your way around using Shiny. The problem could be too broad to tackle...
+- More standalone solutions for linking plots together (Shiny does linking fine, but it's not entirely shareable - you need to host it on a server, and either: you host it on shinyapps.io (for a limited time),  build your own, or you pay $$ for its service)
+
+(My own thought: There's sometimes a disconnect between maths/stats theory and what's happening to our data or when we put theory into practice.
+Sometimes we compute values, but we don't know where they come from or we take them for granted.)
 
 
-- The problem we never got round to discussing (but was in Paul's meeting notes):
-    >  "trying to find a way to create a series of interconnected graphs where I have a filter (either a drop down or series of checkboxes) where when an option is selected, all graphs are updated to show that group’s data.  I need to keep these graphs internal to our organization, so can’t use Shiny etc.; I am also unable to run R or other products on my server (company policy)."
-    - R-help 2017-04-23 from Chris Battiston
-
-    - A proposed 'quick' solution: This could be done with crosstalk + plotly. However, that's only on the assumption that the 'interconnected' graphs deal with scatter plots/row observational data. Filters and checkboxes can be facilitated through crosstalk. The only problem is that if these graphs require displays of aggregated data (like histograms), then there might not be a viable solution.
-    - You could probably do it in iPlots (but it's not made with the 'end user' in mind + not easily shareable). But you can't install stuff, so not an option.
-    - The 'complicated' solution that's outside of R: code up all the links with D3?? (not sure if this is possible, but [model.js](http://bl.ocks.org/curran/f4041cac02f19ee460dfe8b709dc24e7) looks promising)
-
-- it comes back to that problem of being able to link different kinds of plots (not just scatterplots) easily without using Shiny
+**2. What problems have we found with existing tools and how can we solve them?**
+- Solutions that do not require a knowledge of web tech create standard, non-extensive plots
+- Users may demand for standalone solutions rather than those that connect to R (i.e. No shiny)
+- More fluid changes/transitions (crosstalk is still an 'awkward solution' with plotly)
+-  A way of visualizing and interacting with large datasets (where to store the data, how to display it?)
+- Applicability??
+  (An idea: A way of visualising models (like in 20x/330 - where we are given data, and we have to find the best model for it) - a way to compare models in an interactive way, select outliers and see how the model changes, compare fits 'on the fly'. Residuals and diagnostic plots are all connected. <- people might not even bother since there's no time for it.)
 
 
-Other stuff...
-  - Could we mix D3 with Shiny/DOM? (D3 has canvas + SVG support)
-  - No R interface to D3? (maybe too large to scale)
-  - Use of a higher-level library built upon webGL/canvas (Pixi)
-  - Use bookdown/learnr packages to generate an online 'book' format for report (with navigation + references) for submission (might be easier(?) to replicate on print rather than rewrite with knitr/Rnw file)
-   - to investigate: might not able to connect to Shiny(?)
-   - Might still submit a print version in case if technology fails upon us...
+The problem we never got round to discussing (but was in Paul's meeting notes): **link different kinds of plots easily without using Shiny**
+  >  "trying to find a way to create a series of interconnected graphs where I have a filter (either a drop down or series of checkboxes) where when an option is selected, all graphs are updated to show that group’s data.  I need to keep these graphs internal to our organization, so can’t use Shiny etc.; I am also unable to run R or other products on my server (company policy)." R-help 2017-04-23 from Chris Battiston
 
 
- - Using an 'interactive layer' like iPlots and Mondrian (e.g. if you have a histogram linked to a scatter plot, and you brush on the histogram, the 'interactive' layer shows what you've selected on top of the plot - might still require redraws on top? Not sure.)
-  - would this be replicable with SVG/canvas?
-  - Somehow need to link aggregate data with row-observational data (D3 has something called crossfilters for handling large data?)
+  - A proposed 'quick' solution: This could be done with crosstalk + plotly. However, that's only on the assumption that the 'interconnected' graphs deal with scatter plots/row observational data. Filters and checkboxes can be facilitated through crosstalk. The only problem is that if these graphs require displays of aggregated data (like histograms), then there might not be a viable solution.
+  - You could probably do it in iPlots (but it's not made with the 'end user' in mind + not easily shareable). But you can't install software, so not an option.
+  - The 'complicated' solution that's outside of R: code up all the links with D3?? (not sure if this is possible, but something like [model.js](http://bl.ocks.org/curran/f4041cac02f19ee460dfe8b709dc24e7) looks promising)
 
+  - Using an 'interactive layer' like iPlots and Mondrian (e.g. if you have a histogram linked to a scatter plot, and you brush on the histogram, the 'interactive' layer shows what you've selected on top of the plot - might still require redraws on top? Not sure.)
+    - would this be replicable with SVG/canvas?
+    - Somehow need to link aggregate data with row-observational data (D3 has something called crossfilters for handling large data?)
 
-PixiJS:
-- [Main page](https://www.pixijs.com) + [Examples](https://pixijs.github.io/examples/#/basics/basic.js)
+**CANVAS/WEBGL OPTIONS:** are there higher-level javascript APIs that provide access
+  to objects (as well as fast rendering) ?
+
+[PixiJS](https://www.pixijs.com):
+ [Examples](https://pixijs.github.io/examples/#/basics/basic.js)
 - Could try use this to render plots??
 - 2D WebGL renderer that uses canvas as a fallback (if webGL is not supported)
 
+[Stardust:](https://stardustjs.github.io/) GPU-based Visualisation library
+- webGL only
+- Notation is similar to D3 where you can bind data to objects??
 
-   Other tools for interactive data viz outside of R that are commonly used:
-   - Tableau (an [example](http://lenkiefer.com/2017/06/05/tableau-dash) that looks at housing data)
-   - D3 (an [example](http://students.brown.edu/seeing-theory/index.html) that teaches statistics and probability )
-   - The benefits of combining React + D3 - [blog post](https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71)
+[Fabric.js:](http://fabricjs.com/fabric-intro-part-1)
+- 'operate on objects' rather than context (...which is what the raw canvas does)
+- Basic interactivity possible (mouse events, svg...)
 
+[KineticJS:](https://github.com/ericdrowell/KineticJS/) - now no longer maintained.
+
+[ProcessingJS:](http://processingjs.org/) -  *might not be a good choice, as its code/notation is looking kind of similar to webGL, looks more like something from scratch...*
+
+**Other thoughts/ideas:**
+  - Could we mix D3 with Shiny/DOM? (D3 has canvas + SVG support)
+  - No R interface to D3? (too large to scale)
+  - Use of a higher-level library built upon webGL/canvas (Pixi)
+
+
+Other tools for interactive data viz outside of R that are commonly used:
+- Tableau (an [example](http://lenkiefer.com/2017/06/05/tableau-dash) that looks at housing data)
+- D3 (an [example](http://students.brown.edu/seeing-theory/index.html) that teaches statistics and probability )
+
+On the side:
+- The benefits of combining React + D3 - [blog post](https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71)
+- Visualising with Angular and D3 - [blog post](https://medium.com/@lsharir/visualizing-data-with-angular-and-d3-209dde784aeb)
+- A [Data Visualisation](http://courses.cs.washington.edu/courses/cse442/17sp/) course at the University of Washington
+  - This course teaches D3 and the fundamentals of visualising data (under computer science)
+  - Includes web programming, design principles
+  - Gets students to produce a [final project](https://cse442-17s.github.io/) (some of them look really cool) that gets assessed!
 
 ---
 
