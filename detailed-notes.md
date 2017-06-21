@@ -14,6 +14,52 @@ TODOS:
 
 ---
 
+## SEMESTER 1 RECAP:
+
+**Aim:** Existing approaches for incorporating interactivity in plots + what might be good for iNZight?
+
+**Tools investigated:**
+- HTMLWidgets (plotly, rbokeh, highcharter...)
+- ggvis
+- ggiraph (with ggplot2)
+- crosstalk
+- Shiny
+- DOM
+- gridSVG
+- iPlots
+
+Others: webgl, canvas, V8
+
+**Problems found:**
+- Hard to customise own interactions on plot
+- hard to extend plots or to build upon a plot (a 'standard' solution, except for gridSVG/ Shiny)
+- you can build layers on top of a plot, but you can't modify a single layer without replotting
+- Large dataset handling (SVG/DOM fails, gridSVG is slow)
+- Linking + brushing on scatter plots only, but not on other plots
+- Unnecessary redraws with Shiny (may lag on the user side if we are dealing with a large data set - a minor(?) issue)
+- Maintaining connection between R and the browser to drive interactions vs standalone solutions (web driven)
+- Mapping between plot components + data
+
+**Proposed solutions/extensions:**
+- Shiny can act as a more 'generic' solution -> there are ways to incorporate JavaScript, HTML to achieve custom interactivity/use of 'reactives' (such as isolate(), observe()) in R
+- Combining Shiny + HTMLWidgets/ggvis gives on-plot interactions + off-plot interactions
+- Combining Shiny/DOM + gridSVG allows for interaction with grid and grid-based plots, prevent redrawing (linked brushing)
+- Use of canvas/webGL to handle rendering of large datasets
+- Lower level tools such as gridSVG, D3 are better for customising interactions, but require more knowledge about web technologies (tradeoff)
+
+*Speculation for developing a more 'generic' solution that can be implemented for iNZight.*
+-- Leaning towards: having to write own code, but with the help of JavaScript libraries like D3 or a canvas library for dealing with larger datasets.
+
+Where to next??
+*Have I dug deep enough with existing tools or should I keep investigating?*
+
+Questionable??
+- Linking different kinds of plots together (without REDRAWS from Shiny, more 'fluid' like iPlots)
+- Is it necessary to have a 'reactive' programming model like Shiny?
+- Crosstalk + Shiny use a 'key' for each row/observation to link scatter plots together. Is this something we should stick to?
+
+---
+
 ## BREAK (01/06 - 22/06)
 
 Tests/Exams are underway. :(
@@ -45,21 +91,18 @@ An [argument](https://medium.com/@dominikus/the-end-of-interactive-visualization
 - Think about: who's your audience, how much time do they have, what are their goals? Does interaction help?
 
 Common interactions:
-- Brushing
-- Identification
+- brushing
+- identification
 - scaling
 - linking
 
-- People spend more time on analysing the data, and need tools to help them visualise the data easily (hence a boom in HTMLwidgets and R interfaces to JavaScript libraries) - Sievert points this out in a recent [blog post]().
-- What if you could create your own interactive visual in R more deeply rather than just generate standard plots? (e.g. to specific problems such as explaining 'rejection sampling' in Bayesian statistics, or Chris's animation for explaining bar charts...) - The current solution for this is you have to learn D3 or some JavaScript library outside of R, or work your way around using Shiny. The problem could be too broad to tackle...
+- People spend more time on analysing the data, and need tools to help them visualise the data easily (hence the increasing number of HTMLwidgets and R interfaces to JavaScript libraries) - Sievert points this out in a recent [blog post](https://cpsievert.me/2017/06/13/developing-tools-for-exploratory-visualization/).
+- What if you could create your own interactive visual in R more deeply rather than just generate standard plots? (e.g. to specific problems such as explaining 'rejection sampling' in Bayesian statistics, or Chris's animation for explaining bar charts...) - A solution for this is you have to learn D3 or some JavaScript library outside of R, or work your way around using Shiny. The problem could be too broad to tackle...
 - More standalone solutions for linking plots together (Shiny does linking fine, but it's not entirely shareable - you need to host it on a server, and either: you host it on shinyapps.io (for a limited time),  build your own, or you pay $$ for its service)
-
-(My own thought: There's sometimes a disconnect between maths/stats theory and what's happening to our data or when we put theory into practice.
-Sometimes we compute values, but we don't know where they come from or we take them for granted.)
 
 
 **2. What problems have we found with existing tools and how can we solve them?**
-- Solutions that do not require a knowledge of web tech create standard, non-extensive plots
+- Existing solutions do not require a knowledge of web tech create standard, non-extensive plots (just R)
 - Users may demand for standalone solutions rather than those that connect to R (i.e. No shiny)
 - More fluid changes/transitions (crosstalk is still an 'awkward solution' with plotly)
 -  A way of visualizing and interacting with large datasets (where to store the data, how to display it?)
@@ -100,16 +143,11 @@ The problem we never got round to discussing (but was in Paul's meeting notes): 
 [ProcessingJS:](http://processingjs.org/) -  *might not be a good choice, as its code/notation is looking kind of similar to webGL, looks more like something from scratch...*
 
 **Other thoughts/ideas:**
-  - Could we mix D3 with Shiny/DOM? (D3 has canvas + SVG support)
-  - No R interface to D3? (too large to scale)
-  - Use of a higher-level library built upon webGL/canvas (Pixi)
-
-
 Other tools for interactive data viz outside of R that are commonly used:
 - Tableau (an [example](http://lenkiefer.com/2017/06/05/tableau-dash) that looks at housing data)
 - D3 (an [example](http://students.brown.edu/seeing-theory/index.html) that teaches statistics and probability )
 
-On the side:
+Irrelevant findings?
 - The benefits of combining React + D3 - [blog post](https://medium.com/@Elijah_Meeks/interactive-applications-with-react-d3-f76f7b3ebc71)
 - Visualising with Angular and D3 - [blog post](https://medium.com/@lsharir/visualizing-data-with-angular-and-d3-209dde784aeb)
 - A [Data Visualisation](http://courses.cs.washington.edu/courses/cse442/17sp/) course at the University of Washington
