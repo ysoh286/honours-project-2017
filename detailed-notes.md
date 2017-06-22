@@ -7,10 +7,47 @@ This document contains findings, examples, thoughts, ideas, and all kinds of thi
 - would bookdown format be a better option? not sure if it can connect to Shiny(?)
     - Might still submit a print version in case if technology fails upon us...
 
+---
+
+## WEEK 13 (22/06 - 29/06): Abstract thinking?
+
 TODOS:
+- the loess caterpillar with DOM
+- Trial CeR's login + test report drafts
 - Redo the png-trendline problem
 - Keep writing
 - What's the problem I'm trying to answer??
+
+**Questions to answer:**
+- What can plotly not do? (plotly's most advanced)
+
+**Loose ends of an abstract idea?**
+- Focus on talk back to R? (standalone solutions deal with co-ordinating with JavaScript... like crosstalk)
+- The idea of developing an 'add-on' for tracking interactions? (kind of like crosstalk with HTMLwidgets)
+
+R -------------> browser (send data to draw plot)
+
+  <--------------       (send something related to interactivity back/what user has changed)
+
+- Should we send data to the browser for more 'informative' data to be sent back or should we leave information back in R? (ie one of the main advantages for Shiny is that we keep data on the server side to avoid loading too many things on the browser/client side)
+- Isn't this what we've already been doing with Shiny/DOM/gridSVG, where we can send co-ordinates, indexes, values?? (we could potentially send most things - as long as it's in a specific format that it can accept (i.e. DOM can read DOM elements, Shiny can pass through arrays/objects + has alot more going under the hood + there's the option of creating new inputs and outputs that can be rendered on the page - e.g. you could potentially create an svg output/ or just simply throw it on as HTML)
+- Plotly with ```event_data()```: NOTE THAT THIS CAN ONLY BE ACCESSED WITH SHINY and must be used in a reactive Shiny context
+   - Used in conjunction with ```plotly_hover, plotly_click, plotly_selected```
+   - What can it return from different plots??
+
+**Boxplot challenge Part 2:** try render a boxplot + scatterpoints, and return the values that lie in between to R/or the web console. - or make R print something whenever top/bottom is clicked or hovered over.
+
+ - The 'linking plot' problem: Couldn't you send the indices back , group the data in R and then compute a bar chart with the existing indices?? and then it becomes interlinked?
+
+ R  -------------> browser  - send scatterplot over
+
+    <------------- send indices back, but R prints out and stores aggregated data instead
+
+    -------------> once that's done, send an updated histogram?
+
+- Do the opposite: have a bar chart, and send back the aggregated data but produce a scatter plot instead??
+
+- How's this any different from linking everything with Shiny?? (other than not having access to R)
 
 ---
 
@@ -76,7 +113,7 @@ Tests/Exams are underway. :(
 
 [What's in a good visualisation?](http://www.improving-visualisation.org/case-studies/id=6)
 
-A [blog post]((https://www.vis4.net/blog/posts/in-defense-of-interactive-graphics/) on why interactive visuals are great (but more focused on designing interactives):
+A [blog post](https://www.vis4.net/blog/posts/in-defense-of-interactive-graphics/) on why interactive visuals are great (but more focused on designing interactives):
 - "You should not hide important content behind interactions" -tooltips for numbers, and more 'details' for the more interested user
 - A way to allow users to explore the entire data set (if you have lots of data)
 - In cases of 'scenario analysis' - users can see how their data changes
