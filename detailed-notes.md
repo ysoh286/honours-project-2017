@@ -2,27 +2,64 @@ This document contains findings, examples, thoughts, ideas, and all kinds of thi
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress: Writing...** - still needs the uni server - shinyapps.io only gives 25hrs/month before it automatically 'undeploys' the app.
-- Is there a specific structure that has to be adhered to when writing??
-- would bookdown format be a better option? not sure if it can connect to Shiny(?)
-    - Might still submit a print version in case if technology fails upon us...
+**Report draft progress: Writing...** - requires a shiny server.
+
+TODOS:
+- extend DOM-trendline challenge
+- Trial CeR's login + test report draft - can't access login?? Page doesn't load.
+- Keep writing
+- Something to test: can you use 'plotly_click' and do something different other than return values? Can you do the same with 'input$brush' on shiny's on-plot interactions with ggplot2/base?
+
+LOOSE ENDS? Should these be further investigated or not?
+- redo png-trendline challenge?
+- Canvas APIs for fast rendering of large datasets
 
 ---
 
 ## WEEK 13 (22/06 - 29/06): Abstract thinking?
 
-TODOS:
-- the loess caterpillar with DOM
-- Trial CeR's login + test report drafts
-- Redo the png-trendline problem
-- Keep writing
-- What's the problem I'm trying to answer??
-
 **Questions to answer:**
-- What can plotly not do? (plotly's most advanced)
+- **What can plotly not do?**
+    - you can't add interactions without knowing D3/plotly API (an example of adding [custom interactions](https://plotly-book.cpsievert.me/custom-behavior-via-javascript.html) with plotly has been done by Sievert in his book)
+    - ```event_data``` can only be used in conjunction with Shiny, where we can track inputs via ```plotly_click, plotly_hover, plotly_relayout```
+    - What can it return from different plots?? ```plotly_click``` can work on different plots to return the point at which the user has clicked on
+    - Can you attach different interactions through Shiny rather than the obvious 'return whatever's been clicked?'?? (chain reactions?)
 
-**Loose ends of an abstract idea?**
-- Focus on talk back to R? (standalone solutions deal with co-ordinating with JavaScript... like crosstalk)
+
+- **How can you make it EASIER to do what you've done WITHOUT knowing JavaScript?**
+
+    - Most of my solutions are heavily reliant on gridSVG simply because we can map data and what's being rendered/sent to the web with its handy co-ordinate system (it's a little tedious at times - like identifying the correct viewport)
+    - able to track what's what on the page - otherwise, hard to add interactions (problem with all the other tools)
+    - Whatever specified in R should correspond to something that's being sent to the browser
+    - Shiny does have functions to allow for customisation (acts as the 'bridge' between R and the browser) -> so we'd focus on providing functions that produce JavaScript output that can be put into R ??
+      - Another way of manipulating DOM elements with [shiny](http://shiny.rstudio.com/articles/dynamic-ui.html)
+   - something to investigate: most HTMLwidgets that we have looked at can work with Shiny and have a way of tracking on-plot interactions ->  are these interactions limited to return  to return a certain value, or can you customise that interaction??
+    - what if you could send json (could originally be a array) back to R (as a list, data frame, matrix?) that can be used further??
+    - Could come up with pre-written JavaScript for generic 'interactions', but also be able to be flexible enough so that things can change (so user can control what to return) which can be specified in R? (wishful thinking here) - but it would depend on what is used to generate the plot (stick to R plots? gridSVG? D3? HTMLwidget? ggvis/Vega?)
+      - could be dependent on plot type as well? (e.g bar vs scatter)
+
+  Possible steps:
+    - Identify what's being generated in R, what gets sent to the browser returns a set of element 'ids' which correspond to key features of the plot back to R (e.g. a box plot could return element ids which correspond to quartiles, median, min, max and possible outliers, a scatter plot could return the general composition of the id of a point ('point.1.' + i) - or selection tags via D3 (specify parent/child)?)
+    - user can define what element to target + use functions to attach interactions in R (which generates custom javascript to be sent to the browser)
+    (e.g. something like ggiraph? - there's the option for those who know some javascript to write it in R to be passed through, or there is the standard option for the user)
+    - user interacts on browser
+    - depending on the function they've written, should return whatever they asked for back in R (or in the browser)??
+
+  A possible example is the selection box:
+  - Essentially a javascript file to drive this interaction (mousedown, mouseup, mousemove). It could potentially work on anything that's been passed through gridSVG (the only thing that changes is the viewport to where points/lines/bars are located)
+    - What would you want to send back, and how would you change it? How does this information get passed from an R function -> JavaScript function ? (could look at htmlwidgets package - development of htmlwidgets in detail)
+
+
+#### NOTES:
+
+**Notes from meeting:**
+
+- Problems that are found in existing tools are like "holes". Each tool can do similar things, but there are also other things they can do that differentiate them from each other.
+  - Large dataset handling: the general solution appears to be to use canvas/webGL to render these plots
+  - Linking different plots: doable in Shiny, but not on the web (most likely requires a full JavaScript solution)
+- Each has its own system of doing things, so it might be difficult to generalize?
+
+- Focus on talk back to R? ( solutions with no R connected deal with co-ordinating with JavaScript ... like crosstalk)
 - The idea of developing an 'add-on' for tracking interactions? (kind of like crosstalk with HTMLwidgets)
 
 R -------------> browser (send data to draw plot)
@@ -30,24 +67,32 @@ R -------------> browser (send data to draw plot)
   <--------------       (send something related to interactivity back/what user has changed)
 
 - Should we send data to the browser for more 'informative' data to be sent back or should we leave information back in R? (ie one of the main advantages for Shiny is that we keep data on the server side to avoid loading too many things on the browser/client side)
-- Isn't this what we've already been doing with Shiny/DOM/gridSVG, where we can send co-ordinates, indexes, values?? (we could potentially send most things - as long as it's in a specific format that it can accept (i.e. DOM can read DOM elements, Shiny can pass through arrays/objects + has alot more going under the hood + there's the option of creating new inputs and outputs that can be rendered on the page - e.g. you could potentially create an svg output/ or just simply throw it on as HTML)
-- Plotly with ```event_data()```: NOTE THAT THIS CAN ONLY BE ACCESSED WITH SHINY and must be used in a reactive Shiny context
-   - Used in conjunction with ```plotly_hover, plotly_click, plotly_selected```
-   - What can it return from different plots??
+- Isn't this what we've already been doing with Shiny/DOM/gridSVG, where we can send co-ordinates, indexes, values?? (we could potentially send most things - as long as it's in a specific format that it can accept (i.e. DOM can read DOM elements, Shiny can pass through arrays/objects(not sure if there's a limit in how much you can pass? since it's not commonly used) + there's the option of creating new inputs and outputs that can be rendered on the page - you could potentially create an svg output/ or just simply throw it on as HTML)
 
-**Boxplot challenge Part 2:** try render a boxplot + scatterpoints, and return the values that lie in between to R/or the web console. - or make R print something whenever top/bottom is clicked or hovered over.
+**A possible challenge to look at - boxplots:** try render a boxplot + scatterpoints, and return the values that lie in between to R/or the web console. - or make R print something whenever top/bottom is clicked or hovered over.
 
- - The 'linking plot' problem: Couldn't you send the indices back , group the data in R and then compute a bar chart with the existing indices?? and then it becomes interlinked?
+ - The 'linking plot' problem: Couldn't you send the indices back , group the data in R and then compute a and aggregated plot with the existing indices?? and then it becomes interlinked?
 
- R  -------------> browser  - send scatterplot over
+ R  -------------> browser  (send scatterplot over)
 
-    <------------- send indices back, but R prints out and stores aggregated data instead
+    <------------- (send indices back, but R prints out and stores aggregated data instead)
 
-    -------------> once that's done, send an updated histogram?
+    -------------> (once that's done, send a boxplot/bar plot?)
 
-- Do the opposite: have a bar chart, and send back the aggregated data but produce a scatter plot instead??
+- How is this any different from linking everything with Shiny???
 
-- How's this any different from linking everything with Shiny?? (other than not having access to R)
+**Another look into ggiraph:**
+ *Reviewed back in Week 7-9*
+ - The ggiraph package is an HTMLwidget designed to make ggplot2 interactive with 'add-on' functions
+ - has the following features: tooltips (hovers + labels),  onclick (JS function whenever click occurs on an element), data_id (for use with Shiny)
+ - Simplistic, has 'basic' interactivity covered
+ - selections can be done via Shiny
+ - More flexibility on tooltips?
+ - How it works: you build upon a ggplot by adding interactive functions under ggiraph, and pass it through the ggiraph() function.
+ - Appears to 're-render' the plot in D3 + additional JS to pass data through from R -> browser  (from source code)
+ - A more complex example by [Newman](http://dpnewman.com/ggiraph/)
+ - An [example](https://rstudio-pubs-static.s3.amazonaws.com/221846_2ce0c17cc61740d7918ffa0c867ebf65.html) to which if you click on the scatter plot, it opens up a new web page with results about the car.
+ - **How's this different from using plotly's ggplotly() function?**
 
 ---
 
@@ -82,13 +127,12 @@ Others: webgl, canvas, V8
 - Combining Shiny + HTMLWidgets/ggvis gives on-plot interactions + off-plot interactions
 - Combining Shiny/DOM + gridSVG allows for interaction with grid and grid-based plots, prevent redrawing (linked brushing)
 - Use of canvas/webGL to handle rendering of large datasets
-- Lower level tools such as gridSVG, D3 are better for customising interactions, but require more knowledge about web technologies (tradeoff)
+- Lower level tools such as gridSVG, D3 are better for customising interactions, but require more knowledge about JavaScript (tradeoff)
 
 *Speculation for developing a more 'generic' solution that can be implemented for iNZight.*
 -- Leaning towards: having to write own code, but with the help of JavaScript libraries like D3 or a canvas library for dealing with larger datasets.
 
 Where to next??
-*Have I dug deep enough with existing tools or should I keep investigating?*
 
 Questionable??
 - Linking different kinds of plots together (without REDRAWS from Shiny, more 'fluid' like iPlots)
