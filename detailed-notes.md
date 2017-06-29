@@ -2,19 +2,108 @@ This document contains findings, examples, thoughts, ideas, and all kinds of thi
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress: Writing...** - requires a shiny server. CeR's RStudio login only works on campus.
+**Report draft progress: Writing...** - requires a shiny server. CeR's RStudio server provides access to R.
 
-https://ysoh286.shinyapps.io/report-draft/
+https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
 
 TODOS:
 - extend DOM-trendline challenge
 - Keep writing
 - Something to test: ggvis's demo on rendering a selection box to draw a new trendline
 - look at ggiraph in more detail
+- attempt to get a bigger picture of how we'd customise direct interactions on plots in R?
 
 LOOSE ENDS? Should these be further investigated or not?
 - redo png-trendline challenge?
 - Canvas APIs for fast rendering of large datasets
+
+---
+
+## WEEK 14 (29/06 - ?? ): Concepts?
+
+- Identify what's similar in each challenge? What's different? Can you turn it into a function?
+
+**Another pseudo-code plan?**
+*still in progress...*
+
+- A function to return 'main' elements back to R after they are sent to the browser (or after conversion to svg)
+
+```r
+#draws the plot and sends to browser
+drawPlot(x, y, data, plottype, graphictype)
+# plottype relates to what kind of plot it is, graphictype relates to if it might be a lattice plot, a base plot, an iNZightPlot?
+# graph should be of a certain structure such that element ids would not change every time we pass it through gridSVG
+```
+- A function to return a list of whatever's on the browser back to R
+
+```r
+# return list of ids of elements that can be called with appropriate tags to help out
+list_elements()
+# imaginary example: list_elements(plot)
+          # elements      id
+          # panel       panel.1.1
+          # lowerBox    polygon.1.1.1
+          # upperBox    polygon.1.1.2
+          # minLine     grid.line.1.1.1
+          # maxLine     grid.line.2.1.1
+          # points      points.1.1.1 (n)    
+
+```
+
+- A function to be able to attach simple mouse events to an element or a group of elements
+
+- A function to be able to filter elements based upon a condition/range
+
+- A function to be able to link elements together (somehow)
+
+
+Extras that might be helpful:
+- A function that can return more information about a certain element
+
+Wandering ideas that may be off-topic:
+- A possible function to 'translate' code that can be used in Shiny applications (but it might not be that useful ?)
+- A function to add on tooltips + be able to specify what text goes inside
+
+COMMONALITIES:
+- There is a need for finding out WHAT elements are on the page (in gridSVG: find out the viewport containing the main plot objects we are dealing with) -it would be nice to be able to return ids of what they are
+- MOUSE EVENTS such as mouseover, mouseout, clicks can be easily attached to an identified element and do basics such as: change color via fills and strokes
+- A way of being able to link elements to each other because they correspond to the same data (e.g. a table row to a point, a point that lies within a range of a box, a point on one plot to another)
+
+DIFFERENCES:
+- Shiny and DOM have different systems of working around (Shiny relies on inputs and outputs. But the similar JavaScript code is used - needs to be passed into different functions like ```Shiny.addCustomMessageHandler('functionName/type', jsfunction(input)),``` and ```session$sendCustomMessage(type ='functionName/type', input)```)
+- Function in R for converting coordinates into data is used in the trendline challenge (reused in both DOM and Shiny versions but may be too specific)
+
+**Steps in each challenge:**
+
+*Boxplot challenge:*
+- Need for identifying polygon boxes/elements associated with boxplot
+  - group together
+  - add event listeners to correct 'element' (lowerbox)
+
+  ```javascript
+
+  lowerBox.addEventListener('mouseover', fillBox, false);
+
+  fillBox = function() {
+    lowerBox.setAttribute('fill', 'red');
+  }
+
+  ```
+  - able to link to another element/group of elements (such as a set of points - use of a range and an if condition)
+
+*Trendline challenge:*
+- Need to render plot using gridSVG, load co-ordinate system for easy conversion of co-ordinates to data
+- Identify trendline (getElementById)
+- write javascript functions to append to inputs (dropdown menu or paragraphs) to change the color of the line
+- R function to calculate points of the trendline and return converted points as a string
+- JavaScript function to update points
+- Extra slider that needs to be linked up as an input that gets passed through the R function to recalculate and update points on the trendline
+- Extra script for selection box which utilises ```Shiny.onInputChange()``` to return an input that is then run through the same R function
+
+*Linking plots:*
+- Used crosstalk + plotly.
+- A possiblity to recreate one between two gridSVG plots? (might be similar to linking a plot to a table row)
+
 
 ---
 
@@ -100,7 +189,7 @@ R -------------> browser (send data to draw plot)
  - Appears to 're-render' the plot in D3 + additional JS to pass data through from R -> browser  (from source code)
  - A more complex example by [Newman](http://dpnewman.com/ggiraph/)
  - An [example](https://rstudio-pubs-static.s3.amazonaws.com/221846_2ce0c17cc61740d7918ffa0c867ebf65.html) to which if you click on the scatter plot, it opens up a new web page with results about the car.
- - **How's this different from using plotly's ggplotly() function?**
+ - **How's this different from using plotly's ggplotly() function?**.i
 
 ---
 
