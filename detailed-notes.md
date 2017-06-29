@@ -2,13 +2,15 @@ This document contains findings, examples, thoughts, ideas, and all kinds of thi
 
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress: Writing...** - requires a shiny server.
+**Report draft progress: Writing...** - requires a shiny server. CeR's RStudio login only works on campus.
+
+https://ysoh286.shinyapps.io/report-draft/
 
 TODOS:
 - extend DOM-trendline challenge
-- Trial CeR's login + test report draft - can't access login?? Page doesn't load.
 - Keep writing
-- Something to test: can you use 'plotly_click' and do something different other than return values? Can you do the same with 'input$brush' on shiny's on-plot interactions with ggplot2/base?
+- Something to test: ggvis's demo on rendering a selection box to draw a new trendline
+- look at ggiraph in more detail
 
 LOOSE ENDS? Should these be further investigated or not?
 - redo png-trendline challenge?
@@ -22,14 +24,20 @@ LOOSE ENDS? Should these be further investigated or not?
 - **What can plotly not do?**
     - you can't add interactions without knowing D3/plotly API (an example of adding [custom interactions](https://plotly-book.cpsievert.me/custom-behavior-via-javascript.html) with plotly has been done by Sievert in his book)
     - ```event_data``` can only be used in conjunction with Shiny, where we can track inputs via ```plotly_click, plotly_hover, plotly_relayout```
-    - What can it return from different plots?? ```plotly_click``` can work on different plots to return the point at which the user has clicked on
-    - Can you attach different interactions through Shiny rather than the obvious 'return whatever's been clicked?'?? (chain reactions?)
+    - What can it return from different plots?? *from week 3* ```plotly_click``` and ```plotly_hover``` can work on different plots to return the point at which the user has clicked on (except for box plots), but ```plotly_selected``` only works on scatter plots (everything else returns a empty data frame)
+    - This data frame can be used back in R (you could use it to identify if a 'hover'/'click' has been made - but you can't change what event_data() returns. BUT: you can take this data frame and do things with it in R to render something else like a boxplot)
+
+    Browser: user selects over scatterplot
+
+    R: returns selection through event_data(), takes it to render a box plot with corresponding data frame that gets sent to the browser
+
+    Browser: user sees newly rendered box plot
 
 
 - **How can you make it EASIER to do what you've done WITHOUT knowing JavaScript?**
 
-    - Most of my solutions are heavily reliant on gridSVG simply because we can map data and what's being rendered/sent to the web with its handy co-ordinate system (it's a little tedious at times - like identifying the correct viewport)
-    - able to track what's what on the page - otherwise, hard to add interactions (problem with all the other tools)
+    - Most of my solutions are heavily reliant on gridSVG simply because we can map data and what's being rendered/sent to the web with its handy co-ordinate system
+    - need to able to track what's what on the page - otherwise, hard to add interactions (a common problem with all other tools?)
     - Whatever specified in R should correspond to something that's being sent to the browser
     - Shiny does have functions to allow for customisation (acts as the 'bridge' between R and the browser) -> so we'd focus on providing functions that produce JavaScript output that can be put into R ??
       - Another way of manipulating DOM elements with [shiny](http://shiny.rstudio.com/articles/dynamic-ui.html)
@@ -46,7 +54,7 @@ LOOSE ENDS? Should these be further investigated or not?
     - depending on the function they've written, should return whatever they asked for back in R (or in the browser)??
 
   A possible example is the selection box:
-  - Essentially a javascript file to drive this interaction (mousedown, mouseup, mousemove). It could potentially work on anything that's been passed through gridSVG (the only thing that changes is the viewport to where points/lines/bars are located)
+  - Essentially a javascript file to drive this interaction (mousedown, mouseup, mousemove). It could potentially work on anything that's been passed through **gridSVG** (the only thing that changes is the viewport to where points/lines/bars are located)
     - What would you want to send back, and how would you change it? How does this information get passed from an R function -> JavaScript function ? (could look at htmlwidgets package - development of htmlwidgets in detail)
 
 

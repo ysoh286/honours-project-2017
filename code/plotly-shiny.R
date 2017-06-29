@@ -37,9 +37,9 @@ server <- function(input, output) {
   output$event <- renderPrint({
     d <- event_data("plotly_hover")
     if (is.null(d)) {
-      "Hover over a point!" 
+      print(NULL) 
     } else {
-      d
+      print('hello')
     }
 
   })
