@@ -24,15 +24,15 @@ LOOSE ENDS? Should these be further investigated or not?
 **Diagrams + ideas:**
 - Each example represents how a challenge might be expressed.
 
-![boxplot](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/boxplot.svg)
+![boxplot](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/boxplot.png)
 
 
-
-![trendlines](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/trendlines.svg)
+![trendlines](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/trendlines.png)
 
 *^if you can't see these, go to the diagrams folder.*
 
 - A more simple example:
+
 ![simple](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/simpleExamples.png)
 
 **Things that might trip and fall over (or might not 'work' when we start trying this out...):**
