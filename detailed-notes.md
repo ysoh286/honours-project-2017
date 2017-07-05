@@ -1,9 +1,6 @@
-This document contains findings, examples, thoughts, ideas, and all kinds of things related (and the occasional 'unrelated') to the project. Will be updated weekly...
-
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress: Writing...** - requires a shiny server. CeR's RStudio server provides access to R.
-
+**Report draft progress: Writing...** - requires a shiny server.
 https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
 
 TODOS:
@@ -11,7 +8,6 @@ TODOS:
 - Keep writing
 - Something to test: ggvis's demo on rendering a selection box to draw a new trendline
 - look at ggiraph in more detail
-- attempt to get a bigger picture of how we'd customise direct interactions on plots in R?
 
 LOOSE ENDS? Should these be further investigated or not?
 - redo png-trendline challenge?
@@ -21,59 +17,34 @@ LOOSE ENDS? Should these be further investigated or not?
 
 ## WEEK 14 (29/06 - ?? ): Concepts?
 
-- Identify what's similar in each challenge? What's different? Can you turn it into a function?
+- Main idea: be able to allow users to make their own interactive visuals with R only.
+- Tools: DOM, gridSVG, D3/JavaScript
+- May consider: Reactive programming for linking up objects, integrate with Shiny??
 
-**Another pseudo-code plan?**
-*still in progress...*
+**Diagrams + ideas:**
+- Each example represents how a challenge might be expressed.
 
-- A function to return 'main' elements back to R after they are sent to the browser (or after conversion to svg)
-
-```r
-#draws the plot and sends to browser
-drawPlot(x, y, data, plottype, graphictype)
-# plottype relates to what kind of plot it is, graphictype relates to if it might be a lattice plot, a base plot, an iNZightPlot?
-# graph should be of a certain structure such that element ids would not change every time we pass it through gridSVG
-```
-- A function to return a list of whatever's on the browser back to R
-
-```r
-# return list of ids of elements that can be called with appropriate tags to help out
-list_elements()
-# imaginary example: list_elements(plot)
-          # elements      id
-          # panel       panel.1.1
-          # lowerBox    polygon.1.1.1
-          # upperBox    polygon.1.1.2
-          # minLine     grid.line.1.1.1
-          # maxLine     grid.line.2.1.1
-          # points      points.1.1.1 (n)    
-
-```
-
-- A function to be able to attach simple mouse events to an element or a group of elements
-
-- A function to be able to filter elements based upon a condition/range
-
-- A function to be able to link elements together (somehow)
+![boxplot](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/boxplot.svg)
 
 
-Extras that might be helpful:
-- A function that can return more information about a certain element
 
-Wandering ideas that may be off-topic:
-- A possible function to 'translate' code that can be used in Shiny applications (but it might not be that useful ?)
-- A function to add on tooltips + be able to specify what text goes inside
+![trendlines](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/trendlines.svg)
 
-COMMONALITIES:
-- There is a need for finding out WHAT elements are on the page (in gridSVG: find out the viewport containing the main plot objects we are dealing with) -it would be nice to be able to return ids of what they are
-- MOUSE EVENTS such as mouseover, mouseout, clicks can be easily attached to an identified element and do basics such as: change color via fills and strokes
-- A way of being able to link elements to each other because they correspond to the same data (e.g. a table row to a point, a point that lies within a range of a box, a point on one plot to another)
+*^if you can't see these, go to the diagrams folder.*
 
-DIFFERENCES:
-- Shiny and DOM have different systems of working around (Shiny relies on inputs and outputs. But the similar JavaScript code is used - needs to be passed into different functions like ```Shiny.addCustomMessageHandler('functionName/type', jsfunction(input)),``` and ```session$sendCustomMessage(type ='functionName/type', input)```)
-- Function in R for converting coordinates into data is used in the trendline challenge (reused in both DOM and Shiny versions but may be too specific)
+- A more simple example:
+![simple](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/simpleExamples.png)
 
-**Steps in each challenge:**
+**Things that might trip and fall over (or might not 'work' when we start trying this out...):**
+- Being able to extract major components from gridSVGMappings might be tedious? (not sure) Possible to come up with extracting major components for specific kinds of plots (like R base plots, lattice plots, ggplot2, iNZight), but that might take a while.
+- An alternative would be to come with own structure, or use D3 to draw (but the downside to that would be you generate a D3 graph, not an R plot)
+- Generating that  imaginary 'list' that can track what's happening between R and the browser (browser needs to send appropriate list back to R (possibly need to keep a JSON object/list on the browser and allow for conversion(toJSON/fromJSON)))
+- Linking plot objects: may need more investigation (I haven't tried this with gridSVG. The solution we had was crosstalk + plotly... too specific.)
+- gridSVG is slow
+... and I might find more when I actually try implementing these ideas.
+
+
+#### NOTES:
 
 *Boxplot challenge:*
 - Need for identifying polygon boxes/elements associated with boxplot
@@ -104,7 +75,41 @@ DIFFERENCES:
 - Used crosstalk + plotly.
 - A possiblity to recreate one between two gridSVG plots? (might be similar to linking a plot to a table row)
 
+**More ideas:**
 
+Essential functions:
+- A function to return 'main' elements back to R after they are sent to the browser (or after conversion to svg)
+- A function to return a list of whatever's on the browser back to R
+- A function to be able to attach simple mouse events to an element or a group of elements
+- A function to be able to filter elements based upon a condition/range
+- A function to be able to link elements together (somehow)
+
+Extras that might be helpful:
+- A function that can return more information about a certain element
+
+Wandering ideas that may be off-topic:
+- A possible function to 'translate' code that can be used in Shiny applications (but it might not be that useful ?)
+- A function to add on tooltips + be able to specify what text goes inside
+
+**COMMONALITIES:**
+- There is a need for finding out WHAT elements are on the page (in gridSVG: find out the viewport containing the main plot objects we are dealing with) -it would be nice to be able to return ids of what they are
+- MOUSE EVENTS such as mouseover, mouseout, clicks can be easily attached to an identified element and do basics such as: change color via fills and strokes
+- A way of being able to link elements to each other because they correspond to the same data (e.g. a table row to a point, a point that lies within a range of a box, a point on one plot to another)
+
+**DIFFERENCES:**
+- Shiny and DOM have different systems of working around (Shiny relies on inputs and outputs. But the similar JavaScript code is used - needs to be passed into different functions like ```Shiny.addCustomMessageHandler('functionName/type', jsfunction(input)),``` and ```session$sendCustomMessage(type ='functionName/type', input)```)
+- Function in R for converting coordinates into data is used in the trendline challenge (reused in both DOM and Shiny versions but may be too specific)
+
+**Investigating how other tools have managed to link objects together:**
+- An [example](https://medium.com/@pbesh/linked-highlighting-with-react-d3-js-and-reflux-16e9c0b2210b) of linked highlighting using D3, React, Reflux (reactive programming?) - [demo](http://peterbeshai.com/linked-highlighting-react-d3-reflux/)
+- Linking [small multiples](https://flowingdata.com/2014/10/15/linked-small-multiples/) - FlowingData (Nathan Yau)
+- Karl Broman's simple D3 linking [example](http://jsfiddle.net/kbroman/prLbrmbg/1/)
+
+**Random links of inspiration:**
+http://setosa.io/ev/
+- Something to do with React and D3 - [Reusable charts](http://busypeoples.github.io/post/d3-with-react-js/)
+- [Integrating D3 and React](http://nicolashery.com/integrating-d3js-visualizations-in-a-react-app/)
+- Another way of running JavaScript in R?[js package](https://cran.r-project.org/web/packages/js/vignettes/intro.html)
 ---
 
 ## WEEK 13 (22/06 - 29/06): Abstract thinking?
