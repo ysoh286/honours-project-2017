@@ -37,7 +37,7 @@ function normalBox() {
 
 function showPoints() {
   //Get the min and max of x:
-  var points = lowerBox.getAttribute('points').split(" ");
+  var range = lowerBox.getAttribute('points').split(" ");
   var x1 = points[0].split(",")[0];
   var x2 = points[2].split(",")[0];
 
