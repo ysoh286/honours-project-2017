@@ -4,6 +4,11 @@
 
 ## Objective: Use the DOM package, JS + SVG to recreate the trendline challenge.
 
+packageVersion('DOM')
+packageurl <- "https://github.com/pmur002/DOM/archive/v0.4.tar.gz"
+install.packages(packageurl, repos = NULL, type = "source")
+
+
 # Steps:
 # try render an SVG
 # render a slider/ inputs
@@ -40,12 +45,10 @@ appendChild(page,
             ns = TRUE,
             response = svgNode())
 
+pl <- getElementsByTagName(page, 'svg', response = htmlNode())
+
 # get trendline;
 trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
-setAttribute(page,
-            trendline,
-             "points",
-             "0,0")
 
 # add text for selecting linear and loess:
 # try using <p> text instead of dropdowns for the moment...
@@ -110,36 +113,36 @@ calculate  = function(...) {
   #create 'points' string:
   pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
 
-  return(pt)
+  # update points:
+  setAttribute(page,
+               trendline,
+               "points",
+               pt,
+               async = TRUE)
 
 }
 
-#write JS function to update point co-ordinates:
-appendChild(page,
-            child=javascript('sendCoords = function(pt) {
-                             var svg = document.getElementsByTagName("svg")[0];
-                             var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
-                              trendline.setAttribute("points", pt);
-                             }'))
+#...or write JS function to update point co-ordinates:
+#appendChild(page,
+#            child=javascript('sendCoords = function(pt) {
+#                             var svg = document.getElementsByTagName("svg")[0];
+#                             var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
+#                              trendline.setAttribute("points", pt);
+#                             }'))
 
-#set attributes:
+#set attributes: when you click on text, it changes to that model
 setAttribute(page,
              elt = css("#linear"),
              attrName = "onclick",
-             attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], sendCoords)')
+             attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], null)')
 
 setAttribute(page,
              elt = css("#loess"),
              attrName = "onclick",
-             attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], sendCoords)')
+             attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], null)')
 
-#Currently works: when you click on "Linear" - it changes to a linear model
-# When you click on "Loess" - it changes to a loess model
 
-# ADD A SLIDER TO CONTROL LOESS:
-
-#identify trendline
-trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
+## ADD A SLIDER TO CONTROL LOESS:
 
 #add slider:
 appendChild(page,
@@ -192,14 +195,117 @@ setAttribute(page,
              attrValue = 'RDOM.Rcall("sliderValue", this, [ "ptr" ], null)')
 
 
- #------------------------- IDEAS... ---------------------------
-
-#extending the challenge: could you send back values selected from the browser?
-# add more JS:
+#EXTEND FURTHER: can you do a direct interaction?
+# add more JS for selection box: 
+# TOASK: is there a way of attaching external javascript files rather than read it in?
 appendChild(page,
             child = javascript(paste(readLines("js/linked-brush-lattice.js"), collapse=  "\n")))
 
+## append a new smoother:
+# create a new element + set its attributes:
+newSmooth <- createElementNS(page,
+                             "http://www.w3.org/2000/svg",
+                             "polyline")
+#find panel:
+panel <- getElementById(page,
+                        "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2",
+                        response = nodePtr())
 
+appendChild(page,
+            newSmooth,
+            parent = panel,
+            response = nodePtr())
+
+
+## set attributes:
+setAttribute(page,
+             newSmooth,
+             "stroke",
+             "black")
+
+setAttribute(page,
+             newSmooth,
+             "stroke-width",
+             "1")
+
+setAttribute(page,
+             newSmooth,
+             "id",
+             "newSmooth")
+
+## write functions to recalculate and draw new smoother:
+hello <- function(ptr) {
+	## get indices from data-select:
+	value <- getAttribute(page, 
+	                      ptr, 
+	                      "data-select", 
+	                      async = TRUE, 
+	                      callback = createSmooth) ## testing if I get these values...
+  
+}
+
+#create new smoother:
+createSmooth  = function(value) {
+  
+  values <- as.numeric(unlist(strsplit(value, ",")))
+  
+  #filter selected points:
+  if (length(values) > 20) {
+    
+    selected <- iris[values, ]
+    x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
+    panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
+    
+    # loess:
+    lo <- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
+    y <- predict(lo, x)
+    
+    #convert co-ordinates:
+    svg_x <- viewportConvertX(panel, x, "native")
+    svg_y <- viewportConvertY(panel, y, "native")
+    
+    #create 'points' string:
+    pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
+    
+    # change the whole thing:
+    setAttribute(page,
+                 newSmooth,
+                 "points",
+                 pt,
+                 async = TRUE)
+
+  } else {
+    
+    #if there aren't enough points to compute a smoother
+   setAttribute(page,
+                newSmooth,
+                "points",
+                "",
+                async = TRUE) 
+  }
+  
+}
+
+## Test: use JSON array instead - DOM 0.5.
+
+page <- htmlPage()
+appendChild(page,
+            child = svgNode(XML::saveXML(svg)),
+            ns = TRUE,
+            response = svgNode())
+
+appendChild(page,
+            child = javascript(paste(readLines("js/linked-brush-lattice.js"), collapse=  "\n")))
+
+hello <- function(...) {
+  
+  ## get indices from data-select:
+  print(unlist(list(...))) ## testing if I get these values... - printed as a list.
+  
+}
+
+
+#------------------------- IDEAS... ---------------------------
 
 # You could start adding dropdowns... maybe a future thing to experiment with.
 # render a dropdown menu:
@@ -278,9 +384,5 @@ setAttribute(page,
              attrName = "oninput",
              attrValue = "change()")
 
----------------------------------------------------------
-#Using RDOM.Rcall?
-# When you go to the console, it's like it won't return anything that's nested in a div...?
-# Hence try use getElementById() without divs
-# It's interesting that when you nest things in divs, things don't become seen...
+## ---------------------------------------------------------
 ## TODO: NEED TO LEARN WHAT'S THE DIFF BETWEEN A NODE, ATTRIBUTE, PROPERTY!

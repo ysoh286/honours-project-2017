@@ -11,11 +11,6 @@ var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   var panel = document.getElementById(panelId);
   panel.appendChild(g);
 
-//Mouse events:
-svg.setAttribute('onmouseup', 'MouseUp(evt)');
-svg.setAttribute('onmousemove', 'MouseDrag(evt)');
-svg.setAttribute('onmousedown', 'MouseDown(evt)');
-
   var selectRect = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
   selectRect.setAttributeNS(null, 'id', 'selectRect');
   selectRect.setAttributeNS(null, 'class', 'selectRect');
@@ -23,9 +18,18 @@ svg.setAttribute('onmousedown', 'MouseDown(evt)');
 
 var zoomBox = {};
 
+// co-ordinate conversion for svg relative to where it is on the page:
+convertCoord = function(svg, evt) {
+  var pt = svg.createSVGPoint();
+  pt.x = evt.pageX;
+  pt.y = evt.pageY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
 MouseDown = function(evt) {
-    zoomBox["startX"] = evt.pageX - 330;
-    zoomBox["startY"] = evt.pageY - 60;
+  var pt  = convertCoord(svg, evt);
+    zoomBox["startX"] = pt.x;
+    zoomBox["startY"] = pt.y;
     zoomBox["isDrawing"] = true;
    selectRect.setAttribute('points',  zoomBox["startX"] + ',' + zoomBox["startY"]);
 };
@@ -33,16 +37,18 @@ MouseDown = function(evt) {
 
 MouseUp = function(evt) {
   svg.style.cursor = "default";
-      zoomBox["endX"] = evt.pageX - 330;
-      zoomBox["endY"] = evt.pageY - 60;
+  var pt  = convertCoord(svg, evt);
+      zoomBox["endX"] = pt.x;
+      zoomBox["endY"] = pt.y;
       zoomBox["isDrawing"] = false;
   };
 
 MouseDrag = function(evt) {
     if(zoomBox["isDrawing"]) {
         svg.style.cursor = "crosshair";
-        zoomBox["endX"] = evt.pageX - 330;
-        zoomBox["endY"] = evt.pageY - 60;
+        var pt  = convertCoord(svg, evt);
+        zoomBox["endX"] = pt.x;
+        zoomBox["endY"] = pt.y;
 
         //Because the y-axis is inverted in the plot - need to invert the scale
         var tVal = document.getElementsByTagName('g')[0].getAttribute('transform').substring(13, 16);
@@ -85,7 +91,21 @@ MouseDrag = function(evt) {
              point.setAttribute('fill-opacity', '0.5');
            }
          }
-         //return selected rows to Shiny?
-         Shiny.onInputChange("selectedPoints", selected);
+         //SHINY VERSION: return selected rows to Shiny?
+         //Shiny.onInputChange("selectedPoints", selected);
+
+         svg.setAttribute('data-select', selected);
+
+         //for DOM version 0.4 and lower:
+         RDOM.Rcall("hello", this, [ "ptr" ], null);
+        //console.log(this); - test what 'this' returns
+
+        //test DOM version 0.5:
+        //RDOM.Rcall("hello", selected, [ "JSON" ], null);
+
         }
 };
+
+svg.addEventListener('mouseup', MouseUp, false);
+svg.addEventListener('mousedown', MouseDown, false);
+svg.addEventListener('mousemove', MouseDrag, false);
