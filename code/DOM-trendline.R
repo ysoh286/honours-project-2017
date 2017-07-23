@@ -383,6 +383,3 @@ setAttribute(page,
              elt = css("input"),
              attrName = "oninput",
              attrValue = "change()")
-
-## ---------------------------------------------------------
-## TODO: NEED TO LEARN WHAT'S THE DIFF BETWEEN A NODE, ATTRIBUTE, PROPERTY!

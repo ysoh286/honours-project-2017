@@ -2,20 +2,157 @@
 
 **Report draft progress: Writing...** - requires a shiny server.
 https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
+-
+
+AVOID WRITING JAVASCRIPT!
 
 TODOS:
-- extend DOM-trendline challenge
-- Keep writing
-- Something to test: ggvis's demo on rendering a selection box to draw a new trendline
-- look at ggiraph in more detail
+- Build 'solution'
+  - remind yourself WHY you're making this and how the rest don't fit.
+    - to somehow make it easier to customise interactions and not have the user write javascript/learn D3 (but leave it open for those who do know)
+    - to be able to provide more 'on-plot' interactions to R plots (...which could possibly extend to JavaScript libraries)
+    - to provide a more 'fluid and flexible' solution for creating simple interactive plots
+    - build off gridSVG + DOM
 
 LOOSE ENDS? Should these be further investigated or not?
 - redo png-trendline challenge?
 - Canvas APIs for fast rendering of large datasets
 
+## WEEK 15 - ?? (06/07 - ??): Build.
+
+- Completed integrating selection box in DOM-trendline version
+
+**Building...**
+- Issues/Challenges??
+  - What's the best/most appropriate way to passing R -> JavaScript (R arguments that user writes in to pass to JavaScript)
+  - Need a way to pass/attach data
+    - Use the XML package on generated svg?
+    - pass data as JSON (there would be a copy on the browser + in R)?
+    - some plots do not store any data at all when they draw (would we have to compute it ourselves?)
+
+BOXPLOT CHALLENGE:
+- Tested on lattice, ggplot2, iNZightPlots. Could extend to base (using gridGraphics)
+- Still need to fix boxplot filter on scatterplot
+
+```{r}
+library(interactr)
+library(lattice)
+
+bw <- bwplot(1:10, main = "boxplot")
+listElements(bw)
+
+#map elements?
+bwlist <- list(box = "plot_01.bwplot.box.polygon.panel.1.1",
+               med = "plot_01.bwplot.dot.points.panel.1.1",
+               ends = "plot_01.bwplot.cap.segments.panel.1.1")
+
+#define interactions
+interactions <- list(onmouseover = fill(bwlist$box, 'blue'),
+                     onmouseout = unfill(bwlist$box))
+
+#draw and send to browser
+draw(bw, bwlist$box, interactions, new.page = TRUE)
+
+sp <- xyplot(1:10 ~ 1:10, main = "scatterplot")
+listElements(sp)
+
+splist <- list(points = "plot_01.xyplot.points.panel.1.1")
+
+draw(sp)
+
+boxClick <- list(onclick = highlightPoints(bwlist$box, splist$points))
+
+addInteractions(bwlist$box, boxClick)
+
+```
+
+Issues/Limitations/to do:
+- For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open to derive from the current plot when printed.
+- Only one kind of interaction can be attached (not several - i.e you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
+- Defining interactions requires more thought (for now, R functions paste the arguments to be passed into JavaScript... which doesn't feel like a good way to do things.)
+-  the mapElements() function? (not sure how to write this)
+- instead of using grid tags, use SVG tags instead? (use getSVGMappings() to get correct id/selectors)
+- Fix up the boxplot filter on scatterplot (relate back to DATA!)
+- NOTE: if there's more than one plot, add prefixes!
+- The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)
+- add selection box
+- expand to trendline challenge (note that it is easy when we're only dealing with 1 element - how would you deal with changes in several elements?)
+- Q: when using the DOM package, how would we define functions that are required in RDOM.RCall()?
+(if they're not in the global environment?)
+
+
+Questions about DOM (for Paul):
+- Is there a way to incorporate external scripts into the page?
+
+
+Something like:
+```{r}
+library(DOM)
+page <- htmlPage()
+appendChild(page,
+            htmlNode("<script src = 'test.js'></script>"))
+#where test.js is a javascript file.
+#Could be replaced with a url where a javascript library is... like D3
+
+```
+- No 'removeAttribute()' function? (not needed?)
+- DOM version 0.5-1: help database appears to be corrupted? Not sure if this is happening on your side.
+
+```{r}
+?setAttribute
+Error in fetch(key) : lazy-load database '/Library/Frameworks/R.framework/Versions/3.2/Resources/library/DOM/help/DOM.rdb' is corrupt
+```
+
+##### NOTES:
+
+**Notes from meeting:**
+
+What does our proposed idea achieve that the others do not?
+Customised on-plot interactions
+
+Main goals:
+- be able to define interactions that users would find helpful
+- be able to select, query, and filter (...relate back to what is required from EDA)
+- be able to easily transform between data and plot
+
+Main components:
+- ID mappings (for 'mapping' between which elements to attach interactions to)
+- Coordinate mappings (or a translation system between data and plot)
+- Be generic?
+- Defining interactions in a 'flexible' manner
+
+WHY ARE WE BUILDING THIS?
+- Shiny: Shiny CAN do on-plot interactions, but limited
+    - you can't do something like adding trendlines 'on top' of a png
+    - you can't add something onto a plotly plot
+    - If something needs to be added/removed from the plot, it requires re-rendering (...ggvis may be an exception??)
+    - there is no event_data()/input$brush for grid based plots (like lattice)
+    - If your HTMLwidget doesn't have 'selection' or something like 'event_data()', then you don't have 'access' to on-plot interactions
+- Crosstalk: links between htmlwidgets only (that have been linked up!) - it's more of a standalone solution (depending on what has been defined in R). Great for selection and filtering, but implementation is difficult/not exactly flexible (plotly still shows 'awkward' brushing + it's slow).
+- Plotly: hard to define what has been drawn (or not in a correct ' format' - like a box plot is defined as a single svg path, rather than a set of boxes/lines). Requires D3 knowledge to customise interactions further.
+
+- Connecting to other frameworks -> GENERIC, abstract 'mapping structure' (e.g. plots made from grid such as ggplot2, base, lattice have a naming scheme that can be returned by grid.ls()/grid.force(), translation to gridSVG can give you gridSVGMappings, a possibility to extend to javascript libraries like highcharts/plotly that have a consistent structure)
+- A way of mapping elements (let users map instead? - would that be too much to ask for? Especially if grid.ls() doesn't give a very good naming scheme...)
+
+**ggvis' demo with trendlines** [link](https://github.com/rstudio/ggvis/tree/master/demo/apps/brush-summary)
+- ggvis has a way of changing the trend line whenever you brush over points (more of a transition).
+   Steps: create a linked brush object, use of ```add_data``` function to pass data that has been brushed through to draw the trend line.
+- Achieves something more 'fluid' than compared to previous solutions (does not require redrawing from Shiny - but that is something ggvis has an advantage over the others)
+
+**More advanced example of plotly + shiny together**:
+- You can couple events together (bar chart click leads to box plot formations)
+- selecting over a set can be further analysed using shiny (but requires data to be passed to the parent environment)
+https://plot.ly/r/shiny-coupled-events/
+
+**Update with plotly 4.6.0**
+- Plotly's got some new features happening that focus on linking views without shiny.... (which might need revising)
+
+**Stumbled past:**
+- [Dash](https://medium.com/@plotlygraphs/introducing-dash-5ecf7191b503) is almost the 'Shiny' for python.
+
 ---
 
-## WEEK 14 (29/06 - ?? ): Concepts?
+## WEEK 14 (29/06 - 06/07): Concepts?
 
 - Main idea: be able to allow users to make their own interactive visuals with R only.
 - Tools: DOM, gridSVG, D3/JavaScript
@@ -41,6 +178,7 @@ LOOSE ENDS? Should these be further investigated or not?
 - Generating that  imaginary 'list' that can track what's happening between R and the browser (browser needs to send appropriate list back to R (possibly need to keep a JSON object/list on the browser and allow for conversion(toJSON/fromJSON)))
 - Linking plot objects: may need more investigation (I haven't tried this with gridSVG. The solution we had was crosstalk + plotly... too specific.)
 - gridSVG is slow
+
 ... and I might find more when I actually try implementing these ideas.
 
 
@@ -104,6 +242,7 @@ Wandering ideas that may be off-topic:
 - An [example](https://medium.com/@pbesh/linked-highlighting-with-react-d3-js-and-reflux-16e9c0b2210b) of linked highlighting using D3, React, Reflux (reactive programming?) - [demo](http://peterbeshai.com/linked-highlighting-react-d3-reflux/)
 - Linking [small multiples](https://flowingdata.com/2014/10/15/linked-small-multiples/) - FlowingData (Nathan Yau)
 - Karl Broman's simple D3 linking [example](http://jsfiddle.net/kbroman/prLbrmbg/1/)
+- [D3 block](http://bl.ocks.org/mattykuch/40ba19de703632ea2afbbc5156b9471f) that links line and bar chart using D3
 
 **Random links of inspiration:**
 http://setosa.io/ev/

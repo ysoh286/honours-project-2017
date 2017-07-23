@@ -106,6 +106,7 @@ appendChild(page,
 ## there is a need for data attributes to be attached to svg elements.
 ## Too much javascript written. Need a way to customise accordingly.
 
+#----------------------------- VERSION 1.1 -------------------------
 ## A different way which does not use 'this':
 ## append javascript functions to box:
 
@@ -167,8 +168,8 @@ sp <- 'spplot_01.xyplot.points.panel.1.1.1'
 boxObj <- getElementById(page,
                          'bwplot_01.bwplot.box.polygon.panel.1.1.1.1',
                          response = nodePtr())
-## append events:
 
+## append events using DOM:
 fillFunc <- paste0("fill('", box, "')")
 unfillFunc <- paste0("unfill('", box, "')")
 highlightFunc <- paste0("highlightPoints('", box, "','", sp, "')")
@@ -188,21 +189,82 @@ setAttribute(page,
              "onclick",
              highlightFunc)
 
+#----------------- VERSION 2: REWRITE without using javascript, use DOM only. ------------
 
-## a way to pass interactions through...
-## or to record interactions in a for a specific element?
-# but you need to be able to define what kind of interaction you want (generalized in certain ways)
+library(DOM)
+library(grid)
+library(gridSVG)
+library(lattice)
 
-## Have a separate javascript file that has all the interactive functions defined.
-## R user needs to pass through what they want to interact with.
-## Use of a list?
-##interactions("midbox"=list(onclick=highlightSP)) <-- Paul's suggestion
+#set up page:
+page <- htmlPage()
+
+appendChild(page,
+            child = svgNode(XML::saveXML(bwSVG)))
+
+appendChild(page,
+            child = svgNode(XML::saveXML(spSVG)))
+
+plotObj <- getElementById(page,
+                          "plot_01.bwplot.box.polygon.panel.1.1.1",
+                          response = nodePtr())
+#fill function:
+fill <- function(ptr) {
+  
+  setAttribute(page,
+               ptr,
+               "fill",
+               "red",
+               async = TRUE)
+  
+  setAttribute(page,
+               ptr,
+               "fill-opacity",
+               "1",
+               async = TRUE)
+}
+
+#unfill function:
+unfill <- function(ptr) {
+
+  setAttribute(page,
+               ptr,
+               "fill",
+               "transparent",
+               async = TRUE)
+    
+}
+
+#attach data attribute?
+#highlightPoints function:
+highlightPoints <- function(ptr) {
+  
+  #subset data between these values:
+  data <- as.data.frame(x = 1:10)
+  colnames(data) <- "x"
+  
+  #upper and lower quartiles:
+  uq <- quantile(data$x, 0.75)
+  lq <- quantile(data$x, 0.25)
+  
+  subset <- which(lq <= data$x & data$x <= uq)
+  
+  #TODO:: filter points:
+  
+}
 
 
-## ideally: an event (onclick, onmouseout, onmouseover, keyup, keydown...etc) should have a function attached.
-## so the list would have event-to-function pairs.
-## But: interactions could be attached to a single element at a time (somehow need to get around this.) 
-        # but you can attach multiple events to a single element at a time.
+setAttribute(page,
+             plotObj,
+             "onmouseover",
+             "RDOM.Rcall('fill', this, ['ptr'], NULL)")
 
-#constructing possible functions:
-interactions <-addInteractions(id, list(onclick = highlightPoints, onmouseover = fill, onmouseout = unfill))
+setAttribute(page,
+             plotObj,
+             "onmouseout",
+             "RDOM.Rcall('unfill', this, ['ptr'], NULL)")
+
+setAttribute(page,
+             plotObj,
+             "onclick",
+             "RDOM.Rcall('highlightPoints, this, ['ptr'], NULL)")
