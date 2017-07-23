@@ -1,0 +1,21 @@
+Package: interactr
+Title: trials!
+Version: 0.0.0.9000
+Authors@R: person(
+    "First", 
+    "Last", 
+    email = "first.last@example.com", 
+    role  = c("aut", "cre"))
+Description: Aiming to achieve on-plot interactivity.
+Depends:
+    R (>= 3.2.5)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: 
+	DOM,
+	XML,
+	gridGraphics,
+	gridSVG,
+	grid
+RoxygenNote: 5.0.1
