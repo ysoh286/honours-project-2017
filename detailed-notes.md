@@ -1,8 +1,9 @@
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress: Writing...** - requires a shiny server.
+**Report draft progress: Writing...** requires a shiny server
+
 https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
--
+
 
 AVOID WRITING JAVASCRIPT!
 
@@ -103,7 +104,7 @@ appendChild(page,
 Error in fetch(key) : lazy-load database '/Library/Frameworks/R.framework/Versions/3.2/Resources/library/DOM/help/DOM.rdb' is corrupt
 ```
 
-##### NOTES:
+#### NOTES:
 
 **Notes from meeting:**
 
