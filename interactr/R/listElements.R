@@ -2,16 +2,9 @@
 #'
 #' @description Function tries to list elements drawn (currently derived from grid objects) 
 #' for further reference to add interactions.
-#' 
-#' @param x a plot that can be stored (x is null for base plots)
-#'
+#' @param x a plot that can be stored
 #' @export
-
-
-## Here, we identify what components to combine together, and to 'map'
-
-## list elements function - taking Paul's starting point:
-listElements <- function(x = NULL) {
+listElements <- function(x) {
   UseMethod("listElements")
 }
 

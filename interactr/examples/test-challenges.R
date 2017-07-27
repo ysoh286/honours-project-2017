@@ -7,17 +7,17 @@
 
 # TODO: FIX HIGHLIGHTPOINTS - FILTER!
 
-#setwd('~/Dropbox/honours-project-2017/interactr')
-#devtools::load_all()
-devtools::install_github("ysoh286/honours-project-2017", subdir = "interactr")
-
+setwd('~/Dropbox/honours-project-2017/interactr')
+devtools::load_all()
+#devtools::install_github("ysoh286/honours-project-2017", subdir = "interactr") 
 library(interactr)
+
 # on a lattice plot:
 library(lattice)
 bw <- bwplot(1:10, main = "boxplot")
 listElements(bw)
 #map elements based upon list generated?
-bw.list <- list(box = "plot_01.bwplot.box.polygon.panel.1.1",
+bwlist <- list(box = "plot_01.bwplot.box.polygon.panel.1.1",
                med = "plot_01.bwplot.dot.points.panel.1.1",
                ends = "plot_01.bwplot.cap.segments.panel.1.1")
 #define interactions
@@ -81,7 +81,7 @@ draw(p, bw.list$box, interactions, new.page = TRUE)
 
 plot(1:10, 1:10)
 sp <- recordPlot()
-listElements(sp) #BUG: be able to draw first if no need to attach interactions (rethink where print statement goes).
+listElements(sp)
 draw(sp)
 #add interactions
 sp.list <- list(points = "graphics-plot-1-points-1")
@@ -97,6 +97,7 @@ addInteractions(bw.list$box, boxClick)
 # draw the plot:
 iris.plot <- xyplot(Petal.Length~Petal.Width, data = iris, pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
 listElements(iris.plot)
+
 #send plot to browser
 draw(iris.plot, new.page = TRUE)
 #add slider:
