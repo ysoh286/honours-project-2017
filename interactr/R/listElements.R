@@ -1,11 +1,13 @@
-#' listElements
+#' @title listElements
 #'
-#' Function tries to list elements drawn (currently derived from grid objects) for further reference to add interactions.
+#' @description Function tries to list elements drawn (currently derived from grid objects) 
+#' for further reference to add interactions.
+#' 
 #' @param x a plot that can be stored (x is null for base plots)
-#' @keywords list elements
+#'
 #' @export
-#' 
-#' 
+
+
 ## Here, we identify what components to combine together, and to 'map'
 
 ## list elements function - taking Paul's starting point:
@@ -13,8 +15,9 @@ listElements <- function(x = NULL) {
   UseMethod("listElements")
 }
 
-## for base: - doesn't work! 
-listElements.base <- function(x) {
+#for recorded plots (ie base)
+listElements.recordedplot <- function(x) {
+  print(x)
   gridGraphics::grid.echo()
   grid::grid.ls()
 }

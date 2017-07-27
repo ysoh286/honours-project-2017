@@ -2,7 +2,7 @@
 % Please edit documentation in R/interactions.R
 \name{unfill}
 \alias{unfill}
-\title{unfill: returns element to original color (if 'fill' is added)}
+\title{unfill}
 \usage{
 unfill(element)
 }
@@ -10,6 +10,6 @@ unfill(element)
 \item{element}{element to target}
 }
 \description{
-unfill: returns element to original color (if 'fill' is added)
+returns element to original color (if 'fill' is added)
 }
 

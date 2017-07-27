@@ -10,8 +10,7 @@ listElements(x = NULL)
 \item{x}{a plot that can be stored (x is null for base plots)}
 }
 \description{
-Function tries to list elements drawn (currently derived from grid objects) for further reference to add interactions.
+Function tries to list elements drawn (currently derived from grid objects) 
+for further reference to add interactions.
 }
-\keyword{elements}
-\keyword{list}
 

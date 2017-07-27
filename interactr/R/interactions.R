@@ -1,8 +1,7 @@
-#' Interactions
-#' A list of interactiosn that can be specified (still testing!)
-#' 
+# A list of specific/ simple interactions that can be used:
 
-#' fill: highlights an element with a color
+#' @title fill 
+#' @description highlights an element with a color
 #' @param element element to target
 #' @param color color to highlight
 #' @export
@@ -12,7 +11,8 @@ fill <- function(element, color) {
   return(f)
 }
 
-#' unfill: returns element to original color (if 'fill' is added)
+#' @title unfill
+#' @description returns element to original color (if 'fill' is added)
 #' @param element element to target
 #' @export
 unfill <- function(element) {
@@ -21,7 +21,8 @@ unfill <- function(element) {
   return(f)
 }
 
-#' highlightPoints: link an object to highlight certain group of points
+#' @title highlightPoints
+#' @description link an object to highlight certain group of points
 #' @param p1 element to target
 #' @param p2 group of points to target
 #' @export

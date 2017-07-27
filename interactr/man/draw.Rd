@@ -2,20 +2,21 @@
 % Please edit documentation in R/draw.R
 \name{draw}
 \alias{draw}
-\title{Draw: send plot/svg to browser and attach interactions}
+\title{Draw plots and add interactions}
 \usage{
 draw(pl, target = NULL, interactions = NULL, new.page = FALSE)
 }
-\description{
-Draw: send plot/svg to browser and attach interactions
+\arguments{
+\item{pl}{plot}
+
+\item{target}{element to attach interactions to}
+
+\item{interactions}{interactions to attach to target}
+
+\item{new.page}{specifies drawing on a new web page}
 }
-\details{
+\description{
 Used to send plots to the browser and its interactivity attached.
   You can also draw plots with no interactions if you like.
- @param pl plot 
- @param target plot object to attach interactions to
- @param interactions interactions to attach to target
- @param new.page specifies drawing on a new web page
- @export
 }
 

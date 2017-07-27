@@ -15,7 +15,8 @@ LazyData: true
 Imports: 
 	DOM,
 	XML,
-	gridGraphics,
 	gridSVG,
 	grid
+Suggests:
+	gridGraphics
 RoxygenNote: 5.0.1

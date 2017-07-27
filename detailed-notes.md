@@ -4,16 +4,11 @@
 
 https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
 
-
-AVOID WRITING JAVASCRIPT!
-
 TODOS:
 - Build 'solution'
-  - remind yourself WHY you're making this and how the rest don't fit.
-    - to somehow make it easier to customise interactions and not have the user write javascript/learn D3 (but leave it open for those who do know)
-    - to be able to provide more 'on-plot' interactions to R plots (...which could possibly extend to JavaScript libraries)
-    - to provide a more 'fluid and flexible' solution for creating simple interactive plots
-    - build off gridSVG + DOM
+  - reduce the exponentially increasing list of bugs/issues
+- Need to update on plotly+crosstalk information
+- Try AWS + shiny server during the weekend
 
 LOOSE ENDS? Should these be further investigated or not?
 - redo png-trendline challenge?
@@ -21,19 +16,31 @@ LOOSE ENDS? Should these be further investigated or not?
 
 ## WEEK 15 - ?? (06/07 - ??): Build.
 
-- Completed integrating selection box in DOM-trendline version
+- Completed integrating selection box in DOM-trendline example (alternative to example done in shiny)
 
 **Building...**
-- Issues/Challenges??
+
+![main-idea](https://github.com/ysoh286/honours-project-2017/blob/master/diagrams/main-idea.png)
+
+- MAIN CHALLENGES:
+  - AVOID WRITING JAVASCRIPT! (unless DOM can't do it)
   - What's the best/most appropriate way to passing R -> JavaScript (R arguments that user writes in to pass to JavaScript)
   - Need a way to pass/attach data
     - Use the XML package on generated svg?
     - pass data as JSON (there would be a copy on the browser + in R)?
     - some plots do not store any data at all when they draw (would we have to compute it ourselves?)
 
+**Key points:**
+- an event handler (onclick, onmouseout, onmouseover, keyup, keydown...etc) should have a function attached.
+- the list specified by the user should include event-to-function pairs (which function to run to which event) - this is a JavaScript function
+  - by specifying a target element to attach interactions to, we can attach several interactions to a single element, but it means that interactions can only be specified one at a time.
+- Functions (and maybe more to come) for specific interactions (such as attaching a selection box, driving a slider, e.t.c) but it should be flexible enough so that the user can still achieve what they want.
+
+**Code samples (as of 26/07):**
+
 BOXPLOT CHALLENGE:
-- Tested on lattice, ggplot2, iNZightPlots. Could extend to base (using gridGraphics)
-- Still need to fix boxplot filter on scatterplot
+- Tested on lattice, ggplot2, iNZightPlots. Could extend to base (using gridGraphics + recordPlot())
+- Still need to fix boxplot filter on scatterplot (rewrite highlightPoints - use DOM instead rather than javascript)
 
 ```{r}
 library(interactr)
@@ -42,10 +49,12 @@ library(lattice)
 bw <- bwplot(1:10, main = "boxplot")
 listElements(bw)
 
-#map elements?
+#which to target from list:
 bwlist <- list(box = "plot_01.bwplot.box.polygon.panel.1.1",
                med = "plot_01.bwplot.dot.points.panel.1.1",
                ends = "plot_01.bwplot.cap.segments.panel.1.1")
+
+#map elements to data required? (TODO -revise highlightPoints)
 
 #define interactions
 interactions <- list(onmouseover = fill(bwlist$box, 'blue'),
@@ -67,42 +76,80 @@ addInteractions(bwlist$box, boxClick)
 
 ```
 
-Issues/Limitations/to do:
-- For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open to derive from the current plot when printed.
-- Only one kind of interaction can be attached (not several - i.e you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
+TRENDLINE CHALLENGE:
+ - still needs revising as DOM/gridSVG functions are still seen by the user + missing a step
+
+```{r}
+
+iris.plot <- xyplot(Petal.Length~Petal.Width, data = iris, pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
+listElements(iris.plot)
+
+#send plot to browser
+draw(iris.plot, new.page = TRUE)
+
+#add slider:
+addSlider("slider.1.1", 0.5, 1, 0.05, "plot_01.loess.lines.panel.1.1")
+
+# ideally, the user can decide what to do with the value (compute in R)
+changeTrendline <- function(value) {
+
+  x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
+  panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
+  lo <- loess(Petal.Length~Petal.Width, data = iris, span = value)
+  y <- predict(lo, x)
+
+  #convert co-ordinates:
+  svg_x <- viewportConvertX(panel, x, "native")
+  svg_y <- viewportConvertY(panel, y, "native")
+  cat(svg_x)
+
+  #create 'points' string:
+  pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
+
+  # update points:
+  setAttribute(pageNo,
+               plotObj,
+               "points",
+               pt,
+               async = TRUE)
+
+}
+
+# there should be a function to identify which function to run when value is returned +
+# allow user to pass this function through
+# for now, changeTrendline is the default.
+# something to pass through match.fun()?? maybe
+
+interactions <- list(oninput = "RDOM.Rcall('sliderValue', this, [ 'ptr' ], null)")
+
+addInteractions("slider", interactions) #NOTE: tags do not match (should be consistent!!)
+
+```
+
+**Limitations so far:**
+- For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open to derive from the current plot when printed. (in this case, user MUST call listElements first if they want to send a plot through... (which makes no sense if they just want to send the plot first, think about interactions later... unless they want to modify the plot via grid.))
+- Only one kind of interaction can be attached (not several - e.g. you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
+- Both these challenges involve just dealing with a single element - what if we had to deal with many elements at once (but apply the same function)? (e.g a slider that controls the bin widths of a histogram)
+- ... with a lot of bugs to fix.
+
+**Issues/Bugs/TODO/TOFIX:**
 - Defining interactions requires more thought (for now, R functions paste the arguments to be passed into JavaScript... which doesn't feel like a good way to do things.)
--  the mapElements() function? (not sure how to write this)
-- instead of using grid tags, use SVG tags instead? (use getSVGMappings() to get correct id/selectors)
+-  the mapElements() function could be a function to bind data to certain elements (not sure how to write this)
+- instead of using grid tags, use SVG tags instead for consistency with cases that do not use gridSVG? (use getSVGMappings() to get correct id/selectors - in a case of gridSVG, the tags are not the same as those generated by grid.)
 - Fix up the boxplot filter on scatterplot (relate back to DATA!)
 - NOTE: if there's more than one plot, add prefixes!
 - The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)
+- VALIDATION/TEST STOPS
 - add selection box
-- expand to trendline challenge (note that it is easy when we're only dealing with 1 element - how would you deal with changes in several elements?)
 - Q: when using the DOM package, how would we define functions that are required in RDOM.RCall()?
 (if they're not in the global environment?)
 
+**Idea list:**
+- try integrate with a javascript library (R interface wrappers)
+  - htmlwidgets (as their name states) generate a standalone HTML page
+  - somehow need to extract elements with this and target the svg
+- integration with Shiny (functions to generate correct javascript that can be added in)
 
-Questions about DOM (for Paul):
-- Is there a way to incorporate external scripts into the page?
-
-
-Something like:
-```{r}
-library(DOM)
-page <- htmlPage()
-appendChild(page,
-            htmlNode("<script src = 'test.js'></script>"))
-#where test.js is a javascript file.
-#Could be replaced with a url where a javascript library is... like D3
-
-```
-- No 'removeAttribute()' function? (not needed?)
-- DOM version 0.5-1: help database appears to be corrupted? Not sure if this is happening on your side.
-
-```{r}
-?setAttribute
-Error in fetch(key) : lazy-load database '/Library/Frameworks/R.framework/Versions/3.2/Resources/library/DOM/help/DOM.rdb' is corrupt
-```
 
 #### NOTES:
 
@@ -110,6 +157,14 @@ Error in fetch(key) : lazy-load database '/Library/Frameworks/R.framework/Versio
 
 What does our proposed idea achieve that the others do not?
 Customised on-plot interactions
+
+**Remind yourself WHY you're making this and how the rest don't fit.**
+  - to somehow make it easier to customise interactions and not have the user write javascript/learn D3 (but leave it open for those who do know)
+  - to be able to provide more 'on-plot' interactions to R plots (...which could possibly extend to JavaScript libraries)
+  - to provide a more 'fluid and flexible' solution for creating simple interactive plots
+  - build off grid tools + DOM
+  - Be able to achieve interactions that require R to recalculate/return/modify something
+  - TO AVOID REDRAWING!
 
 Main goals:
 - be able to define interactions that users would find helpful

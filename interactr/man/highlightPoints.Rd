@@ -2,7 +2,7 @@
 % Please edit documentation in R/interactions.R
 \name{highlightPoints}
 \alias{highlightPoints}
-\title{highlightPoints: link an object to highlight certain group of points}
+\title{highlightPoints}
 \usage{
 highlightPoints(p1, p2)
 }
@@ -12,6 +12,6 @@ highlightPoints(p1, p2)
 \item{p2}{group of points to target}
 }
 \description{
-highlightPoints: link an object to highlight certain group of points
+link an object to highlight certain group of points
 }
 

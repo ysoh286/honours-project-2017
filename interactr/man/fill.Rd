@@ -2,8 +2,7 @@
 % Please edit documentation in R/interactions.R
 \name{fill}
 \alias{fill}
-\title{Interactions
-A list of interactiosn that can be specified (still testing!)}
+\title{fill}
 \usage{
 fill(element, color)
 }
@@ -13,6 +12,6 @@ fill(element, color)
 \item{color}{color to highlight}
 }
 \description{
-fill: highlights an element with a color
+highlights an element with a color
 }
 
