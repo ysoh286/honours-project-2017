@@ -9,6 +9,7 @@ listElements <- function(x) {
 }
 
 #for recorded plots (ie base)
+#' @export
 listElements.recordedplot <- function(x) {
   print(x)
   gridGraphics::grid.echo()
@@ -16,12 +17,14 @@ listElements.recordedplot <- function(x) {
 }
 
 ## for lattice plots:
+#' @export
 listElements.trellis <- function(x) {
   print(x)
   grid::grid.ls()
 }
 
 ## for ggplot2:
+#' @export
 listElements.ggplot <- function(x) {
   print(x)
   grid::grid.force()
@@ -29,6 +32,7 @@ listElements.ggplot <- function(x) {
 }
 
 ## for iNZight plots:
+#' @export
 listElements.inzplotoutput <- function(x) {
   #print(x)
   grid::grid.ls()
