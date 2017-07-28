@@ -19,4 +19,5 @@ Imports:
 	grid
 Suggests:
 	gridGraphics
+Remotes: pmur002/DOM
 RoxygenNote: 5.0.1

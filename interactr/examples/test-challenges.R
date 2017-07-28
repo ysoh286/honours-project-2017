@@ -1,16 +1,16 @@
 ## TESTING package with existing and new challenges:
 # serves as demos/examples:
 
+## Installation:
+
+devtools::install_github("ysoh286/honours-project-2017", subdir = "interactr") 
+library(interactr)
+
 ############################
 ## Boxplot challenge ##
 ############################
 
 # TODO: FIX HIGHLIGHTPOINTS - FILTER!
-
-setwd('~/Dropbox/honours-project-2017/interactr')
-devtools::load_all()
-#devtools::install_github("ysoh286/honours-project-2017", subdir = "interactr") 
-library(interactr)
 
 # on a lattice plot:
 library(lattice)
