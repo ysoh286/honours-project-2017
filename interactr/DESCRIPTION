@@ -1,23 +1,16 @@
 Package: interactr
-Title: trials!
+Title: trial package for on-plot interactivity
 Version: 0.0.0.9000
 Authors@R: person(
-    "First", 
-    "Last", 
-    email = "first.last@example.com", 
+    "Yu Han",
+    "Soh",
+    email = "ysoh286@aucklanduni.ac.nz",
     role  = c("aut", "cre"))
 Description: Aiming to achieve on-plot interactivity.
-Depends:
-    R (>= 3.2.5)
-License: What license is it under?
+License: License required
 Encoding: UTF-8
 LazyData: true
-Imports: 
-	DOM,
-	XML,
-	gridSVG,
-	grid
-Suggests:
-	gridGraphics
+Imports: DOM, grid, XML, gridSVG
+Suggests: gridGraphics
 Remotes: pmur002/DOM
 RoxygenNote: 5.0.1

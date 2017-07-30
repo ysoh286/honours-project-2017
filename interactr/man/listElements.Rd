@@ -10,7 +10,7 @@ listElements(x)
 \item{x}{a plot that can be stored}
 }
 \description{
-Function tries to list elements drawn (currently derived from grid objects) 
+Function tries to list elements drawn (currently derived from grid objects)
 for further reference to add interactions.
 }
 

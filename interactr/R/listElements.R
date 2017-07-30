@@ -1,6 +1,6 @@
 #' @title listElements
 #'
-#' @description Function tries to list elements drawn (currently derived from grid objects) 
+#' @description Function tries to list elements drawn (currently derived from grid objects)
 #' for further reference to add interactions.
 #' @param x a plot that can be stored
 #' @export
@@ -11,9 +11,17 @@ listElements <- function(x) {
 #for recorded plots (ie base)
 #' @export
 listElements.recordedplot <- function(x) {
+
+  if (!requireNamespace("gridGraphics", quietly = TRUE)) {
+    stop(paste("We require the gridGraphics package for this.",
+               "Please use install.packages('gridGraphics') to install.",
+               sep = "\n"))
+  }
+
   print(x)
   gridGraphics::grid.echo()
   grid::grid.ls()
+
 }
 
 ## for lattice plots:
