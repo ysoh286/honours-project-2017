@@ -4,10 +4,12 @@
 \alias{listElements}
 \title{listElements}
 \usage{
-listElements(x)
+listElements(x, prefix = NULL)
 }
 \arguments{
 \item{x}{a plot that can be stored}
+
+\item{prefix}{to add a prefix to a plot if many are plotted (for lattice plots)}
 }
 \description{
 Function tries to list elements drawn (currently derived from grid objects)

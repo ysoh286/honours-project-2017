@@ -4,11 +4,9 @@
 \alias{styleHover}
 \title{styleHover}
 \usage{
-styleHover(el, attrs)
+styleHover(attrs)
 }
 \arguments{
-\item{el}{element to target}
-
 \item{attrs}{styling options/attributes (currently fill and fill.opacity)}
 }
 \description{

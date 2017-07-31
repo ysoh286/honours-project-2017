@@ -4,7 +4,7 @@
 \alias{setPoints}
 \title{setPoints}
 \usage{
-setPoints(el, type = "points", range = index, attrs)
+setPoints(el, type, range, attrs)
 }
 \arguments{
 \item{el}{element/class group to control}

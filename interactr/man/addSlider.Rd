@@ -18,9 +18,6 @@ addSlider(name = "slider", min = 0, max = 10, step = 1,
 
 \item{control.on}{an element (id) to control (optional)}
 }
-\value{
-
-}
 \description{
 Add an HTML slider to the page
 }

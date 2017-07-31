@@ -12,5 +12,4 @@ Encoding: UTF-8
 LazyData: true
 Imports: DOM, grid, XML, gridSVG
 Suggests: gridGraphics
-Remotes: pmur002/DOM
 RoxygenNote: 5.0.1

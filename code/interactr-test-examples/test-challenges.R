@@ -8,52 +8,54 @@ devtools::install_github("ysoh286/honours-project-2017", subdir = "interactr")
 library(interactr)
 
 ############################
-## Boxplot challenge ##
+## Boxplot to points ##
 ############################
 
 library(lattice)
 bw <- bwplot(iris$Sepal.Length, main = "boxplot")
 bw.elements <- listElements(bw)
-bwlist <- list(box = "plot_01.bwplot.box.polygon.panel.1.1")
-interactions <- list(hover = styleHover(bwlist$box,
-                                        attrs = list(fill = "red", fill.opacity = "1")))
-draw(bw, bwlist$box, interactions, new.page = TRUE)
+box <- "plot_01.bwplot.box.polygon.panel.1.1"
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
+draw(bw, box, interactions, new.page = TRUE)
+#obtain the range of the box before we draw the scatterplot:
+range <- returnRange(box)
 
 sp <- xyplot(Sepal.Width ~ Sepal.Length, data = iris, main = "scatterplot")
 listElements(sp)
-splist <- list(points = "plot_01.xyplot.points.panel.1.1")
+points <- "plot_01.xyplot.points.panel.1.1"
 draw(sp)
 
 #highlightPoints: defined by user:
 highlightPoints <- function(ptr) {
-  range <- returnRange('plot_01.bwplot.box.polygon.panel.1.1')
-  #subset values within data:
   index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
-  setPoints("plot_01.xyplot.points.panel.1.1", type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+  setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
 }
 
 boxClick <- list(onclick = 'highlightPoints')
-addInteractions(bwlist$box, boxClick)
+addInteractions(box, boxClick)
 
-## test on ggplot2:
+## test on ggplot2: DOES NOT WORK!
+
 library(ggplot2)
 p <- ggplot(data = iris, aes(x = "", y = Sepal.Length)) + geom_boxplot()
 p.elements <- listElements(p)
 # this changes every time (need to match to list generated)
 # taken from listElements() output
-box <- "geom_polygon.polygon.548"
-interactions <- list(hover = styleHover(box,
-                                        attrs = list(fill = "red", fill.opacity = "1")))
+box <- "geom_polygon.polygon.52"
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
 draw(p, box, interactions, new.page = TRUE)
-
+#find the range of the box: - returnRange FAILS ON THIS.
+## returns an error due to convertX not returning data values under 'native'.
+range <- c(5.1, 6.4)
 #add scatterplot:
 sp <- ggplot(data = iris, aes(x = Sepal.Width, y =Sepal.Length)) + geom_point()
 sp.elements <- listElements(sp)
 draw(sp)
-points <- "geom_point.points.604"
+points <- "geom_point.points.108"
 highlightPoints <- function(ptr) {
-  range <- returnRange(box)
+  #find the index of points that lie within the range of the box
   index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
+  print(index)
   setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
 }
 boxClick <- list(onclick = "highlightPoints")
@@ -62,13 +64,36 @@ addInteractions(box, boxClick)
 #switching order of draw works fine.
 #BUT: you must print the plot (via listElements) before you send to browser.
 
+## a possible solution using base:
+boxplot(iris$Sepal.Length, horizontal = TRUE)
+pl <- recordPlot()
+listElements(pl)
+box = "graphics-plot-1-polygon-1"
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
+draw(p, box, interactions, new.page = TRUE)
+range <- returnRange(box)
+
+plot(iris$Sepal.Length, iris$Sepal.Width)
+sp <- recordPlot()
+listElements(sp)
+draw(sp)
+#add interactions
+points <- 'graphics-plot-1-points-1'
+highlightPoints <- function(ptr) {
+  #find the index of points that lie within the range of the box
+  index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
+  setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+}
+boxClick <- list(onclick = "highlightPoints")
+addInteractions(box, boxClick)
+# other polygons are 'hover'-highlighted - need to restrict to id.
+
 ## test on iNZightPlots:
 library(iNZightPlots)
 p <- iNZightPlot(Sepal.Length, data = iris)
 listElements(p)
 box <- "GRID.polygon.675"
-interactions <- list(hover = styleHover(box,
-                                        attrs = list(fill = "red", fill.opacity = "1")))
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
 draw(p, box, interactions, new.page = TRUE)
 ## add scatter plot:
 sp <- iNZightPlot(Sepal.Width, Sepal.Length, data = iris)
@@ -79,26 +104,6 @@ boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 #THIS DOESN'T WORK AS IT SHOULD...
 #note that only half the box has been highlighted.
-
-## a possible solution using base:
-boxplot(iris$Sepal.Length, horizontal = TRUE)
-pl <- recordPlot()
-listElements(pl)
-box = "graphics-plot-1-polygon-2"
-interactions <- list(hover = styleHover(box,
-                                        attrs = list(fill = "red", fill.opacity = "1")))
-draw(p, box, interactions, new.page = TRUE)
-
-plot(iris$Sepal.Length, iris$Sepal.Width)
-sp <- recordPlot()
-listElements(sp)
-draw(sp)
-#add interactions
-points = 'graphics-plot-1-points-1'
-boxClick <- list(onclick = "highlightPoints")
-addInteractions(box, boxClick)
-
-# other polygons are 'hover'-highlighted - need to restrict to id.
 
 ############################
 ## Trendlines ##

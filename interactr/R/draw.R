@@ -78,6 +78,12 @@ addInteractions <- function(target, interactions) {
   cssInt <- valid.interactions$cssInt
 
   for (cssRule in names(cssInt)) { #TODO: vectorise
+
+    DOM::setAttribute(pageNo,
+                      plotObj,
+                      "class",
+                      cssRule)
+
     DOM::insertRule(pageNo, sheets[1], cssInt[[cssRule]], i)
     i <<- i + 1
   }
@@ -117,14 +123,9 @@ validate <- function(interactions) {
 
 }
 
-
-# convert to SVG: converts svg using gridSVG (for R plots)
+# convert to SVG: converts svg using gridSVG
+# convert plot to svg - for R plots:
 convertToSVG <- function(x = NULL) {
-  UseMethod("convertToSVG")
-}
-
-# convert plot to svg:
-convertToSVG.default <- function(x = NULL) {
 
   #do not print - because tags changes from reprinting  - user should call listElements first
   svgall <- gridSVG::grid.export(NULL, exportMappings = "inline", exportCoords = "inline")
@@ -133,24 +134,6 @@ convertToSVG.default <- function(x = NULL) {
   coords <- svgall$coords
   gridSVG::gridSVGCoords(coords)
   gridSVG::gridSVGMappings(mappings)
-  dev.off()
-
-  return(svg)
-
-}
-
-convertToSVG.trellis <- function(x) {
-
-  pdf(NULL)
-  print(x)
-  svgall <- gridSVG::grid.export(NULL, exportMappings = "inline", exportCoords = "inline")
-  svg <- svgall$svg
-  mappings <- svgall$mappings
-  coords <- svgall$coords
-  gridSVG::gridSVGCoords(coords)
-  gridSVG::gridSVGMappings(mappings)
-  dev.off()
-
   return(svg)
 
 }
