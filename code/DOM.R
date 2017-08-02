@@ -4,19 +4,19 @@
 devtools::install_github('pmur002/DOM')
 library(DOM)
 
-## going through his intro tutorial - look at  version: 0.3. 
+## going through his intro tutorial - look at  version: 0.3.
 #https://www.stat.auckland.ac.nz/~paul/Reports/DOM/v0.3/DOM-v0.3.html
 ## DON'T LOOK AT 0.4! (unless you're playing with CSS)
 #this works on Firefox (testing on Mac OSX, R version 3.2.4).
 
-page <- htmlPage('<p> Hello World! </p>') 
+page <- htmlPage('<p> Hello World! </p>')
 
 page <- htmlPage()
 appendChild(page, child = htmlNode("<p> Hello World! </p>"))
 # this returns object of class.
 
 # adding a span:
-appendChild(page, 
+appendChild(page,
             child = htmlNode('<span style = "font-style: italic"> hello italics </span>'))
 
 
@@ -26,7 +26,7 @@ appendChild(page,
             response = css())
 
 #return the xpath:
-appendChild(page, 
+appendChild(page,
             child =xpath("//p[1]"))
 #this moves the 1st element (technically the 2nd) down to the end of the page.
 #response = what it returns in R.
@@ -55,7 +55,7 @@ appendChild(page,
             child = svgNode(svgString),
             ns = TRUE,
             response = svgNode())
-appendChild(page, 
+appendChild(page,
             child = htmlNode('<span> hello iNZight! </span>'))
 
 #could I render other HTML elements?
@@ -82,10 +82,10 @@ appendChild(page,
             child = htmlNode('<input id="search" type="search" />'))
 
 
-#removing!: 
-# note that for removal, you specify css tags rather than htmlNode() 
+#removing!:
+# note that for removal, you specify css tags rather than htmlNode()
 #removes the last item that was originally appended.
-removeChild(page, 
+removeChild(page,
             child=css('p'))
 
 removeChild(page,
@@ -126,13 +126,13 @@ echo <- function(elt, css) {
   cat("HTML:", elt, "\n")
 }
 page <- htmlPage()
-appendChild(page, 
+appendChild(page,
             child = htmlNode("<p> <span>Click on me to change!</span> </p>"))
 #add some js:
 appendChild(page,
             child = javascript('document.getElementsByTagName("p")[0].style.color = "blue";'))
-            
-setAttribute(page, elt = css("span"), attrName = "onclick", 
+
+setAttribute(page, elt = css("span"), attrName = "onclick",
             attrValue = 'RDOM.Rcall("echo", this, [ "HTML" ],null)')
 
 ## let's try something different...
@@ -149,23 +149,36 @@ normal = function() {
 
 #set up page:
 page <- htmlPage()
-appendChild(page, 
+appendChild(page,
             child = htmlNode("<p> <span>Click on me to change!</span> </p>"))
 
 #using setAttribute instead + JS:
 appendChild(page,
             child = javascript(js))
 setAttribute(page,
-             elt = css("span"), 
+             elt = css("span"),
              attrName = "onmouseover",
              attrValue = 'highlight()')
-setAttribute(page, 
+setAttribute(page,
              elt = css("span"),
              attrName = "onmouseout",
              attrValue = "normal()")
 
 #TODO: could you return something that's not elt/css?
 
-## might add more things...
+# CONTROLLING CSS:
+page <- htmlPage()
+appendChild(page,
+            child = htmlNode("<p> Hi! </p>"))
 
+#requires a style sheet!
+appendChild(page,
+            htmlNode('<style type="text/css"></style>'),
+            parent=css("head"))
+sheets <- styleSheets(page)
+insertRule(page, sheets[1], "p:hover { color: red; }", 0)
 
+# use getProperty instead...?
+style <- getProperty(page, css('p'), "style")
+setProperty(page, style, "font-size", "10")
+setProperty(page, style, "font-family", "Arial")

@@ -1,7 +1,7 @@
 ## TESTING package with existing and new challenges:
 # serves as demos/examples:
 
-## Installation:
+## Installation (as of 03/08 - should work!):
 
 devtools::install_github("ysoh286/honours-project-2017", subdir = "interactr")
 #installs DOM automatically
@@ -57,34 +57,38 @@ highlightPoints <- function(ptr) {
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 
-## test on ggplot2: DOES NOT WORK!
+## test on ggplot2: requires revising.
+# Because its coordinate system differs on grid, need a different way to get data.
+#(can't use returnRange(), needs revision)
 
 library(ggplot2)
 p <- ggplot(data = iris, aes(x = "", y = Sepal.Length)) + geom_boxplot()
 p.elements <- listElements(p)
 # this changes every time (need to match to list generated)
 # taken from listElements() output
-box <- "geom_polygon.polygon.52"
+box <- "geom_polygon.polygon.1065"
 interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
 draw(p, box, interactions, new.page = TRUE)
-#find the range of the box: - returnRange FAILS ON THIS.
-## returns an error due to convertX not returning data values under 'native'.
-range <- c(5.1, 6.4)
+
+#find the range of the box: 
+boxData <- ggplot_build(p)$data[[1]]
+#for a box plot - IQR: lower, upper
+range <- c(boxData$lower, boxData$upper)
+
 #add scatterplot:
 sp <- ggplot(data = iris, aes(x = Sepal.Width, y =Sepal.Length)) + geom_point()
 sp.elements <- listElements(sp)
 draw(sp)
-points <- "geom_point.points.108"
+points <- "geom_point.points.1121"
 highlightPoints <- function(ptr) {
   #find the index of points that lie within the range of the box
   index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
-  setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+  setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
 }
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 
-#switching order of draw works fine.
-#BUT: you must print the plot (via listElements) before you send to browser.
+#BUT: you must print the plot (via listElements) in the R graphics device before you send to browser.
 
 
 ## test on iNZightPlots:
@@ -123,20 +127,31 @@ draw(p, box, interactions, new.page = TRUE)
 ## Boxplot to density ##
 ############################
 
-## apply it on census data (Paul's example):
-census <- read.csv("~/Desktop/datasets/census.csv", header = TRUE)
+## apply it on 2009 CensusAtSchool data (Paul's example):
+
+#get dataset off web:
+census <- read.csv("http://new.censusatschool.org.nz/wp-content/uploads/2016/08/CaS2009_subset.csv", header = TRUE)
+
+#subset the first 500 values... since gridSVG can't handle all 15000 values on the scatter plot:
+census <- census[1:500, ]
 
 # separate girls and boys:
 boys <- census[census$gender == "male", ]
 girls <- census[census$gender == "female", ]
 
 # plot box plot of boys heights:
-bw <- bwplot(boys$height, main = "boxplot")
+bw <- bwplot(boys$height, main = "Boxplot of boys' heights")
 bw.elements <- listElements(bw, "boys_height")
 box <- "boys_height.bwplot.box.polygon.panel.1.1"
 interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "0.5")))
 draw(bw, box, interactions, new.page = TRUE)
 range <- returnRange(box)
+
+# add in a scatterplot of boys heights to armspan:
+sp <- xyplot(boys$armspan ~ boys$height, main = "Height vs armspan (boys)", xlab = "Height(cm)", ylab = "Armspan")
+sp.elements <- listElements(sp, "sp_bheight")
+points <- "sp_bheight.xyplot.points.panel.1.1"
+draw(sp)
 
 #density plot of girls height:
 dplot <- densityplot(~girls$height,
@@ -164,22 +179,31 @@ highlightRange <- function(ptr) {
 
   # add start and end:
   xval <- c(xval[1], xval, xval[length(xval)])
-  yval <- c(0, yval, 0)
+  yval <- c(-1, yval, -1)
 
   pt <- convertXY(xval, yval, panel)
   #set points on added polygon
   setPoints("highlightRegion", type = "coords", value = pt)
+  
+  # highlight points in scatter plot:
+  index <- which(min(range) <= boys$height  & boys$height <= max(range) & !is.na(boys$armspan))
+  # note that if armspans are missing, then it will return 'element is undefined', hence requires !is.na(boys$armspan) to screen through th
+  setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "0.5", class = "selected"))
 
 }
 
 boxClick <- list(onclick = "highlightRange")
 addInteractions(box, boxClick)
 
+# a limitation of this is for coords to be calculated correctly, the density plot in the R graphics device must be present. (The an alternative is to calculate it beforehand and store its value)
+# Also, not everything is immediate. Things happen in order! 
+
+
 ############################
 ## Trendlines ##
 ############################
 
-# as of current: still needs alot of revision!
+# as of current: DOES NOT WORK DUE TO REVISIONS.
 # draw the plot:
 iris.plot <- xyplot(Petal.Length~Petal.Width, data = iris, pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
 listElements(iris.plot)

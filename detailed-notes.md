@@ -5,21 +5,20 @@
 https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
 
 TODOS:
-- Build 'solution' + fix package
-  - get box plot challenge fully sussed
-  - attempt to generalize 'highlighting' (what if you could highlight a range instead - boxplot to density plot)
-  - reduce the exponentially increasing list of bugs/issues
-- Need to update on plotly+crosstalk information
-- Try AWS + shiny server during the weekend
-- AVOID WRITING JAVASCRIPT! (unless DOM can't do it)
+- **REVIEW AND TRY PLOTLY 4.7.1 - THERE ARE SUBSTANTIAL CHANGES THAT CONTRADICT what was previously determined. plotly can now stop redrawing in shiny + a lot more links to other types of plots rather than just scatter plots**
+- Build 'solution'
+- Try AWS + shiny server
 
 LOOSE ENDS? Should these be further investigated or not?
 - redo png-trendline challenge?
 - Canvas APIs for fast rendering of large datasets
 
-## WEEK 15 - 19 (06/07 - 03/07): Build.
+## WEEK 15 - End of Semester (06/07 - ): Build.
 
 - Completed integrating selection box in DOM-trendline example (alternative to example done in shiny)
+
+- Completed challenges:
+  - boxplot challenge
 
 **Building...**
 
@@ -27,125 +26,55 @@ LOOSE ENDS? Should these be further investigated or not?
 
 **Key points:**
 - an event handler (onclick, onmouseout, onmouseover, keyup, keydown...etc) should have a function attached.
-- the list specified by the user should include event-to-function pairs (which function to run to which event) - this is a JavaScript function
-  - by specifying a target element to attach interactions to, we can attach several interactions to a single element, but it means that interactions can only be specified one at a time.
+- the list specified by the user should include event-to-function pairs (which function to run to which event), or a css rule
+  - by specifying a target element to attach interactions to, we can attach several interactions to a single element, but currently we can only target 1 element at a time.
 - Functions (and maybe more to come) for specific interactions (such as attaching a selection box, driving a slider, e.t.c) but it should be flexible enough so that the user can still achieve what they want.
 
-**Code samples (as of 26/07):**
+**Challenges achieved:**
+- Boxplot to points challenge: highlight the box and points between two plots.
 
-BOXPLOT CHALLENGE:
-- Tested on lattice, ggplot2, iNZightPlots. Could extend to base (using gridGraphics + recordPlot())
-- Still need to fix boxplot filter on scatterplot (rewrite highlightPoints - use DOM instead rather than javascript)
-
-```{r}
-library(interactr)
-library(lattice)
-
-bw <- bwplot(1:10, main = "boxplot")
-listElements(bw)
-
-#which to target from list:
-bwlist <- list(box = "plot_01.bwplot.box.polygon.panel.1.1",
-               med = "plot_01.bwplot.dot.points.panel.1.1",
-               ends = "plot_01.bwplot.cap.segments.panel.1.1")
-
-#map elements to data required? (TODO -revise highlightPoints)
-
-#define interactions
-interactions <- list(onmouseover = fill(bwlist$box, 'blue'),
-                     onmouseout = unfill(bwlist$box))
-
-#draw and send to browser
-draw(bw, bwlist$box, interactions, new.page = TRUE)
-
-sp <- xyplot(1:10 ~ 1:10, main = "scatterplot")
-listElements(sp)
-
-splist <- list(points = "plot_01.xyplot.points.panel.1.1")
-
-draw(sp)
-
-boxClick <- list(onclick = highlightPoints(bwlist$box, splist$points))
-
-addInteractions(bwlist$box, boxClick)
-
-```
-
-TRENDLINE CHALLENGE:
- - still needs revising as DOM/gridSVG functions are still seen by the user + missing a step
-
-```{r}
-
-iris.plot <- xyplot(Petal.Length~Petal.Width, data = iris, pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
-listElements(iris.plot)
-
-#send plot to browser
-draw(iris.plot, new.page = TRUE)
-
-#add slider:
-addSlider("slider.1.1", 0.5, 1, 0.05, "plot_01.loess.lines.panel.1.1")
-
-# ideally, the user can decide what to do with the value (compute in R)
-changeTrendline <- function(value) {
-
-  x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
-  panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-  lo <- loess(Petal.Length~Petal.Width, data = iris, span = value)
-  y <- predict(lo, x)
-
-  #convert co-ordinates:
-  svg_x <- viewportConvertX(panel, x, "native")
-  svg_y <- viewportConvertY(panel, y, "native")
-  cat(svg_x)
-
-  #create 'points' string:
-  pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
-
-  # update points:
-  setAttribute(pageNo,
-               plotObj,
-               "points",
-               pt,
-               async = TRUE)
-
-}
-
-# there should be a function to identify which function to run when value is returned +
-# allow user to pass this function through
-# for now, changeTrendline is the default.
-# something to pass through match.fun()?? maybe
-
-interactions <- list(oninput = "RDOM.Rcall('sliderValue', this, [ 'ptr' ], null)")
-
-addInteractions("slider", interactions) #NOTE: tags do not match (should be consistent!!)
-
-```
+**Assumptions?:**
+- requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use ```ggplot_build()```)
+- assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the df.)
+-  assumes that most grid objects represent a single object in SVG (which sometimes is not the case - see iNZightPlot boxplot version)
 
 **Limitations so far:**
+- Limitations of using DOM + gridSVG are carried forward
 - For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open to derive from the current plot when printed. (in this case, user MUST call listElements first if they want to send a plot through... (which makes no sense if they just want to send the plot first, think about interactions later... unless they want to modify the plot via grid.))
 - Only one kind of interaction can be attached (not several - e.g. you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
 - Both these challenges involve just dealing with a single element - what if we had to deal with many elements at once (but apply the same function)? (e.g a slider that controls the bin widths of a histogram)
+- Code must be written in a certain order
+- WILL NOT WORK WELL ON DATA WITH MISSING VALUES
 - ... with a lot of bugs to fix.
 - WARNING from Paul about DOM:
 > "DOM does nothing to help with synchronising cascades of updates (OR infinite loops of updates)"
 
 **Issues/Bugs/TODO/TOFIX:**
-- The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)
-- mapElements function?
+- ~~The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)~~
 - instead of using grid tags, use SVG tags instead for consistency with cases that do not use gridSVG? (use getSVGMappings() to get correct id/selectors - in a case of gridSVG, the tags are not the same as those generated by grid.)
-- Fix up the boxplot filter on scatterplot (relate back to DATA via using conversion coordinates - grid/gridSVG)
-- NOTE: if there's more than one plot, add prefixes!
+- ~~Fix up the boxplot filter on scatterplot (relate back to DATA via using conversion coordinates - grid/gridSVG)~~
+- ~~Fix up package for Paul to use in meetings~~
+- ~~Generalize density-boxplot challenge~~
+- ~~Fix CSS selectors (be able to pass an id?)~~
+- ~~NOTE: if there's more than one plot, add prefixes!~~
+- ~~Extend highlight-boxplot to density plots~~
 - VALIDATION/TEST STOPS
-- add selection box
-- Read up on closures and environments in R
-- Q: when using the DOM package, how would we define functions that are required in RDOM.RCall()?
-(if they're not in the global environment?)
+- ~~Vectorise existing for-loops~~
+- Revise ```returnRange``` - for ggplot2
+- Make trendlines work!
+- add selection box onto trendline-challenge
+- ~~Read up on closures and environments in R~~
+- Fix event propagation on selection box
+- STOP USING GLOBALS IN THE PACKAGE!
+- Is there a way to find the panel/viewport based upon returning a grob?
+- Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
 
 **Idea list:**
 - try integrate with a javascript library (R interface wrappers)
   - htmlwidgets (as their name states) generate a standalone HTML page
   - somehow need to extract elements with this and target the svg
 - integration with Shiny (functions to generate correct javascript that can be added in)
+- mapElements function?
 
 #### NOTES:
 
@@ -181,7 +110,7 @@ WHY ARE WE BUILDING THIS?
 - Shiny: Shiny CAN do on-plot interactions, but limited
     - you can't do something like adding trendlines 'on top' of a png
     - you can't add something onto a plotly plot
-    - If something needs to be added/removed from the plot, it requires re-rendering (...ggvis may be an exception??)
+    - If something needs to be added/removed from the plot, it requires re-rendering (...ggvis may be an exception)
     - there is no event_data()/input$brush for grid based plots (like lattice)
     - If your HTMLwidget doesn't have 'selection' or something like 'event_data()', then you don't have 'access' to on-plot interactions
 - Crosstalk: links between htmlwidgets only (that have been linked up!) - it's more of a standalone solution (depending on what has been defined in R). Great for selection and filtering, but implementation is difficult/not exactly flexible (plotly still shows 'awkward' brushing + it's slow).
@@ -191,6 +120,7 @@ WHY ARE WE BUILDING THIS?
 **```interactr``` issues faced and discussed:**
 
 *First iteration (27/07):*
+
 - What's the best/most appropriate way to passing R -> JavaScript (R arguments that user writes in to pass to JavaScript)
   - **Best to avoid and stay in R. You're targeting R users.** Paul's advice: When you're writing text in R that's in fact another language.... it's flakey and not a good idea.
 
@@ -200,6 +130,8 @@ WHY ARE WE BUILDING THIS?
     - some plots do not store any data at all when they draw (would we have to compute it ourselves?)
     - **Use grid's conversion system?** You cannot bind data to grid objects (too complex, requires use of gTrees + modifying entire structures... which is not recommended.)
 
+  - Q: when using the DOM package, how would we define functions that are required in RDOM.RCall()? (if they're not in the global environment?)
+     - use a closure
 
 **ggvis' demo with trendlines** [link](https://github.com/rstudio/ggvis/tree/master/demo/apps/brush-summary)
 - ggvis has a way of changing the trend line whenever you brush over points (more of a transition).
@@ -212,7 +144,7 @@ WHY ARE WE BUILDING THIS?
 https://plot.ly/r/shiny-coupled-events/
 
 **Update with plotly 4.6.0**
-- Plotly's got some new features happening that focus on linking views without shiny.... (which might need revising)
+plotly need revising. see notes >> plotly
 
 **Stumbled past:**
 - [Dash](https://medium.com/@plotlygraphs/introducing-dash-5ecf7191b503) is almost the 'Shiny' for python.

@@ -56,7 +56,7 @@ shinyApp(
           sliderInput(
             "span",
             label = "Degree of smoothing",
-            min = 0.25, max = 1, value = 1, step = 0.01)
+            min = 0.5, max = 1, value = 1, step = 0.01)
         )
       ),
       
