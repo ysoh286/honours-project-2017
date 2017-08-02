@@ -4,16 +4,16 @@
 \alias{setPoints}
 \title{setPoints}
 \usage{
-setPoints(el, type, range, attrs)
+setPoints(el, type, value, attrs = NULL)
 }
 \arguments{
 \item{el}{element/class group to control}
 
-\item{type}{the type of element (points, bars)}
+\item{type}{either an index of points (row observations), or a string of coordinates to plot ("index" or "coords")}
 
-\item{range}{either an index or a range (use index for subsetting row observations, range for aggregate data)}
+\item{value}{vector of indices, or a character vector of coordinates}
 
-\item{attrs}{list of attributes and stylings to apply}
+\item{attrs}{list of attributes and stylings to apply (optional)}
 }
 \description{
 allows setting attributes/styles of points over a range/index values

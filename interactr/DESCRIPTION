@@ -10,6 +10,8 @@ Description: Aiming to achieve on-plot interactivity.
 License: License required
 Encoding: UTF-8
 LazyData: true
-Imports: DOM, grid, XML, gridSVG
+Imports: grid, XML, gridSVG
+Depends: DOM
+Remotes: pmur002/DOM
 Suggests: gridGraphics
 RoxygenNote: 5.0.1

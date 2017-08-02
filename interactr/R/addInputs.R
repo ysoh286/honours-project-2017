@@ -27,6 +27,7 @@ addSlider <- function(name = "slider", min = 0, max = 10, step = 1, control.on =
     plotObj <<- DOM::getElementById(pageNo,
                                paste0(control.on, '.1.1'),
                                response = DOM::nodePtr())
+    #assign("plotObj", plotObj, p.env)
   }
 
   # append invisible paragraph to record values:

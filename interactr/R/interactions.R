@@ -1,4 +1,4 @@
-# A list of specific/ simple interactions that can be used:
+# Setting styles...
 
 #' @title styleHover
 #' @description allows user to style a hover interaction
@@ -13,13 +13,20 @@ styleHover <- function(attrs) {
   #generateCSS- should be for all list in attr:
   fill <- paste0("fill:", attrs$fill, "; ")
   fillop <- paste0("fill-opacity:", attrs$fill.opacity, "; ")
-  #can expand further to other attributes available in css
-  # TODO: vectorise!
+  # TODO: vectorise + expand further to other styles in css!
 
   #temp fix:
   cssRule <- paste0(".hover:hover {", fill, fillop, "}")
   return(cssRule)
 
-  ## the other alternative: use HTMLnodes instead...
+}
 
+hide <- function(el) {
+  cssRule <- paste0(".hidden { visibility: hidden; }")
+  return(cssRule)
+}
+
+show <- function(el) {
+  cssRule <- paste0(".show { visibility: visible; }")
+  return(cssRule)
 }

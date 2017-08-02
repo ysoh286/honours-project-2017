@@ -15,6 +15,9 @@ addPolygon <- function(id, panel, attrs) {
   newPolygon <<- DOM::createElementNS(pageNo,
                                 "http://www.w3.org/2000/svg",
                                 "polygon")
+
+  #assign("newPolygon", newPolygon, p.env)
+
   DOM::appendChild(pageNo,
                   newPolygon,
                   parent = panelObj,
@@ -27,13 +30,17 @@ addPolygon <- function(id, panel, attrs) {
 
   names(attrs) <- gsub("[.]", "-", names(attrs))
 
-  for (names in names(attrs)) {
-    setAttribute(pageNo,
-                 newPolygon,
-                 names,
-                 attrs[[names]])
+  lapply(names(attrs), function(nm) {
 
-  }
+    #newPolygon <- get(newPolygon, p.env)
+
+      DOM::setAttribute(pageNo,
+                        newPolygon,
+                        nm,
+                        attrs[[nm]])
+
+    invisible(NULL)
+    })
 
   invisible(NULL)
 

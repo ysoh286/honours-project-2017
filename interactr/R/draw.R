@@ -16,7 +16,9 @@ draw <- function(pl, target = NULL, interactions = NULL, new.page = FALSE) {
 
   ##send to browser - initial set up:
   if (new.page == TRUE) {
+
     pageNo <<- DOM::htmlPage()
+    #assign("pageNo", pageNo, p.env)
 
     #set up a stylesheet:
     DOM::appendChild(pageNo,
@@ -24,6 +26,8 @@ draw <- function(pl, target = NULL, interactions = NULL, new.page = FALSE) {
                     parent = DOM::css("head"))
 
     sheets <<- DOM::styleSheets(pageNo)
+    #assign("sheets", sheets, p.env)
+    #assign("i", 0, p.env)
     i <<- 0
 
   }
@@ -50,35 +54,35 @@ addInteractions <- function(target, interactions) {
     stop("You need to specify an object to target.")
   }
 
-  ## TODO: screen through interactions that are CSS driven vs JS driven
-  valid.interactions <- validate(interactions)
+  ## screen through interactions that are CSS driven vs JS driven
+  valid.int <- validate(interactions)
 
   ## identify which require setAttribute:
-  jsInt <- valid.interactions$jsInt
+  jsInt <- valid.int$jsInt
 
   ##find element:
   plotObj <- DOM::getElementById(pageNo,
                                  paste0(target,".1.1"),
                                  response = DOM::nodePtr())
 
-  ## attach interactions: TODO: vectorise
-  for (event in names(jsInt)) {
+  lapply(names(jsInt), function(nm) {
 
-    if(is.function(match.fun(interactions[[event]]))) {
-      interactions[[event]] <- paste0("RDOM.Rcall('", interactions[[event]], "', this, ['ptr'], null)")
+    if(is.function(match.fun(jsInt[[nm]]))) {
+      jsInt[[nm]] <- paste0("RDOM.Rcall('", jsInt[[nm]], "', this, ['ptr'], null)")
     }
 
     DOM::setAttribute(pageNo,
                       plotObj,
-                      event,
-                      interactions[[event]])
-  }
+                      nm,
+                      jsInt[[nm]])
+
+    invisible(NULL)
+  })
 
   ## which are css:
-  cssInt <- valid.interactions$cssInt
+  cssInt <- valid.int$cssInt
 
-  for (cssRule in names(cssInt)) { #TODO: vectorise
-
+  for (cssRule in names(cssInt)) { ## TODO: vectorise
     DOM::setAttribute(pageNo,
                       plotObj,
                       "class",
@@ -126,7 +130,7 @@ validate <- function(interactions) {
 # convert to SVG: converts svg using gridSVG
 # convert plot to svg - for R plots:
 convertToSVG <- function(x = NULL) {
-
+  ## TODO: check if there really is anything drawn on the current graphics device!
   #do not print - because tags changes from reprinting  - user should call listElements first
   svgall <- gridSVG::grid.export(NULL, exportMappings = "inline", exportCoords = "inline")
   svg <- svgall$svg

@@ -28,10 +28,33 @@ draw(sp)
 #highlightPoints: defined by user:
 highlightPoints <- function(ptr) {
   index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
-  setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+  setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
 }
 
 boxClick <- list(onclick = 'highlightPoints')
+addInteractions(box, boxClick)
+
+## a possible solution using base:
+boxplot(iris$Sepal.Length, horizontal = TRUE)
+pl <- recordPlot()
+listElements(pl)
+box = "graphics-plot-1-polygon-1"
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
+draw(p, box, interactions, new.page = TRUE)
+range <- returnRange(box)
+
+plot(iris$Sepal.Length, iris$Sepal.Width)
+sp <- recordPlot()
+listElements(sp)
+draw(sp)
+#add interactions
+points <- 'graphics-plot-1-points-1'
+highlightPoints <- function(ptr) {
+  #find the index of points that lie within the range of the box
+  index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
+  setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+}
+boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 
 ## test on ggplot2: DOES NOT WORK!
@@ -55,7 +78,6 @@ points <- "geom_point.points.108"
 highlightPoints <- function(ptr) {
   #find the index of points that lie within the range of the box
   index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
-  print(index)
   setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
 }
 boxClick <- list(onclick = "highlightPoints")
@@ -64,46 +86,94 @@ addInteractions(box, boxClick)
 #switching order of draw works fine.
 #BUT: you must print the plot (via listElements) before you send to browser.
 
-## a possible solution using base:
-boxplot(iris$Sepal.Length, horizontal = TRUE)
-pl <- recordPlot()
-listElements(pl)
-box = "graphics-plot-1-polygon-1"
-interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
-draw(p, box, interactions, new.page = TRUE)
-range <- returnRange(box)
-
-plot(iris$Sepal.Length, iris$Sepal.Width)
-sp <- recordPlot()
-listElements(sp)
-draw(sp)
-#add interactions
-points <- 'graphics-plot-1-points-1'
-highlightPoints <- function(ptr) {
-  #find the index of points that lie within the range of the box
-  index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
-  setPoints(points, type = "points", range = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
-}
-boxClick <- list(onclick = "highlightPoints")
-addInteractions(box, boxClick)
-# other polygons are 'hover'-highlighted - need to restrict to id.
 
 ## test on iNZightPlots:
+# Note: there are two ways you could solve this: either obtain the 'rearranged' data frame that's stored inside the plot OR plot.features = list(order.first = -1)
 library(iNZightPlots)
-p <- iNZightPlot(Sepal.Length, data = iris)
+p <- iNZightPlot(Sepal.Length, data = iris, plot.features = list(order.first = -1))
 listElements(p)
-box <- "GRID.polygon.675"
+box <- "GRID.polygon.526"
+range <- returnRange(box)
 interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
 draw(p, box, interactions, new.page = TRUE)
 ## add scatter plot:
-sp <- iNZightPlot(Sepal.Width, Sepal.Length, data = iris)
+sp <- iNZightPlot(Sepal.Width, Sepal.Length, data = iris, plot.features = list(order.first = -1))
 listElements(sp)
 points <- "SCATTERPOINTS"
 draw(sp)
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
-#THIS DOESN'T WORK AS IT SHOULD...
-#note that only half the box has been highlighted.
+# this only lights up half the box.
+#This is because the box is defined as two polygons in svg (but grid only sees this as 1)
+
+#to light up the points on the same plot:
+p <- iNZightPlot(Sepal.Length, data = iris, plot.features = list(order.first = -1))
+listElements(p)
+box <- "GRID.polygon.637"
+points <- "DOTPOINTS"
+range <- returnRange(box)
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")),
+					 onclick = "highlightPoints")
+# ideally, if these were plotted in the order according to the data frame, then these would light up correctly.
+#However, iNZightPlots does reorder the entire data frame before plotting, which causes it to differ.
+draw(p, box, interactions, new.page = TRUE)
+
+
+############################
+## Boxplot to density ##
+############################
+
+## apply it on census data (Paul's example):
+census <- read.csv("~/Desktop/datasets/census.csv", header = TRUE)
+
+# separate girls and boys:
+boys <- census[census$gender == "male", ]
+girls <- census[census$gender == "female", ]
+
+# plot box plot of boys heights:
+bw <- bwplot(boys$height, main = "boxplot")
+bw.elements <- listElements(bw, "boys_height")
+box <- "boys_height.bwplot.box.polygon.panel.1.1"
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "0.5")))
+draw(bw, box, interactions, new.page = TRUE)
+range <- returnRange(box)
+
+#density plot of girls height:
+dplot <- densityplot(~girls$height,
+                     main="Density plot of girl's heights",
+                     xlab="Height(cm)")
+d.elements <- listElements(dplot, "girls_height")
+dlist <- list(points = "girls_height.density.points.panel.1.1",
+              lines = "girls_height.density.lines.panel.1.1")
+draw(dplot)
+
+# add invisible polygon to the page:
+panel <- "girls_height.toplevel.vp::girls_height.panel.1.1.vp.2"
+addPolygon("highlightRegion", panel, attrs = list(fill = "red",
+                                                  stroke = "red",
+                                                  stroke.opacity = "1",
+                                                  fill.opacity= "0.5"))
+
+#define what happens when you click (back in R):
+highlightRange <- function(ptr) {
+
+  coords <- returnRange(dlist$lines)
+  index <- which(min(range) <= coords$x & coords$x <= max(range))
+  xval <- coords$x[index]
+  yval <- coords$y[index]
+
+  # add start and end:
+  xval <- c(xval[1], xval, xval[length(xval)])
+  yval <- c(0, yval, 0)
+
+  pt <- convertXY(xval, yval, panel)
+  #set points on added polygon
+  setPoints("highlightRegion", type = "coords", value = pt)
+
+}
+
+boxClick <- list(onclick = "highlightRange")
+addInteractions(box, boxClick)
 
 ############################
 ## Trendlines ##
@@ -129,12 +199,7 @@ controlTrendline <- function(value) {
   lo <- loess(Petal.Length~Petal.Width, data = iris, span = value)
   y <- predict(lo, x)
 
-  #convert co-ordinates:
-  svg_x <- gridSVG::viewportConvertX(panel, x, "native")
-  svg_y <- gridSVG::viewportConvertY(panel, y, "native")
-
-  #create 'points' string:
-  pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
+  pt <- convertXY(x, y, panel)
 
   # update points:
   DOM::setAttribute(pageNo,
@@ -152,16 +217,8 @@ controlTrendline <- function(value) {
 # let them define controlTrendline?? How would you generalize this?
 
 #define interactions:
-#identify that it's a slider interaction.
-int <- list(oninput = "RDOM.Rcall('sliderValue', this, [ 'ptr' ], null)")
+#ERROR: needs revising.
+int <- list(oninput = "sliderValue")
 
 #attach:
 addInteractions("slider", int)
-
-############################
-## Selection Box ##
-############################
-
-
-
-
