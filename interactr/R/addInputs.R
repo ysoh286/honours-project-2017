@@ -6,13 +6,14 @@
 #' @param min minimum value of slider
 #' @param max maximum value of slider
 #' @param step increment for the slider
-#' @param control.on an element (id) to control (optional)
 #'
 #' @export
+addSlider <- function(name = "slider", min = 0, max = 10, step = 1) {
 
-addSlider <- function(name = "slider", min = 0, max = 10, step = 1, control.on = NULL) {
+  pageNo <- p.env$pageNo
 
-  htmlTag <- paste0('<input id ="', name,
+  #if we change to SVG tags: remove '.1.1'
+  htmlTag <- paste0('<input id ="', paste0(name, '.1.1'),
                     '" type = "range"',
                     'min = "', min,
                     '" max = "', max,
@@ -23,13 +24,6 @@ addSlider <- function(name = "slider", min = 0, max = 10, step = 1, control.on =
                    child = DOM::htmlNode(htmlTag),
                    response = DOM::nodePtr())
 
-  if (!is.null(control.on)) {
-    plotObj <<- DOM::getElementById(pageNo,
-                               paste0(control.on, '.1.1'),
-                               response = DOM::nodePtr())
-    #assign("plotObj", plotObj, p.env)
-  }
-
   # append invisible paragraph to record values:
   DOM::appendChild(pageNo,
                    DOM::htmlNode('<p id="para"></p>'),
@@ -37,20 +31,17 @@ addSlider <- function(name = "slider", min = 0, max = 10, step = 1, control.on =
 
 }
 
-## back functions to return slider value to R:
-## this is maintained as a back function, but requires 'callback' to change accordingly.
-# how can you change callback according to what the user has written?
-sliderValue <- function(ptr) {
-  value <- DOM::getProperty(pageNo, ptr, "value", async = TRUE, callback = defaultPrint)
-}
+#' @title showValue (slider only)
+#' @description show the value of the slider
+#' @param value to pass value of slider (fixed to value when used within a function
+#'  that is to be processed back in R)
+#' @export
+showValue <- function(value) {
 
-defaultPrint <- function(value) {
+  pageNo <- p.env$pageNo
 
   newPara <- DOM::htmlNode(paste('<p id="para">', value, '</p>'))
   DOM::replaceChild(pageNo, newPara, DOM::css("#para"), async=TRUE)
-
-  # TODO: be able to insert a function that the user has defined (ie controlTrendline)??
-  value <- as.numeric(value)
-  controlTrendline(value)
+  invisible(NULL)
 
 }

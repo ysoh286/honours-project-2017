@@ -16,12 +16,13 @@ styleHover <- function(attrs) {
   # TODO: vectorise + expand further to other styles in css!
 
   #temp fix:
-  cssRule <- paste0(".hover:hover {", fill, fillop, "}")
+  cssRule <- paste0(".hover:hover {", fill, fillop, " pointer-events: all; }")
   return(cssRule)
 
 }
 
 hide <- function(el) {
+  ## ideally be able to specify the element to hide
   cssRule <- paste0(".hidden { visibility: hidden; }")
   return(cssRule)
 }

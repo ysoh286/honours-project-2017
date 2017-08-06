@@ -4,8 +4,7 @@
 \alias{addSlider}
 \title{Add an HTML slider}
 \usage{
-addSlider(name = "slider", min = 0, max = 10, step = 1,
-  control.on = NULL)
+addSlider(name = "slider", min = 0, max = 10, step = 1)
 }
 \arguments{
 \item{name}{element id of slider}
@@ -15,8 +14,6 @@ addSlider(name = "slider", min = 0, max = 10, step = 1,
 \item{max}{maximum value of slider}
 
 \item{step}{increment for the slider}
-
-\item{control.on}{an element (id) to control (optional)}
 }
 \description{
 Add an HTML slider to the page

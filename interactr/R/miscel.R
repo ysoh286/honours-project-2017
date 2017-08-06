@@ -52,6 +52,8 @@ convertXY <- function(x, y, panel) {
 #' @export
 setPoints <- function(el, type, value, attrs = NULL) {
 
+  pageNo <- p.env$pageNo
+
 # ideally, range could be a 'range' as well, rather than an index value.
   if (type == "index") {
 
@@ -83,7 +85,7 @@ setPoints <- function(el, type, value, attrs = NULL) {
 
     newRegion <- DOM::getElementById(pageNo,
                                     el,
-                                    response = nodePtr(),
+                                    response = DOM::nodePtr(),
                                     async = TRUE,
                                     callback = function(newRegion) {
                                       DOM::setAttribute(pageNo,
@@ -94,7 +96,44 @@ setPoints <- function(el, type, value, attrs = NULL) {
                                     })
 
   } else {
-    stop("Invalid input.type!")
+    stop("Invalid input type!")
   }
+
+}
+
+
+#' @title findElement
+#' @description Find an element based upon its tag. Used for dealing with systems
+#' that do not have a consistent naming scheme such as ggplot2, iNZightPlots.
+#' @param tag a part of an element name
+#' @export
+findElement <- function(tag) {
+
+  if(!is.character(tag)) {
+    stop("tag of element must be a character value!")
+  }
+
+  return(grid::grid.grep(tag, grep = TRUE)$name)
+
+}
+
+#' @title findPanel
+#' @description Find the panel/viewport in which an element resides in
+#' @param el element id/or part of a tag
+#' @export
+findPanel <- function(el) {
+
+  if (!is.character(el)) {
+    stop("Element name must be of character value!")
+  }
+
+  grob <- grid::grid.grep(el, grep=TRUE)
+  listing <- grid::grid.ls(print=FALSE, view=TRUE)
+  panelName <- listing$vpPath[listing$name == grob$name]
+  #drop root:
+  panelName <- gsub("^ROOT::", "", panelName)
+  #plot must be drawn to browser. Must check for gridSVG mappings.
+  panel <- tail(gridSVG::getSVGMappings(panelName, "vp"), n = 1)
+  return(panel)
 
 }

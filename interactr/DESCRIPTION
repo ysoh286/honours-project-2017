@@ -1,13 +1,13 @@
 Package: interactr
 Title: trial package for on-plot interactivity
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: person(
     "Yu Han",
     "Soh",
     email = "ysoh286@aucklanduni.ac.nz",
     role  = c("aut", "cre"))
 Description: Aiming to achieve on-plot interactivity.
-License: License required
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: grid, XML, gridSVG

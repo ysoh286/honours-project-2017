@@ -18,19 +18,21 @@ draw <- function(pl, target = NULL, interactions = NULL, new.page = FALSE) {
   if (new.page == TRUE) {
 
     pageNo <<- DOM::htmlPage()
-    #assign("pageNo", pageNo, p.env)
+    assign("pageNo", pageNo, p.env)
 
     #set up a stylesheet:
     DOM::appendChild(pageNo,
                     DOM::htmlNode('<style type="text/css"></style>'),
                     parent = DOM::css("head"))
 
-    sheets <<- DOM::styleSheets(pageNo)
-    #assign("sheets", sheets, p.env)
-    #assign("i", 0, p.env)
-    i <<- 0
+    sheets <- DOM::styleSheets(pageNo)
+    assign("sheets", sheets, p.env)
+    assign("i", 0, p.env)
+    #i <<- 0
 
   }
+
+  pageNo <- p.env$pageNo
 
   DOM::appendChild(pageNo,
                    child = DOM::svgNode(XML::saveXML(svg)),
@@ -53,6 +55,8 @@ addInteractions <- function(target, interactions) {
   if (is.null(target)) {
     stop("You need to specify an object to target.")
   }
+
+  pageNo <- p.env$pageNo
 
   ## screen through interactions that are CSS driven vs JS driven
   valid.int <- validate(interactions)
@@ -82,15 +86,22 @@ addInteractions <- function(target, interactions) {
   ## which are css:
   cssInt <- valid.int$cssInt
 
+  i <- p.env$i
+  sheets <- p.env$sheets
+
   for (cssRule in names(cssInt)) { ## TODO: vectorise
+
     DOM::setAttribute(pageNo,
                       plotObj,
                       "class",
                       cssRule)
 
     DOM::insertRule(pageNo, sheets[1], cssInt[[cssRule]], i)
-    i <<- i + 1
+    i <- i + 1
+
   }
+
+  assign("i", i, p.env)
 
 }
 

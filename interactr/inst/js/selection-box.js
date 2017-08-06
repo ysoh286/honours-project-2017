@@ -1,26 +1,4 @@
 // A more generalized version:
-
-// identify svg:
-v
-
-createSelectionBox = function(panelId) {
-
-  //var panelId = 'plot_01.xyplot.points.panel.1.1.1';
-  var panel = document.getElementById(panelId);
-  var num = document.getElementById(panelId).childElementCount;
-
-  //putting selection rectangle in a group element: (creating a selection box)
-  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttributeNS(null, 'id', 'selectionBox');
-    panel.appendChild(g);
-
-    var selectRect = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-    selectRect.setAttributeNS(null, 'id', 'selectRect');
-    selectRect.setAttributeNS(null, 'class', 'selectRect');
-    g.appendChild(selectRect);
-
-}
-
   var zoomBox = {};
 
 // co-ordinate conversion for svg relative to where it is on the page:
@@ -33,6 +11,7 @@ convertCoord = function(svg, evt) {
 
 MouseDown = function(evt) {
   var pt  = convertCoord(svg, evt);
+    evt.stopPropagation();
     zoomBox["startX"] = pt.x;
     zoomBox["startY"] = pt.y;
     zoomBox["isDrawing"] = true;
@@ -43,14 +22,16 @@ MouseDown = function(evt) {
 MouseUp = function(evt) {
   svg.style.cursor = "default";
   var pt  = convertCoord(svg, evt);
-      zoomBox["endX"] = pt.x;
-      zoomBox["endY"] = pt.y;
-      zoomBox["isDrawing"] = false;
-  };
+  evt.stopPropagation();
+  zoomBox["endX"] = pt.x;
+  zoomBox["endY"] = pt.y;
+  zoomBox["isDrawing"] = false;
+};
 
 MouseDrag = function(evt) {
     if(zoomBox["isDrawing"]) {
         svg.style.cursor = "crosshair";
+        evt.stopPropagation();
         var pt  = convertCoord(svg, evt);
         zoomBox["endX"] = pt.x;
         zoomBox["endY"] = pt.y;
@@ -81,8 +62,10 @@ MouseDrag = function(evt) {
                                   + x2 + ',' + y2 + ' ' + x2 + ',' + y1);
 
         var selected = [];
+        var num = document.getElementById(pointId).childElementCount;
+        console.log(num);
         for (i =1; i <= num; i++) {
-          var point = document.getElementById(panelId + '.' + i);
+          var point = document.getElementById(pointId + '.' + i);
 
           //obtain x, y values
           var x = point.x.baseVal.value;
