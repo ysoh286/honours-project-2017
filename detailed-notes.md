@@ -5,7 +5,7 @@
 https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
 
 TODOS:
-- **REVIEW AND TRY PLOTLY 4.7.1 - THERE ARE SUBSTANTIAL CHANGES THAT CONTRADICT what was previously determined. plotly can now stop redrawing in shiny + a lot more links to other types of plots rather than just scatter plots**
+- Be aware that plotly has been updated. Should we update too? No.
 - Build 'solution'
 - Try AWS + shiny server
 
@@ -19,6 +19,12 @@ LOOSE ENDS? Should these be further investigated or not?
 
 - Completed challenges:
   - boxplot challenge
+  - trendline with slider + selection box
+
+
+- Other features:
+  - compatibility with base, ggplot2, lattice
+  - controlling a density plot by its bandwidth
 
 **Building...**
 
@@ -35,8 +41,9 @@ LOOSE ENDS? Should these be further investigated or not?
 
 **Assumptions?:**
 - requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use ```ggplot_build()```)
-- assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the df.)
+- assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the df.) In cases where data taken in is rearranged and sorted (like iNZightPlots), this causes the 'indexes' of the points to differ to the original dataframe.
 -  assumes that most grid objects represent a single object in SVG (which sometimes is not the case - see iNZightPlot boxplot version)
+
 
 **Limitations so far:**
 - Limitations of using DOM + gridSVG are carried forward
@@ -44,6 +51,7 @@ LOOSE ENDS? Should these be further investigated or not?
 - Only one kind of interaction can be attached (not several - e.g. you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
 - Both these challenges involve just dealing with a single element - what if we had to deal with many elements at once (but apply the same function)? (e.g a slider that controls the bin widths of a histogram)
 - Code must be written in a certain order
+ - Furthermore, in cases of multiple plots, you need to extract all the data you need (panels, gridSVGMappings...) from that specific plot before moving onto the next.
 - WILL NOT WORK WELL ON DATA WITH MISSING VALUES
 - ... with a lot of bugs to fix.
 - WARNING from Paul about DOM:
@@ -61,12 +69,14 @@ LOOSE ENDS? Should these be further investigated or not?
 - VALIDATION/TEST STOPS
 - ~~Vectorise existing for-loops~~
 - Revise ```returnRange``` - for ggplot2
-- Make trendlines work!
-- add selection box onto trendline-challenge
+- ~~Make trendlines work!~~
+- ~~add selection box onto trendline-challenge~~
 - ~~Read up on closures and environments in R~~
-- Fix event propagation on selection box
-- STOP USING GLOBALS IN THE PACKAGE!
-- Is there a way to find the panel/viewport based upon returning a grob?
+- Fix event propagation on selection box (half done)
+- Try using CSS rules rather than setAttribute for everything
+- ~~STOP USING GLOBALS IN THE PACKAGE!~~
+- ~~Is there a way to find the panel/viewport based upon returning a grob? YES~~ see ```findPanel()```
+- Hide DOM passing functions
 - Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
 
 **Idea list:**
@@ -89,7 +99,7 @@ Customised on-plot interactions
   - to provide a more 'fluid and flexible' solution for creating simple interactive plots
   - build off grid tools + DOM
   - Be able to achieve interactions that require R to recalculate/return/modify something
-  - TO AVOID REDRAWING!
+  - TO AVOID FULL REDRAWS! (there will be some redrawing, but only for specific parts of the plot)
 
 Main goals:
 - be able to define interactions that users would find helpful
@@ -144,7 +154,7 @@ WHY ARE WE BUILDING THIS?
 https://plot.ly/r/shiny-coupled-events/
 
 **Update with plotly 4.6.0**
-plotly need revising. see notes >> plotly
+plotly need revising. Updating notes.
 
 **Stumbled past:**
 - [Dash](https://medium.com/@plotlygraphs/introducing-dash-5ecf7191b503) is almost the 'Shiny' for python.
