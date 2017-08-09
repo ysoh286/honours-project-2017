@@ -61,15 +61,29 @@ setPoints <- function(el, type, value, attrs = NULL) {
 
     #filter attributes to replace names with period to -:
     names(attrs) <- gsub("[.]", "-", names(attrs))
+    
+    #if (is.null(class) & !is.null(attrs)) {
+     # stop("Attributes require a class!")
+    #}
+    
+    #setClasses(class, attrs)
 
+     #setStyles <- function(obj) {
+      #DOM::setAttribute(pageNo,
+       #                 obj,
+        #                "class",
+         #               class, 
+          #              async = TRUE)
+    #}
+    
     setStyles <- function(obj) {
 
       lapply(names(attrs), function(nm) {
         DOM::setAttribute(pageNo,
-                          obj,
-                          nm,
-                          attrs[[nm]],
-                          async = TRUE)
+                         obj,
+                         nm,
+                         attrs[[nm]],
+                         async = TRUE)
 
         invisible(NULL)
       })
@@ -98,6 +112,32 @@ setPoints <- function(el, type, value, attrs = NULL) {
   } else {
     stop("Invalid input type!")
   }
+
+}
+
+## BACK END FUNCTION - trialling css:
+setClasses <- function(className, attrs) {
+  
+  #need to validate the attributes.
+  names(attrs) <- gsub("[.]", "-", names(attrs))
+  vec <- unlist(attrs)
+  cssAttrs <- paste0(names(vec), ":", vec, "; ", collapse = "")
+  cssRule <- paste0(".", className, " { ", cssAttrs, " }")
+  print(cssRule)
+  
+  #append cssRule:
+  pageNo <- p.env$pageNo
+  i <- p.env$i
+  sheets <- DOM::styleSheets(pageNo, 
+                             async = TRUE, 
+                             callback = function(x) { DOM::insertRule(pageNo, 
+                                                                      x[1], 
+                                                                      cssRule, 
+                                                                      i, 
+                                                                      async = TRUE) })
+  
+  i <- i + 1
+  assign("i", i, p.env)
 
 }
 

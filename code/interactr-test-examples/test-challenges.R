@@ -191,7 +191,7 @@ highlightRange <- function(ptr) {
   # highlight points in scatter plot:
   index <- which(min(range) <= boys$height  & boys$height <= max(range) & !is.na(boys$armspan))
   # note that if armspans are missing, then it will return 'element is undefined',
-  #hence requires !is.na(boys$armspan) to remove missing values
+  # hence requires !is.na(boys$armspan) to remove missing values
   setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "0.5", class = "selected"))
 
 }
@@ -240,7 +240,6 @@ controlTrendline <- function(value) {
   panel <- findPanel('plot_01.xyplot.points.panel.1.1')
   pt <- convertXY(x, y, panel)
 
-  # update points:
   # NOTE: THERE IS INCONSISTENCY WITH TAGS.
   setPoints("plot_01.loess.lines.panel.1.1.1.1", type = "coords", value = pt)
 
@@ -299,45 +298,6 @@ addInteractions("slider", int)
 #Because this doesn't exactly follow the same structure as other interactions
 # hence, will slightly differ.
 
-## write functions to recalculate and draw new smoother:
-#THIS SHOULD BE HIDDEN!
-hello <- function(ptr) {
-
-  ## get indices from data-select:
-  index <- getAttribute(pageNo,
-                        ptr,
-                        "data-select",
-                        async = TRUE,
-                        callback = createSmooth)
-
-}
-
-#create new smoother:
-createSmooth  = function(index) {
-
-  #this returns the indices of the points selected
-  index <- as.numeric(unlist(strsplit(index, ",")))
-
-  #filter selected points:
-  if (length(index) > 20) {
-
-    selected <- iris[index, ]
-    x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
-    lo <<- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
-    y <- predict(lo, x)
-
-    #convert co-ordinates:
-    panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-    pt <- convertXY(x, y, panel)
-
-  } else {
-    pt <- ""
-  }
-
-  setPoints("newSmooth", type = "coords", value = pt)
-
-}
-
 #steps:
 iris.plot <- xyplot(Petal.Length~Petal.Width,
                     data = iris,
@@ -348,14 +308,91 @@ iris.plot <- xyplot(Petal.Length~Petal.Width,
 listElements(iris.plot)
 #send plot to browser
 draw(iris.plot, new.page = TRUE)
-#add slider to page:
+#add selection box to page:
 panel <- findPanel("plot_01.xyplot.points.panel.1.1")
 addLine("newSmooth", panel, list(stroke = "red", stroke.width = "1", fill = "none"))
+## write functions to recalculate and draw new smoother:
+#THIS SHOULD BE HIDDEN!
+hello <- function(ptr) {
+  
+  ## get indices from data-select:
+  index <- getAttribute(pageNo,
+                        ptr,
+                        "data-select",
+                        async = TRUE,
+                        callback = createSmooth)
+  
+}
+
+#create new smoother:
+createSmooth  = function(index) {
+  
+  #this returns the indices of the points selected
+  index <- as.numeric(unlist(strsplit(index, ",")))
+  
+  #filter selected points:
+  if (length(index) > 20) {
+    
+    selected <- iris[index, ]
+    x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
+    lo <<- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
+    y <- predict(lo, x)
+    
+    #convert co-ordinates:
+    panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
+    pt <- convertXY(x, y, panel)
+    
+  } else {
+    pt <- ""
+  }
+  
+  setPoints("newSmooth", type = "coords", value = pt)
+  
+}
 addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1")
 #ideally, this should link back to function: createSmooth
 # you can call "lo" back to find out the loess equation for the graph.
 
 
+## Linking more than 1 graph??
+## NOT STABLE - CRASHES R!!
+#steps:
+iris.plot <- xyplot(Petal.Length~Petal.Width,
+                    data = iris,
+                    pch = 19)
+
+listElements(iris.plot)
+#send plot to browser
+draw(iris.plot, new.page = TRUE)
+addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1")
+
+## add another scatter plot:
+iris.plot2 <- xyplot(Sepal.Length ~ Sepal.Width,
+                     data = iris,
+                     pch = 19)
+listElements(iris.plot2, "plot_02")
+draw(iris.plot2)
+
+hello <- function(ptr) {
+
+  ## get indices from data-select:
+  index <- getAttribute(pageNo,
+                        ptr,
+                        "data-select",
+                        async = TRUE,
+                        callback = highlight)
+
+}
+
+#create highlights:
+highlight  = function(index) {
+
+  #this returns the indices of the points selected
+  index <- as.numeric(unlist(strsplit(index, ",")))
+    points <- "plot_02.xyplot.points.panel.1.1"
+    setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+
+}
 
 ## TO DOS:
 ## Weight example?
