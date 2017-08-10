@@ -68,6 +68,11 @@ addInteractions <- function(target, interactions) {
   plotObj <- DOM::getElementById(pageNo,
                                  paste0(target,".1.1"),
                                  response = DOM::nodePtr())
+  
+  DOM::setAttribute(pageNo,
+                    plotObj,
+                    "pointer-events",
+                    "all")
 
   lapply(names(jsInt), function(nm) {
 

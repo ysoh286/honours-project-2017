@@ -33,7 +33,7 @@ addSelectionBox <- function(plotNum = 1, el) {
 
   ## attach js - TODO: should only run ONCE.
   DOM::appendChild(pageNo,
-                   child = DOM::javascript(paste(readLines(system.file("inst/js", "selection-box.js", package="interactr")), collapse = "\n")),
+                   child = DOM::javascript(paste(readLines(system.file("js", "selection-box.js", package="interactr")), collapse = "\n")),
                    response = DOM::nodePtr())
 
   js <- "svg.addEventListener('mouseup', MouseUp, false);
