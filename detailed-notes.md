@@ -1,28 +1,28 @@
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-**Report draft progress:** requires a shiny server.
+https://ysoh286.shinyapps.io/report-draft/ - dead...
 
-https://ysoh286.shinyapps.io/report-draft/ - dead at the moment.
+---
 
-TODOS:
-- Be aware that plotly has been updated. Should we update too? No.
-- Build 'solution'
-- Try AWS + shiny server
+## REPORT:
+- Proposed final report structure/outline:
+*report > [report-draft-outline.txt](https://github.com/ysoh286/honours-project-2017/blob/master/report/report-draft-outline.txt)*  
+- Interactive version requires a shiny server/DOM server
 
-LOOSE ENDS? Should these be further investigated or not?
-- redo png-trendline challenge?
-- Canvas APIs for fast rendering of large datasets
+Q for Chris: Do you want to experiment the ```interactr``` package with iNZight?
 
-## WEEK 15 - End of Semester (06/07 - ): Build.
+---
+
+## WEEK 15 - End of Semester (06/07 - 20/10): Build.
 
 - Completed integrating selection box in DOM-trendline example (alternative to example done in shiny)
 
 - Completed challenges:
-  - boxplot challenge
+  - boxplot challenges
   - trendline with slider + selection box
 
 
-- Other features:
+- Other features/examples:
   - compatibility with base, ggplot2, lattice
   - controlling a density plot by its bandwidth
 
@@ -36,9 +36,6 @@ LOOSE ENDS? Should these be further investigated or not?
   - by specifying a target element to attach interactions to, we can attach several interactions to a single element, but currently we can only target 1 element at a time.
 - Functions (and maybe more to come) for specific interactions (such as attaching a selection box, driving a slider, e.t.c) but it should be flexible enough so that the user can still achieve what they want.
 
-**Challenges achieved:**
-- Boxplot to points challenge: highlight the box and points between two plots.
-
 **Assumptions?:**
 - requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use ```ggplot_build()```)
 - assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the df.) In cases where data taken in is rearranged and sorted (like iNZightPlots), this causes the 'indexes' of the points to differ to the original dataframe.
@@ -47,15 +44,24 @@ LOOSE ENDS? Should these be further investigated or not?
 
 **Limitations so far:**
 - Limitations of using DOM + gridSVG are carried forward
+  - gridSVG is slow for rendering large datasets (it would be great to go faster, but only to a certain point since the DOM can't handle many svg elements)
 - For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open to derive from the current plot when printed. (in this case, user MUST call listElements first if they want to send a plot through... (which makes no sense if they just want to send the plot first, think about interactions later... unless they want to modify the plot via grid.))
 - Only one kind of interaction can be attached (not several - e.g. you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
 - Both these challenges involve just dealing with a single element - what if we had to deal with many elements at once (but apply the same function)? (e.g a slider that controls the bin widths of a histogram)
 - Code must be written in a certain order
  - Furthermore, in cases of multiple plots, you need to extract all the data you need (panels, gridSVGMappings...) from that specific plot before moving onto the next.
 - WILL NOT WORK WELL ON DATA WITH MISSING VALUES
-- ... with a lot of bugs to fix.
+- It is not as 'fluid' as simply using javascript directly, simply because requests are being sent from R <-> browser asynchronously (sequential order).
+- WARNING: this is a prototype package that's used to demonstrate concepts... with a lot of bugs to fix.
 - WARNING from Paul about DOM:
 > "DOM does nothing to help with synchronising cascades of updates (OR infinite loops of updates)"
+
+**Idea list:**
+- try integrate with a javascript library (R interface wrappers)
+  - htmlwidgets (as their name states) generate a standalone HTML page
+  - somehow need to extract elements with this and target the svg
+- integration with Shiny (functions to generate correct javascript that can be added in)
+- mapElements function?
 
 **Issues/Bugs/TODO/TOFIX:**
 - ~~The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)~~
@@ -77,14 +83,8 @@ LOOSE ENDS? Should these be further investigated or not?
 - ~~STOP USING GLOBALS IN THE PACKAGE!~~
 - ~~Is there a way to find the panel/viewport based upon returning a grob? YES~~ see ```findPanel()```
 - Hide DOM passing functions
+- Plot to table example?
 - Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
-
-**Idea list:**
-- try integrate with a javascript library (R interface wrappers)
-  - htmlwidgets (as their name states) generate a standalone HTML page
-  - somehow need to extract elements with this and target the svg
-- integration with Shiny (functions to generate correct javascript that can be added in)
-- mapElements function?
 
 #### NOTES:
 

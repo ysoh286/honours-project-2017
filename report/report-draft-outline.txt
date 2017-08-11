@@ -1,7 +1,80 @@
- Report Draft - Ideas:
+
+FINAL REPORT STRUCTURE (as of 11/08/2017)
+
+1 - Introduction 
+	- why web interactive? 
+	- why go from static to interactive? Motivation for iNZight? Need for interactive	 	graphics?
+	- Is there a way of making your own interactive visuals easily from R?
+	- Investigate existing tools, then decide
+
+
+2 - Existing tools for creating web interactive plots in R
+  These are tools that automatically generate web interactive plots and only require knowledge of R
+    - HTMLWidgets (highcharter, DT, Leaflet…)
+      - Plotly
+      - rbokeh
+    - ggvis
+    - crosstalk
+    - shiny
+  For each, discuss the pros and cons for each. What sorts of interactions can they achieve?
+	- Note that these are under development (subjected to change!)
+  - Comparison to non-web tools: iPlots (Mondrian/rggobi/cranvas??)
+
+
+3 - Extending limitations with other tools
+  ‘Lower level’ tools require a knowledge of web tech - HTML/CSS/JS/DOM manipulation
+    - gridSVG
+    - DOM
+  Discuss which limitations have been solved, while what has appeared.
+  - Ways in which we could try and solve these limitations?
+  - Other tools that are outside of R that could help or achieve what we want
+	- expansion to using webGL/HTML canvas environments for handling large datasets
+Methods in which we have solved our problem: 
+	Using DOM + JS + gridSVG, Shiny + JS + gridSVG
+	- How Shiny has extensibility (can incorporate HTML/JS and send specific things back and forth)
+	- these are standalone solutions specific to challenges proposed, but require specifically 
+
+
+4 - Developing a more generalised solution: interactr prototype package
+	- The main idea - a ‘wrapper’ for achieving simple interactive R plots:
+		- draw plot in R (or anything with grid/graphics)
+		- identify elements
+		- define interactions (talk back to R)
+		- attach interactions to specific elements
+		- view on web browser
+	- built upon DOM, gridSVG and other ‘grid’ tools(grid, gridGraphics and the relationship between grid objects + gridSVG)
+	- explain why shiny wasn’t picked to be built upon (despite having ways to customise)
+- interactr in action:
+ - Express these challenges using interactr (boxplot, trend line, linking, plot to table, simplistic example that doesn’t involve a plot)
+
+
+5** - Adding complexity to interactr?? / Experiment integrating with iNZight (if Chris wants this to happen)
+	- Theoretically should be possible as iNZight’s plots are made with grid
+	- Discuss the challenges of integrating the package with iNZight (similar problems faced when you try plug into different graphics systems such as ggplot2)
+
+
+6 - Discussion
+	- What’s good about interactr?
+	- Discuss the limitations and assumptions for the ‘interactr’ package
+	- highlight the limitations of DOM and gridSVG previously discussed in chapter 3, and how that affects this (stability + sharing?!)
+	- Compare solution to existing tools (how it compares with Shiny, crosstalk and HTMLwidgets…)
+	- Further directions (a way to deal with large datasets?? webGL? plug into htmlwidgets?, 				multi panel plots? zooming?)
+	- What problems still exist and how could we solve them?
+
+
+7 - Conclusion
+	- There is a possible solution to allow control and creation of simple interactive R plots that can be viewed in a web browser. 
+	- Simple on-plot interactivity can be achieved + a non-RStudio way of driving interactions 	without the need for learning ‘lower level tools’ + web tech
+	- Utilises R’s power of statistical computing to aid changes in graphical plots
+	- More assessment required on building more sophisticated interactive visualisations + looking beyond “SVG”.
+ 
+
+---
+
+ Report Draft - Ideas: (SEMESTER 1)
 
 Aim:
-- Investigate current approaches for creating interactive data visualisations through R on the web (HTMLwidgets such as Plotly, rbokeh, the ggvis package, possibly trelliscopeJS? and tools to enhance these widgets such as Shiny, crosstalk)
+- Investigate current approaches for creating interactive data visualisations through R on the web (HTMLwidgets such as Plotly, rbokeh, the ggvis package and tools to enhance these widgets such as Shiny, crosstalk)
 - Investigate tools that do interactive data visualisation, but are currently not on the web and their limitations and how they compare to those that are currently on the web
 - Could we design something better for users?
 
@@ -17,35 +90,6 @@ Possible outline:
 
 
 
-
 - Build solution that aims to solve the limitations.
-
----
-
-Current Structure:
-1 - Introduction - why web interactive? why make from static to interactive? Motivation?
-2 - Problem/aim addressed? What do users want? Is there a way of making your own interactive visuals easily?
-3 - Existing tools for creating web interactive plots in R
-  These are tools that automatically generate web interactive plots and only require knowledge of R
-    - HTMLWidgets
-      - Plotly
-      - rbokeh
-    - ggvis
-    - crosstalk
-    - shiny
-  For each, discuss the pros and cons for each.
-  - Comparison to non-web tools: iPlots (Mondrian/rggobi/cranvas??)
-4 - Extending limitations with other tools
-  These tools require a knowledge of web tech - HTML/CSS/JS/DOM manipulation
-    - gridSVG
-    - DOM
-  Discuss which limitations have been solved, while what has appeared.
-  - Ways in which we could try and solve these limitations?
-  - Other tools that are outside of R that could help or achieve what we want
-5 - Proposed solutions
-
-
-6 - Conclusion
-
 
 ---
