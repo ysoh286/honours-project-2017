@@ -9,7 +9,10 @@ https://ysoh286.shinyapps.io/report-draft/ - dead...
 *report > [report-draft-outline.txt](https://github.com/ysoh286/honours-project-2017/blob/master/report/report-draft-outline.txt)*  
 - Interactive version requires a shiny server/DOM server
 
-Q for Chris: Do you want to experiment the ```interactr``` package with iNZight?
+Q for Chris: Would you want to use the ```interactr``` package with iNZight?
+- Might still be really unstable...
+- Either continue doing more examples and stretch the package,
+  or stop and start writing.
 
 ---
 
@@ -82,9 +85,10 @@ Q for Chris: Do you want to experiment the ```interactr``` package with iNZight?
 - Try using CSS rules rather than setAttribute for everything
 - ~~STOP USING GLOBALS IN THE PACKAGE!~~
 - ~~Is there a way to find the panel/viewport based upon returning a grob? YES~~ see ```findPanel()```
-- Hide DOM passing functions
+- ~~Hide DOM passing functions~~
 - Plot to table example?
 - Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
+- Example of histogram/barplot control
 
 #### NOTES:
 
