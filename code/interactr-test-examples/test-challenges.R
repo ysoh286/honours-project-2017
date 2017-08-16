@@ -16,7 +16,7 @@ library(lattice)
 bw <- bwplot(iris$Sepal.Length, main = "boxplot")
 bw.elements <- listElements(bw)
 box <- "plot_01.bwplot.box.polygon.panel.1.1"
-interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1", pointer.events = "all")))
+interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity = "1")))
 draw(bw, box, interactions, new.page = TRUE)
 #obtain the range of the box before we draw the scatterplot:
 range <- returnRange(box)
@@ -167,10 +167,11 @@ draw(dplot)
 
 # add invisible polygon to the page:
 panel <- findPanel(dlist$lines)
-addPolygon("highlightRegion", panel, attrs = list(fill = "red",
-                                                  stroke = "red",
-                                                  stroke.opacity = "1",
-                                                  fill.opacity= "0.5"))
+addPolygon("highlightRegion", panel, class = "highlight",
+           attrs = list(fill = "red",
+                        stroke = "red",
+                        stroke.opacity = "1",
+                        fill.opacity= "0.5"))
 
 #define what happens when you click (back in R):
 highlightRange <- function(ptr) {
@@ -208,44 +209,35 @@ addInteractions(box, boxClick)
 ## Control a trendline ##
 ############################
 
-# draw the plot:
+# define plot
 iris.plot <- xyplot(Petal.Length~Petal.Width,
                     data = iris,
                     pch = 19,
                     type = c("p", "smooth"),
                     col.line = "orange", lwd = 3)
-
+#list elements and print plot
 listElements(iris.plot)
-
 #send plot to browser
 draw(iris.plot, new.page = TRUE)
 #add slider to page:
 addSlider("slider", min = 0.5, max = 1, step = 0.05)
-
-sliderValue <- function(ptr) {
-  value <- DOM::getProperty(pageNo, ptr, "value", async = TRUE, callback = controlTrendline)
-}
-
+#user defines this function:
 controlTrendline <- function(value) {
-
   showValue(value) #to show value of the slider
-  value <- as.numeric(value) #should this be hidden?
+  value <- as.numeric(value)
 
   #user defines what to do next: (here, recalculates x and y)
   x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
   lo <- loess(Petal.Length~Petal.Width, data = iris, span = value)
   y <- predict(lo, x)
 
-  #convert coordinates:
+  #convert coordinates and set points:
   panel <- findPanel('plot_01.xyplot.points.panel.1.1')
   pt <- convertXY(x, y, panel)
-
-  # NOTE: THERE IS INCONSISTENCY WITH TAGS.
-  setPoints("plot_01.loess.lines.panel.1.1.1.1", type = "coords", value = pt)
-
+  setPoints("plot_01.loess.lines.panel.1.1", type = "coords", value = pt)
 }
-
-#define interactions - this should be controlTrendline, rather than sliderValue!
+#pass function through to get values from slider
+sliderValue <- sliderCallback(controlTrendline)
 int <- list(oninput = "sliderValue")
 addInteractions("slider", int)
 
@@ -260,13 +252,8 @@ dline <- "graphics-plot-1-lines-1"
 draw(d.plot, new.page = TRUE)
 #add slider to page:
 addSlider("slider", min = 0.1, max = 1, step = 0.05)
-
-sliderValue <- function(ptr) {
-  value <- DOM::getProperty(pageNo, ptr, "value", async = TRUE, callback = controlDensity)
-}
-
+#user defined function:
 controlDensity <- function(value) {
-
   showValue(value)
   value <- as.numeric(value)
 
@@ -279,13 +266,11 @@ controlDensity <- function(value) {
   pt <- convertXY(x, y, panel)
 
   # update points:
-  # NOTE: THERE IS INCONSISTENCY WITH TAGS. (this requires svg tag)
-  setPoints("graphics-plot-1-lines-1.1.1", type = "coords", value = pt)
-
+  setPoints(dline, type = "coords", value = pt)
 }
-
 #define and attach interactions:
-int <- list(oninput = "sliderValue")
+slideDensity <- sliderCallback(controlDensity)
+int <- list(oninput = "slideDensity")
 addInteractions("slider", int)
 
 ############################
@@ -310,51 +295,37 @@ listElements(iris.plot)
 draw(iris.plot, new.page = TRUE)
 #add selection box to page:
 panel <- findPanel("plot_01.xyplot.points.panel.1.1")
-addLine("newSmooth", panel, list(stroke = "red", stroke.width = "1", fill = "none"))
-## write functions to recalculate and draw new smoother:
-#THIS SHOULD BE HIDDEN!
-hello <- function(ptr) {
-  
-  ## get indices from data-select:
-  index <- getAttribute(pageNo,
-                        ptr,
-                        "data-select",
-                        async = TRUE,
-                        callback = createSmooth)
-  
-}
-
+addLine("newSmooth", panel, class = "hello", list(stroke = "red",
+                                                  stroke.width = "1",
+                                                  fill = "none"))
 #create new smoother:
 createSmooth  = function(index) {
-  
   #this returns the indices of the points selected
+  # could use DOM 0.5 and pass JSON through to avoid this step...
   index <- as.numeric(unlist(strsplit(index, ",")))
-  
   #filter selected points:
   if (length(index) > 20) {
-    
     selected <- iris[index, ]
     x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
     lo <<- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
     y <- predict(lo, x)
-    
     #convert co-ordinates:
-    panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
     pt <- convertXY(x, y, panel)
-    
   } else {
     pt <- ""
   }
-  
   setPoints("newSmooth", type = "coords", value = pt)
-  
 }
-addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1")
-#ideally, this should link back to function: createSmooth
+
+#link callback functions together to pass index values to function
+boxIndex = boxCallback(createSmooth)
+addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", f = "boxIndex")
 # you can call "lo" back to find out the loess equation for the graph.
 
-
-## Linking more than 1 graph??
+############################
+## Linking: Selection Box
+## Multiple plots
+############################
 ## NOT STABLE - CRASHES R!!
 #steps:
 iris.plot <- xyplot(Petal.Length~Petal.Width,
@@ -364,7 +335,8 @@ iris.plot <- xyplot(Petal.Length~Petal.Width,
 listElements(iris.plot)
 #send plot to browser
 draw(iris.plot, new.page = TRUE)
-addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1")
+passIndex = boxCallback(highlight)
+addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", "passIndex")
 
 ## add another scatter plot:
 iris.plot2 <- xyplot(Sepal.Length ~ Sepal.Width,
@@ -373,26 +345,17 @@ iris.plot2 <- xyplot(Sepal.Length ~ Sepal.Width,
 listElements(iris.plot2, "plot_02")
 draw(iris.plot2)
 
-hello <- function(ptr) {
-
-  ## get indices from data-select:
-  index <- getAttribute(pageNo,
-                        ptr,
-                        "data-select",
-                        async = TRUE,
-                        callback = highlight)
-
-}
-
 #create highlights:
 highlight  = function(index) {
-
   #this returns the indices of the points selected
   index <- as.numeric(unlist(strsplit(index, ",")))
-    points <- "plot_02.xyplot.points.panel.1.1"
-    setPoints(points, type = "index", value = index, attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
-
+  points <- "plot_02.xyplot.points.panel.1.1"
+  setPoints(points, type = "index", value = index, attrs = list(fill = "red",
+                                                                fill.opacity = "1",
+                                                                class = "selected"))
 }
+
+#returns element is undefined?? Requires more thought.
 
 ## TO DOS:
 ## Weight example?

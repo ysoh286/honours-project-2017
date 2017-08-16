@@ -4,12 +4,14 @@
 \alias{addPolygon}
 \title{addPolygon}
 \usage{
-addPolygon(id, panel, attrs)
+addPolygon(id, panel, class, attrs = NULL)
 }
 \arguments{
 \item{id}{a name/id for the polygon element}
 
 \item{panel}{panel/viewport you want to attach this polygon to}
+
+\item{class}{a class/name to group attributes specified}
 
 \item{attrs}{a list of attributes}
 }

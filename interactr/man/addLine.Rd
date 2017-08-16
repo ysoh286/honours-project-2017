@@ -4,12 +4,14 @@
 \alias{addLine}
 \title{addLine}
 \usage{
-addLine(id, panelID, attrs)
+addLine(id, panelID, class, attrs = NULL)
 }
 \arguments{
 \item{id}{a name/id for the line element}
 
 \item{panelID}{panel/viewport to attach this line to}
+
+\item{class}{a class/grouping for specified attributes}
 
 \item{attrs}{a list of attributes for this line}
 }

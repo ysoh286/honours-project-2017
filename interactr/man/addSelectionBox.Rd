@@ -4,12 +4,14 @@
 \alias{addSelectionBox}
 \title{Add a linking selection box}
 \usage{
-addSelectionBox(plotNum = 1, el)
+addSelectionBox(plotNum = 1, el, f)
 }
 \arguments{
 \item{plotNum}{the plot number on the page (from left to right, starting from 1)}
 
 \item{el}{the element id/tag to capture (points only)}
+
+\item{f}{function name (character value/string) to pass through}
 }
 \description{
 allows user to draw a selection rectangle which captures points within that region

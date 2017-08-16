@@ -7,24 +7,18 @@
 returnRange <- function(el) {
   # requires validation if a grid object is a segment or something else.
   grob <- grid::grid.get(el)
-
+  # sort by class... for now
   if (any(class(grob) == "polygon")) {
-
     coords <- grid::convertX(grob$x, "native", valueOnly = TRUE)
     max <- max(coords, na.rm = TRUE)
     min <- min(coords, na.rm = TRUE)
     range <- c(min, max)
-
   } else {
-
     x <- grid::convertX(grob$x, "native", valueOnly = TRUE)
     y <- grid::convertY(grob$y, "native", valueOnly = TRUE)
     range <- list(x = x, y = y)
-
   }
-
   return(range)
-
 }
 
 #' @title convertXY
@@ -49,11 +43,10 @@ convertXY <- function(x, y, panel) {
 #' @param type either an index of points (row observations), or a string of coordinates to plot ("index" or "coords")
 #' @param value vector of indices, or a character vector of coordinates
 #' @param attrs list of attributes and stylings to apply (optional)
+#' @import DOM
 #' @export
 setPoints <- function(el, type, value, attrs = NULL) {
-
   pageNo <- p.env$pageNo
-
 # ideally, range could be a 'range' as well, rather than an index value.
   if (type == "index") {
 
@@ -61,33 +54,16 @@ setPoints <- function(el, type, value, attrs = NULL) {
 
     #filter attributes to replace names with period to -:
     names(attrs) <- gsub("[.]", "-", names(attrs))
-    
-    #if (is.null(class) & !is.null(attrs)) {
-     # stop("Attributes require a class!")
-    #}
-    
-    #setClasses(class, attrs)
 
-     #setStyles <- function(obj) {
-      #DOM::setAttribute(pageNo,
-       #                 obj,
-        #                "class",
-         #               class, 
-          #              async = TRUE)
-    #}
-    
     setStyles <- function(obj) {
-
       lapply(names(attrs), function(nm) {
-        DOM::setAttribute(pageNo,
-                         obj,
-                         nm,
-                         attrs[[nm]],
-                         async = TRUE)
-
+         DOM::setAttribute(pageNo,
+                           obj,
+                           nm,
+                           attrs[[nm]],
+                           async = TRUE)
         invisible(NULL)
       })
-
     }
 
   #getElements and run the styling:
@@ -95,10 +71,10 @@ setPoints <- function(el, type, value, attrs = NULL) {
                                                            x,
                                                           response = DOM::nodePtr(),
                                                           async = TRUE, callback = setStyles) })
-  } else if (type == "coords") {
 
+    } else if (type == "coords") {
     newRegion <- DOM::getElementById(pageNo,
-                                    el,
+                                    paste0(el, '.1.1'),
                                     response = DOM::nodePtr(),
                                     async = TRUE,
                                     callback = function(newRegion) {
@@ -108,37 +84,9 @@ setPoints <- function(el, type, value, attrs = NULL) {
                                                         value,
                                                         async = TRUE)
                                     })
-
   } else {
     stop("Invalid input type!")
   }
-
-}
-
-## BACK END FUNCTION - trialling css:
-setClasses <- function(className, attrs) {
-  
-  #need to validate the attributes.
-  names(attrs) <- gsub("[.]", "-", names(attrs))
-  vec <- unlist(attrs)
-  cssAttrs <- paste0(names(vec), ":", vec, "; ", collapse = "")
-  cssRule <- paste0(".", className, " { ", cssAttrs, " }")
-  print(cssRule)
-  
-  #append cssRule:
-  pageNo <- p.env$pageNo
-  i <- p.env$i
-  sheets <- DOM::styleSheets(pageNo, 
-                             async = TRUE, 
-                             callback = function(x) { DOM::insertRule(pageNo, 
-                                                                      x[1], 
-                                                                      cssRule, 
-                                                                      i, 
-                                                                      async = TRUE) })
-  
-  i <- i + 1
-  assign("i", i, p.env)
-
 }
 
 
@@ -148,13 +96,10 @@ setClasses <- function(className, attrs) {
 #' @param tag a part of an element name
 #' @export
 findElement <- function(tag) {
-
   if(!is.character(tag)) {
     stop("tag of element must be a character value!")
   }
-
   return(grid::grid.grep(tag, grep = TRUE)$name)
-
 }
 
 #' @title findPanel
@@ -162,11 +107,10 @@ findElement <- function(tag) {
 #' @param el element id/or part of a tag
 #' @export
 findPanel <- function(el) {
-
   if (!is.character(el)) {
     stop("Element name must be of character value!")
   }
-
+  #find grob:
   grob <- grid::grid.grep(el, grep=TRUE)
   listing <- grid::grid.ls(print=FALSE, view=TRUE)
   panelName <- listing$vpPath[listing$name == grob$name]
@@ -175,5 +119,4 @@ findPanel <- function(el) {
   #plot must be drawn to browser. Must check for gridSVG mappings.
   panel <- tail(gridSVG::getSVGMappings(panelName, "vp"), n = 1)
   return(panel)
-
 }

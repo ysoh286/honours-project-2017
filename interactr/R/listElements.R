@@ -1,5 +1,4 @@
 #' @title listElements
-#'
 #' @description Function tries to list elements drawn (currently derived from grid objects)
 #' for further reference to add interactions.
 #' @param x a plot that can be stored
@@ -20,7 +19,7 @@ listElements.recordedplot <- function(x, prefix = NULL) {
   }
 
   print(x)
-  gridGraphics::grid.echo()
+  gridGraphics::grid.echo(prefix = prefix)
   grid::grid.ls()
 
 }

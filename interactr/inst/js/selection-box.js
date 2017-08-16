@@ -1,5 +1,6 @@
 // A more generalized version:
   var zoomBox = {};
+  var selectRect = document.getElementById("selectRect.1.1");
 
 // co-ordinate conversion for svg relative to where it is on the page:
 convertCoord = function(svg, evt) {
@@ -38,7 +39,6 @@ MouseDrag = function(evt) {
 
         //Because the y-axis is inverted in the plot - need to invert the scale
         var tVal = document.getElementsByTagName('g')[0].getAttribute('transform').substring(13, 16);
-        var selectRect = document.getElementById('selectRect');
 
          // for rectangles with positive height, positive width
         if(zoomBox["startX"] < zoomBox["endX"]) {
@@ -63,7 +63,7 @@ MouseDrag = function(evt) {
 
         var selected = [];
         var num = document.getElementById(pointId).childElementCount;
-        console.log(num);
+        //console.log(num);
         for (i =1; i <= num; i++) {
           var point = document.getElementById(pointId + '.' + i);
 
