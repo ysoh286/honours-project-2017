@@ -8,7 +8,7 @@ Title: Web interactive plots in R
 
 1 - Introduction 
 	- why web interactive? 
-	- why go from static to interactive? Motivation for iNZight? Need for interactive graphics?
+	- why go from static to interactive? Need for interactive graphics?
 	- Is there a way of making your own interactive visuals easily from R?
 	- Investigate existing tools, then decide
 

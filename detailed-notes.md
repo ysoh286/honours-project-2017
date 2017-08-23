@@ -1,29 +1,40 @@
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-https://ysoh286.shinyapps.io/report-draft/ - dead...
+https://ysoh286.shinyapps.io/report-draft/ - somehow it's alive again?
 
 ---
 
 ## REPORT:
 - Proposed final report structure/outline:
 *report > [report-draft-outline.txt](https://github.com/ysoh286/honours-project-2017/blob/master/report/report-draft-outline.txt)*  
+- Write in Rmd + in chapters
+  - Writing all over the place at the moment - NOT READY FOR READING/REVIEWING!
+  - it's in the report/rmd-dissertation folder: working on pdf version first
+- A draft should be done by the end of the mid-semester break
 - Interactive version requires a shiny server/DOM server
 
-Q for Chris: Would you want to use the ```interactr``` package with iNZight?
-- Might still be really unstable...
-- Either continue doing more examples and stretch the package,
-  or stop and start writing.
+The problem is a lot of the examples in chapter 2 and 3 rely on the shiny framework (that's inclusive of the ggvis examples, plotly + shiny, shiny + gridSVG, shiny by itself).
+
+  - OPTIONS:
+    - Host a shiny server on a VPS (either Amazon Web Services on EC2 or Digital Ocean)
+      - AWS has a free tier for 1 year, but they don't alert you when they start charging + may have hidden costs.
+      - on Digital Ocean, $10 credit. If it runs fine on 512MB RAM, then could run for free for 2 months and then pay an extra ~$15 to keep it going for another 2 months till Dec (or just set it up in October).
+      - requires setup - roughly 15 minutes..? (according to Dean Attali's [blog post](http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/))
+        - not sure how long it takes to upload a single application onto the server, which is a separate process
+    - Is there a possibility to host a shiny server on campus that can be accessible, so all I have  to do is upload them to the server? (chances of this happening are slim)
+    - shinyapps.io free tier: instead of running an entire interactive document, divide shiny apps into separate documents instead (since we're only allowed a maximum of 5).
+      - The interactive document is live, but it has a very short life span (it most likely won't last if the marker wants to assess the entire document in a single sitting)
+      - could select the most important 5 to demo (there are too many examples that rely on shiny!) + stick with animated GIFs + videos.
 
 ---
 
-## WEEK 15 - End of Semester (06/07 - 20/10): Build.
+## WEEK 15 - End of Semester (06/07 - 20/10): Build + Write.
 
 - Completed integrating selection box in DOM-trendline example (alternative to example done in shiny)
 
 - Completed challenges:
   - boxplot challenges
   - trendline with slider + selection box
-
 
 - Other features/examples:
   - compatibility with base, ggplot2, lattice
@@ -48,7 +59,7 @@ Q for Chris: Would you want to use the ```interactr``` package with iNZight?
 **Limitations so far:**
 - Limitations of using DOM + gridSVG are carried forward
   - gridSVG is slow for rendering large datasets (it would be great to go faster, but only to a certain point since the DOM can't handle many svg elements)
-- For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open to derive from the current plot when printed. (in this case, user MUST call listElements first if they want to send a plot through... (which makes no sense if they just want to send the plot first, think about interactions later... unless they want to modify the plot via grid.))
+- For systems that do not have a clear naming scheme (tags for objects change every time) - require to print(plot) and then get the svg from that plot certain plot. - current solution is to print(plot) when the user calls listElements(), and the convertToSVG() function left open from the current graphics device when printed. (in this case, user MUST call listElements first if they want to send a plot through... (which makes no sense if they just want to send the plot first, think about interactions later... unless they want to modify the plot via grid.))
 - Only one kind of interaction can be attached (not several - e.g. you can't fill() as well as add a tooltip unless they're defined as a single function, which is a downside)
 - Both these challenges involve just dealing with a single element - what if we had to deal with many elements at once (but apply the same function)? (e.g a slider that controls the bin widths of a histogram)
 - Code must be written in a certain order
@@ -62,13 +73,13 @@ Q for Chris: Would you want to use the ```interactr``` package with iNZight?
 **Idea list:**
 - try integrate with a javascript library (R interface wrappers)
   - htmlwidgets (as their name states) generate a standalone HTML page
-  - somehow need to extract elements with this and target the svg
+  - somehow need to extract elements with this and target the svg??
 - integration with Shiny (functions to generate correct javascript that can be added in)
 - mapElements function?
 
 **Issues/Bugs/TODO/TOFIX:**
 - ~~The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)~~
-- instead of using grid tags, use SVG tags instead for consistency with cases that do not use gridSVG? (use getSVGMappings() to get correct id/selectors - in a case of gridSVG, the tags are not the same as those generated by grid.)
+- instead of using grid tags, use SVG tags instead for consistency with cases that do not use gridSVG? (use getSVGMappings() to get correct id/selectors - in a case of gridSVG, the tags are not the same as those generated by grid.) - temp solution of adding '.1.1'
 - ~~Fix up the boxplot filter on scatterplot (relate back to DATA via using conversion coordinates - grid/gridSVG)~~
 - ~~Fix up package for Paul to use in meetings~~
 - ~~Generalize density-boxplot challenge~~
@@ -89,6 +100,9 @@ Q for Chris: Would you want to use the ```interactr``` package with iNZight?
 - Plot to table example?
 - Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
 - Example of histogram/barplot control
+
+Would you want to use the ```interactr``` package with iNZight?
+  Not at the moment. Still entirely developmental and unstable. Shiny's still better.
 
 #### NOTES:
 
@@ -158,7 +172,7 @@ WHY ARE WE BUILDING THIS?
 https://plot.ly/r/shiny-coupled-events/
 
 **Update with plotly 4.6.0**
-plotly need revising. Updating notes.
+plotly needs revising. Updating notes.
 
 **Stumbled past:**
 - [Dash](https://medium.com/@plotlygraphs/introducing-dash-5ecf7191b503) is almost the 'Shiny' for python.

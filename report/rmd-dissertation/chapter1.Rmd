@@ -1,0 +1,34 @@
+---
+output: pdf_document
+---
+
+# Introduction 
+
+The purpose of this report is to investigate current solutions for creating web interactive data visualisations in R. 
+
+## The need for interactive graphics
+
+*TODO: Introduction is still weak. Needs more resources to back up.*
+
+Interactive graphics have become popular in helping users explore data freely and explain topics to a wider audience. As Murray (2012) suggests, static visualisations can only 'offer pre-composed 'views' of data', whereas interactive plots can provide us with different perspectives. To be able to interact with a plot allows us to explore data and discover trends and relationships that cannot be seen with a static graph. The power of interactive graphics can aid us during exploratory data analysis, to which we can display data and query it to answer specific questions the user has (Cook and Swayne, 2007). 
+
+The term "interactive graphics" can have different meanings. Theus(1996) and Unwin(1999) have suggested that there are 3 broad components: querying, selection and linking, and varying plot characteristics. We can also split it into two broader categories - 'on-plot' and 'off-plot' interactivity. We focus on 'on-plot' interactivity, where a user can interact directly on the plot to query, select and explore the data.
+
+R(Ihaka and Gentleman, 1996) is a powerful open source tool for generating flexible static graphics. However, it is not focused on interactivity. Previously, there have been different programs to help create interactive plots to aid analysis including ggobi(Swayne et al, 2007), cranvas(Xie et al, 2013), iplots(Urbanek, 2007), and Mondrian(Theus, 2013). Despite their capabilities, all these require installation of software which makes it difficult to share results. More recently, new visualisation tools have begun to use the web browser to render plots and drive interactivity.
+
+
+## The web and its main technologies
+
+The web provides an ideal platform for communicating and exchanging information in the present day. It has become accessible to everyone without the worry of technical issues such as device compatibility and installation. We find web interactive visualisations are commonly used in teaching statistics, education, data journalism and is likely to continue to be demanded for in the future. 
+
+The main web technologies are HTML, CSS and JavaScript. Hyper Text Markup Language (known as HTML) is the language used to describe content on a webpage. Cascading style sheets (known as CSS) is the language that controls how elements look and are presented on a web page (such as color, shape, strokes and fills, borders). These can be used to define specific elements on the page. JavaScript is the main programming language for the web, which is used to drive interactions on the web browser(reference!). Whenever we interact with a website that has a button to click on or hover over text, these are driven by JavaScript. 
+
+*TODO: The Document Object Model...*
+
+Many interactive visuals on the web are generally rendered using Scalable Vector Graphics (known as SVG). This XML based format is widely used because it is easy to attach events and interactions to certain elements through the DOM. This cannot be done with a raster image, as a raster image (PNG or JPEG) is treated as an entire element. 
+
+## Motivational problem
+
+The main motivation for this project stemmed upon whether there is an easier and intuitive way to generate simple interactive visuals from R without learning many tools. This solution could ideally be used with iNZight, a data visualisation software from the University of Auckland that aims to teach introductory statistics.
+
+The approach is to identify and assess existing tools for creating web interactive visuals in R before building a viable solution that could solve this problem.

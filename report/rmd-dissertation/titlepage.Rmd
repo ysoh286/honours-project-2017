@@ -1,0 +1,11 @@
+---
+output: pdf_document
+---
+
+\begin{titlepage}
+  \vspace*{\fill}
+  \begin{center}
+  \huge{Web interactive plots in \textbf{R}} \\
+  \end{center}
+  \vspace*{\fill}
+\end{titlepage}

@@ -1,0 +1,72 @@
+---
+documentclass: report
+fig_caption: yes
+fontsize: 11pt
+geometry: margin = 3cm
+header-includes:
+- \usepackage{amsmath}
+- \usepackage{graphicx}
+- \usepackage{framed}
+- \usepackage{dsfont}
+highlight: tango
+linkcolor: black
+output:
+  pdf_document:
+    number_sections: yes
+    toc_depth: 3
+urlcolor: blue
+---
+
+<!-- this dissertation thesis was adapted from https://rosannavanhespenresearch.wordpress.com/2016/03/30/writing-your-thesis-with-r-markdown-5-the-thesis-layout/  -->
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.path = 'figures/',
+                       warning = FALSE, message = FALSE)
+```
+
+\pagenumbering{gobble}
+
+```{r child = 'titlepage.Rmd'}
+```
+
+\newpage
+\pagenumbering{arabic}
+
+```{r child = 'abstract.Rmd'}
+```
+
+\newpage
+\tableofcontents
+\listoffigures
+
+```{r child = 'chapter1.Rmd'}
+```
+
+\newpage
+
+```{r child = 'chapter2.Rmd'}
+```
+
+\newpage
+
+```{r child = 'chapter3.Rmd'}
+```
+
+\newpage
+
+```{r child = 'chapter4.Rmd'}
+```
+
+\newpage
+
+```{r child = 'chapter5.Rmd'}
+```
+
+\newpage
+
+```{r child = 'conclusion.Rmd'}
+```
+
+\newpage
+
+Missing a bibliography!
