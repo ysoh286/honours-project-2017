@@ -1,5 +1,6 @@
 # interactr
 
-A trial R package, in an attempt to customise certain interactions on plots.
+A prototype package for customising simple interactions onto R plots.
+This version is now no longer maintained as of 24/08/2017.
 
-- For testing purposes only!
+The package is now maintained in a new repository [here]()

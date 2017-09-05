@@ -244,7 +244,8 @@ addInteractions("slider", int)
 ############################
 ## Control bandwidths ##
 ############################
-plot(density(census$height, bw = 0.1, na.rm = TRUE), main = "Density plot of heights",
+plot(density(census$height, bw = 0.1, na.rm = TRUE),
+     main = "Density plot of heights",
      xlab = "Heights (cm)")
 d.plot <- recordPlot()
 listElements(d.plot)
@@ -357,6 +358,9 @@ highlight  = function(index) {
 
 #returns element is undefined?? Requires more thought.
 
+
+## link to a bar plot/histogram??
+
+
 ## TO DOS:
 ## Weight example?
-## Linking more than 1 graph via selection box??
