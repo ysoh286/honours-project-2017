@@ -1,0 +1,20 @@
+
+# Conclusion
+There is more that can be achieved in expanding interactive graphics to create better data visualisations for users. Despite having many tools available such as HTMLwidgets and Shiny, we find that they all achieve similar results without allowing the user to further extend or customize unless they have knowledge of the main web techologies involved. Options are even more limited when it comes to dealing with large datasets, querying or linking plots which are handled effortlessly with non-web solutions. There is potential in creating more meaningful web visualisations for the future.
+
+*Note that this conclusion was written for the first half.*
+
+
+- Many existing tools are relatively new (still developing) and produce ‘standard’ interactive plots outside of R.
+	- There is a possible solution to allow control and creation of simple interactive R plots that can be viewed in a web browser. 
+	- Simple on-plot interactivity can be achieved + a non-RStudio way of driving interactions without the need for learning ‘lower level tools’ + web tech
+	- Utilises R’s power of statistical computing to aid changes in graphical plots
+	- More assessment required on building more sophisticated interactive visualisations + looking beyond “SVG” 
+	(…maybe it might be better to stick to JavaScript for the web?)
+
+## Additional resources
+The `interactr` package is currently hosted on Github here.
+For more details about this project, visit this repository which contains codes, findings, other information.
+To view the interactive version of this report to see all the examples live, click here.
+
+*Need to add links!*

@@ -1,0 +1,11 @@
+---
+output: html_document
+---
+
+# Executive Summary{-}
+
+- State the background problem
+- Purpose of report
+- The goal of the work reported on / the scientific or commercial objective
+- Brief details outlining the major findings of the report:
+- Recommendations

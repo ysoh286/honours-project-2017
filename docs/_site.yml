@@ -1,0 +1,25 @@
+name: "project-report"
+output_dir: "."
+navbar:
+  title: "Report"
+  right:
+    - text: "Executive Summary"
+      href: exec-sum.html
+    - text: "Abstract"
+      href: abstract.html
+    - text: "1 - Introduction"
+      href: chapter1.html
+    - text: "2 - Overview"
+      href: chapter2.html
+    - text: "3 - Lower level tools"
+      href: chapter3.html
+    - text: "4 - Designing interactr"
+      href: chapter4.html
+    - text: "5 - Discussion"
+      href: chapter5.html
+    - text: "Conclusion"
+      href: conclusion.html
+output:
+  html_document:
+    theme: cosmo
+    highlight: tango
