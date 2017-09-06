@@ -1,5 +1,5 @@
 ---
-output: 
+output:
   html_document:
     toc: true
     toc_depth: 3
@@ -21,22 +21,16 @@ By using gridSVG, DOM and JavaScript, we can customise interactions onto plots. 
 In each of the previous examples defined, they all have a certain pattern. In order to define a single interaction, it requires the need to know which SVG element to target, what type of interaction or event is to be attached, and how to define what happens when an interaction occurs. This idea can be broken down into 5 simple steps:
 
   - Draw the plot in R
-  - Identify elements to interact with 
+  - Identify elements to interact with
   - Define interactions and process, which elements to target
   - Attach interactions and define events
   - Send defined interactions and plot to the browser
 
-*[TODO: include main idea diagram]*
+*Diagram illustrating the basic process of creating interactions*
 
-## Introducing the interactr package
 To demonstrate this idea, we have created the `interactr` package which builds upon three main packages: DOM, grid and gridSVG. It is designed to allow users to define their own interactions to plots in R, without a full understanding of the web and these lower level tools.
 
-*TODO: to explain more thoroughly? Or not?*
-
-### Relationship between grid and gridSVG objects
-
-
-### Using DOM to handle events and send to the browser
+*TODO: some key points to note, but should these be mentioned in chapter 3?*
 
 To put the idea into practice, the following examples have been replicated using the `interactr` package.
 
@@ -64,7 +58,7 @@ Next, we can define a simple interaction. We want to achieve an interaction wher
 
 ```{r, eval = FALSE}
 box <- "plot_01.bwplot.box.polygon.panel.1.1"
-interactions <- list(hover = styleHover(attrs = list(fill = "red", 
+interactions <- list(hover = styleHover(attrs = list(fill = "red",
                                                      fill.opacity = "1")))
 ```
 
@@ -82,7 +76,7 @@ In this step, we have sent the plot we drew in R to a new web page. We can also 
 
 Before we move on to drawing the scatter plot, we need to make sure we identify the interquartile range of the box plot and extract any other information we may require from the plot before moving onto the next.
 
-This is one of the disadvantages of this process - if there is anything 
+This is one of the disadvantages of this process - if there is anything
 
 Here, we can return the range of the box plot and store it in a variable called `range`.
 
@@ -93,8 +87,8 @@ range <- returnRange(box)
 We proceed to add a scatter plot by drawing the scatter plot, listing the elements and identifying the 'points', before sending it to the same web page.
 
 ```{r, eval = FALSE}
-sp <- xyplot(Sepal.Width ~ Sepal.Length, 
-             data = iris, 
+sp <- xyplot(Sepal.Width ~ Sepal.Length,
+             data = iris,
              main = "scatterplot")
 listElements(sp)
 points <- "plot_01.xyplot.points.panel.1.1"
@@ -110,14 +104,14 @@ To highlight the points in the scatterplot that lie in the range of the box, the
 ```{r, eval = FALSE}
 highlightPoints <- function(ptr) {
   #identify index
-  index <- which(min(range) <= iris$Sepal.Length 
+  index <- which(min(range) <= iris$Sepal.Length
                  & iris$Sepal.Length <= max(range))
   #identify points and set them to red
-  setPoints(points, 
-            type = "index", 
-            value = index, 
-            attrs = list(fill = "red", 
-                         fill.opacity = "1", 
+  setPoints(points,
+            type = "index",
+            value = index,
+            attrs = list(fill = "red",
+                         fill.opacity = "1",
                          class = "selected"))
 }
 ```
@@ -142,8 +136,8 @@ We begin by drawing the box plot of boys heights.
 bw <- bwplot(boys$height, main = "Boxplot of boys' heights")
 bw.elements <- listElements(bw, "boys_height")
 box <- "boys_height.bwplot.box.polygon.panel.1.1"
-interactions <- list(hover = styleHover(attrs = list(fill = "red", 
-                                                     fill.opacity = "0.5", 
+interactions <- list(hover = styleHover(attrs = list(fill = "red",
+                                                     fill.opacity = "0.5",
                                                      pointer.events = "all")))
 draw(bw, box, interactions, new.page = TRUE)
 range <- returnRange(box)
@@ -152,9 +146,9 @@ range <- returnRange(box)
 Next, we add the scatterplot to the page.
 
 ```{r, eval = FALSE}
-sp <- xyplot(boys$armspan ~ boys$height, 
-             main = "Height vs armspan (boys)", 
-             xlab = "Height(cm)", 
+sp <- xyplot(boys$armspan ~ boys$height,
+             main = "Height vs armspan (boys)",
+             xlab = "Height(cm)",
              ylab = "Armspan")
 sp.elements <- listElements(sp, "sp_bheight")
 points <- "sp_bheight.xyplot.points.panel.1.1"
@@ -208,29 +202,29 @@ highlightRange <- function(ptr) {
   yval <- c(-1, yval, -1)
 
   pt <- convertXY(xval, yval, panel)
-  
+
   #set points on added polygon
   setPoints("highlightRegion", type = "coords", value = pt)
 
   # highlight points in scatter plot:
   index <- which(min(range) <= boys$height  
-                 & boys$height <= max(range) 
+                 & boys$height <= max(range)
                  & !is.na(boys$armspan))
   # note that if armspans are missing,
   # then it will return 'element is undefined',
   # requires !is.na(boys$armspan) to remove missing values
-  setPoints(points, 
-            type = "index", 
-            value = index, 
-            attrs = list(fill = "red", 
-                         fill.opacity = "0.5", 
+  setPoints(points,
+            type = "index",
+            value = index,
+            attrs = list(fill = "red",
+                         fill.opacity = "0.5",
                          class = "selected"))
 
 }
 
 ```
 
-Finally, we simply just define and attach our interactions to the page. 
+Finally, we define and attach our interactions to the page.
 
 ```{r, eval = FALSE}
 boxClick <- list(onclick = "highlightRange")
@@ -245,22 +239,30 @@ When the user now clicks on the box plot, it lights up the points and the densit
 
 Another example that can be done is driving an off-plot interaction with a slider. The slider controls the smoothing of the trendline.
 
-Here, it's a bit more complex:
+Here, it becomes more complex:
 
 **NEED TO WRITE THIS...**
 
-## Compatibility with other graphics systems:
+## Compatibility with other graphics systems
 
-A possibility of extending this idea further is the compability with other R graphing systems including \textbf{lattice}, \textbf{graphics}, and \textbf{ggplot2}. As we have seen above, many of these examples are done with \textbf{lattice} plots. However, it is possible to achieve the same with different graphing systems. To demonstrate, we have taken the box plot example in Figure 4.2 and replicated it in graphics and ggplot2.
+A possibility of extending this idea further is the compability with other R graphing systems including **lattice**, **graphics**, and **ggplot2**. As we have seen above, many of these examples are done with **lattice** plots. However, it is possible to achieve the same with different graphing systems. To demonstrate, we have taken the box plot example in Figure 4.2 and replicated it in graphics and ggplot2.
 
 ### Using graphics plots
 
-As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the \textbf{gridGraphics} package, which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. We used `grid.echo()` to achieve this. 
+As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the **gridGraphics** package, which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The `grid.echo()` function achieves this.
+
+```{r}
+
+```
+
+An example of a graphics plot (left) that is converted into a grid plot (right)
+using gridGraphics
+
 Another problem that arises is that when we plot or try save it into a variable, it does not plot to the graphics device. To solve this, we can use `recordPlot` to record the plot that has been drawn to further process it.
 
-Simplistically, the only change that we need to do is run an extra `recordPlot` command before we `listElements`.
+The only change that we need to do is run an extra `recordPlot` command before we call `listElements`.
 
-Once again, we begin by drawing the plot. We then record the plot before listing its elements. This will automatically convert the plot into a grid plot using `grid.echo()` underneath.
+Once again, we begin by drawing the plot. We then record the plot before listing its elements. This will automatically convert the plot using `grid.echo()`.
 ```{r, eval = FALSE}
 boxplot(iris$Sepal.Length, horizontal = TRUE)
 pl <- recordPlot()
@@ -271,7 +273,7 @@ Next, the same process occurs. We see that the code is very similar to what was 
 
 ```{r, eval = FALSE}
 box = "graphics-plot-1-polygon-1"
-interactions <- list(hover = styleHover(attrs = list(fill = "red", 
+interactions <- list(hover = styleHover(attrs = list(fill = "red",
                                                      fill.opacity = "1")))
 draw(pl, box, interactions, new.page = TRUE)
 range <- returnRange(box)
@@ -286,13 +288,13 @@ draw(sp)
 points <- 'graphics-plot-1-points-1'
 highlightPoints <- function(ptr) {
   #find the index of points that lie within the range of the box
-  index <- which(min(range) <= iris$Sepal.Length 
+  index <- which(min(range) <= iris$Sepal.Length
                  & iris$Sepal.Length <= max(range))
-  setPoints(points, 
-            type = "index", 
-            value = index, 
-            attrs = list(fill = "red", 
-                         fill.opacity = "1", 
+  setPoints(points,
+            type = "index",
+            value = index,
+            attrs = list(fill = "red",
+                         fill.opacity = "1",
                          class = "selected"))
 }
 
@@ -302,18 +304,18 @@ addInteractions(box, boxClick)
 
 *Figure*
 
-This shows that there is potential for customising interactions onto graphics plots. Simplistically, the process is the same, except due to the nature of the graphics plot not being a 'grid' plot.
+This shows that there is potential for customising interactions onto graphics plots. The process is the same, except due to the nature of the graphics plot not being a 'grid' plot.
 
 ### Using ggplot2
 
-\textbf{ggplot2} (Wickham et al, 2017) is a popular plotting system in R based upon the "Grammar of Graphics". It is built upon the `grid` graphics system, which makes it compatible with gridSVG.
+**ggplot2** (Wickham et al, 2017) is a popular plotting system in R based upon the "Grammar of Graphics". It is built upon the `grid` graphics system, which makes it compatible with gridSVG.
 
 ```{r, eval = FALSE}
 library(ggplot2)
 p <- ggplot(data = iris, aes(x = "", y = Sepal.Length)) + geom_boxplot()
 p.elements <- listElements(p)
 box <- findElement("geom_polygon.polygon")
-interactions <- list(hover = styleHover(attrs = list(fill = "red", 
+interactions <- list(hover = styleHover(attrs = list(fill = "red",
                                                      fill.opacity = "1",
                                                      pointer.events = "all")))
 draw(p, box, interactions, new.page = TRUE)
@@ -341,13 +343,13 @@ points <- findElement("geom_point.point")
 
 highlightPoints <- function(ptr) {
   #find the index of points that lie within the range of the box
-  index <- which(min(range) <= iris$Sepal.Length 
+  index <- which(min(range) <= iris$Sepal.Length
                  & iris$Sepal.Length <= max(range))
-  setPoints(points, 
-            type = "index", 
-            value = index, 
-            attrs = list(fill = "red", 
-                         fill.opacity = "1", 
+  setPoints(points,
+            type = "index",
+            value = index,
+            attrs = list(fill = "red",
+                         fill.opacity = "1",
                          class = "selected"))
 }
 

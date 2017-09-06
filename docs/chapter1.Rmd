@@ -10,7 +10,7 @@ output:
     ]
 ---
 
-<br> 
+<br /> 
 
 # Introduction 
 
@@ -33,6 +33,7 @@ The web provides an ideal platform for communicating and exchanging information 
 The main web technologies are HTML, CSS and JavaScript. Hyper Text Markup Language (known as HTML) is the language used to describe content on a webpage. Cascading style sheets (known as CSS) is the language that controls how elements look and are presented on a web page (such as color, shape, strokes and fills, borders). These can be used to define specific elements on the page. JavaScript is the main programming language for the web, which is used to add interactivity to web pages. Whenever we interact with a website that has a button to click on or hover over text, these are driven by JavaScript. 
 
 *TODO: The Document Object Model...*
+
 The Document Object Model (known as the DOM)... 
 
 Many interactive visuals on the web are generally rendered using Scalable Vector Graphics (known as SVG). This XML based format is widely used because it is easy to attach events and interactions to certain elements through the DOM. This cannot be done with a raster image, as a raster image (PNG or JPEG) is treated as an entire element. 

@@ -22,6 +22,49 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 <style type="text/css">
@@ -164,10 +207,10 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="exec-sum.html">Executive Summary</a>
+  <a href="abstract.html">Abstract</a>
 </li>
 <li>
-  <a href="abstract.html">Abstract</a>
+  <a href="exec-sum.html">Executive Summary</a>
 </li>
 <li>
   <a href="chapter1.html">1 - Introduction</a>
@@ -200,23 +243,16 @@ $(document).ready(function () {
 </div>
 
 
+<p><br></p>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>There is more that can be achieved in expanding interactive graphics to create better data visualisations for users. Despite having many tools available such as HTMLwidgets and Shiny, we find that they all achieve similar results without allowing the user to further extend or customize unless they have knowledge of the main web techologies involved. Options are even more limited when it comes to dealing with large datasets, querying or linking plots which are handled effortlessly with non-web solutions. There is potential in creating more meaningful web visualisations for the future.</p>
-<p><em>Note that this conclusion was written for the first half.</em></p>
-<ul>
-<li>Many existing tools are relatively new (still developing) and produce ‘standard’ interactive plots outside of R.
-<ul>
-<li>There is a possible solution to allow control and creation of simple interactive R plots that can be viewed in a web browser.</li>
-<li>Simple on-plot interactivity can be achieved + a non-RStudio way of driving interactions without the need for learning ‘lower level tools’ + web tech</li>
-<li>Utilises R’s power of statistical computing to aid changes in graphical plots</li>
-<li>More assessment required on building more sophisticated interactive visualisations + looking beyond “SVG” (…maybe it might be better to stick to JavaScript for the web?)</li>
-</ul></li>
-</ul>
+<p>There is more that can be achieved in expanding interactive graphics to create better data visualisations for users. Despite having many tools available such as htmlwidgets, ggvis and shiny, these generally produce standard interactive plots outside of R without allowing the user to further extend or customize interactions easily. There is a possible solution to allow the control and creation of simple interactive R plots through the interactr package. This proof-of-concept provides a way of driving interactions without the need of learning too many tools, while utilising R’s power of statistical computing to aid changes in plots. However, more assessment and development is required on building more sophisticated interactive visualisations before it can be used in the future.</p>
 <div id="additional-resources" class="section level2">
 <h2>Additional resources</h2>
-<p>The <code>interactr</code> package is currently hosted on Github here. For more details about this project, visit this repository which contains codes, findings, other information. To view the interactive version of this report to see all the examples live, click here.</p>
-<p><em>Need to add links!</em></p>
+<p>The <strong>interactr</strong> package is currently hosted on Github <a href="https://github.com/ysoh286/interactr">here</a>.</p>
+<p>To install <strong>interactr</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;ysoh286/interactr&#39;</span>)</code></pre></div>
+<p>For more details about this project, visit this <a href="https://github.com/ysoh286/honours-project-2017">repository</a> which contains code and additional notes.</p>
 </div>
 </div>
 

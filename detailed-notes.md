@@ -1,6 +1,17 @@
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-https://ysoh286.shinyapps.io/report-draft/ - somehow it's alive again?
+Draft writing!
+- An HTML/interactive version (new and still in testing stages + figures missing):
+  https://ysoh286.github.io/honours-project-2017/
+  TODOS:
+    - fill in gifs + screen capture + images
+    - Chapter 4: write trend line example
+    - Chapter 3: shiny custom messaging, expand on DOM + async callback?
+    - review, reread, edit
+    - REFERENCES!
+    - acknowledgements
+
+- pdf version lies in report/rmd-dissertation folder
 
 ---
 
@@ -8,23 +19,8 @@ https://ysoh286.shinyapps.io/report-draft/ - somehow it's alive again?
 - Proposed final report structure/outline:
 *report > [report-draft-outline.txt](https://github.com/ysoh286/honours-project-2017/blob/master/report/report-draft-outline.txt)*  
 - Write in Rmd + in chapters
-  - Writing all over the place at the moment - NOT READY FOR READING/REVIEWING!
-  - it's in the report/rmd-dissertation folder: working on pdf version first
-- A draft should be done by the end of the mid-semester break
+  - Draft written
 - Interactive version requires a shiny server/DOM server
-
-The problem is a lot of the examples in chapter 2 and 3 rely on the shiny framework (that's inclusive of the ggvis examples, plotly + shiny, shiny + gridSVG, shiny by itself).
-
-  - OPTIONS:
-    - Host a shiny server on a VPS (either Amazon Web Services on EC2 or Digital Ocean)
-      - AWS has a free tier for 1 year, but they don't alert you when they start charging + may have hidden costs.
-      - on Digital Ocean, $10 credit. If it runs fine on 512MB RAM, then could run for free for 2 months and then pay an extra ~$15 to keep it going for another 2 months till Dec (or just set it up in October).
-      - requires setup - roughly 15 minutes..? (according to Dean Attali's [blog post](http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/))
-        - not sure how long it takes to upload a single application onto the server, which is a separate process
-    - Is there a possibility to host a shiny server on campus that can be accessible, so all I have  to do is upload them to the server? (chances of this happening are slim)
-    - shinyapps.io free tier: instead of running an entire interactive document, divide shiny apps into separate documents instead (since we're only allowed a maximum of 5).
-      - The interactive document is live, but it has a very short life span (it most likely won't last if the marker wants to assess the entire document in a single sitting)
-      - could select the most important 5 to demo (there are too many examples that rely on shiny!) + stick with animated GIFs + videos.
 
 ---
 
@@ -176,6 +172,20 @@ plotly needs revising. Updating notes.
 
 **Stumbled past:**
 - [Dash](https://medium.com/@plotlygraphs/introducing-dash-5ecf7191b503) is almost the 'Shiny' for python.
+
+**Report setup - ideas**
+The problem is a lot of the examples in chapter 2 and 3 rely on the shiny framework (that's inclusive of the ggvis examples, plotly + shiny, shiny + gridSVG, shiny by itself).
+
+  - OPTIONS:
+    - Host a shiny server on a VPS (either Amazon Web Services on EC2 or Digital Ocean)
+      - AWS has a free tier for 1 year, but they don't alert you when they start charging + may have hidden costs.
+      - on Digital Ocean, $10 credit. If it runs fine on 512MB RAM, then could run for free for 2 months and then pay an extra ~$15 to keep it going for another 2 months till Dec (or just set it up in October).
+      - requires setup - roughly 15 minutes..? (according to Dean Attali's [blog post](http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/))
+        - not sure how long it takes to upload a single application onto the server, which is a separate process
+    - Is there a possibility to host a shiny server on campus that can be accessible, so all I have  to do is upload them to the server? (chances of this happening are slim)
+    - shinyapps.io free tier: instead of running an entire interactive document, divide shiny apps into separate documents instead (since we're only allowed a maximum of 5).
+      - The interactive document is live, but it has a very short life span (it most likely won't last if the marker wants to assess the entire document in a single sitting)[link  - part 1](https://ysoh286.shinyapps.io/report-draft/)
+      - could select the most important 5 to demo (there are too many examples that rely on shiny!) + stick with animated GIFs + videos.
 
 ---
 

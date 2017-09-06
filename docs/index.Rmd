@@ -1,6 +1,11 @@
 ---
-title: "report-online-test"
+title: "Web interactive plots in R"
 ---
 
-This is a beta-test for an interactive version of a report.
-THIS IS NOT COMPLETE. It will be complete by the 31st October. :)
+This is a test for an interactive version of a research report.
+
+**THIS IS NOT COMPLETE AND IS CURRENTLY UNDER DEVELOPMENT.**
+
+DUE DATE: 31st October 12pm.
+
+*Now stop procrastinating and start reading/writing!*
