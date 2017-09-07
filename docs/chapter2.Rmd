@@ -182,12 +182,12 @@ To show how this works, we have created a simple shiny application that has a sl
 
 *Figure 2.8: A simplistic shiny application that has a slider to control the smoothness of the trendline*
 
-These applications can become more complex when more inputs and outputs are added. The main advantage of using shiny is that it establishes a connection to R to allow for statistical computing to occur, while leaving the browser to drive on-plot and off-plot interactions. This allows us to be able to link different views of data easily. Furthermore, RStudio has provided ways to be able to host and share these shiny apps via a Shiny server. However, we are still limited in the sense that for every time we launch a Shiny app, we do not have access to R as it runs that session. Additionally, shiny has a tendency to rerender entire objects whenever an 'input' changes as seen in Figure 7. This may lead to unnecessary computations and may slow down the experience for the user. Despite this, it remains a popular tool for creating interactive visualisations.
+These applications can become more complex when more inputs and outputs are added. The main advantage of using shiny is that it establishes a connection to R to allow for statistical computing to occur, while leaving the browser to drive on-plot and off-plot interactions. This allows us to be able to link different views of data easily. Furthermore, RStudio has provided ways to be able to host and share these shiny apps via a Shiny server. However, we are still limited in the sense that for every time we launch a Shiny app, we do not have access to R as it runs that session. Additionally, shiny has a tendency to redraw entire objects whenever an 'input' changes as seen in Figure 2.7. This may lead to unnecessary computations and may slow down the experience for the user. Despite this, it remains a popular tool for creating interactive visualisations.
 
-There are many different ways to use shiny to create more interactive data visualisations - we can simply just use it to create interactive plots or extend interactivity in HTMLwidgets and other R packages.
+There are many different ways to use shiny to create more interactive data visualisations - we can simply just use it to create interactive plots or extend interactivity in htmlwidgets and other R packages.
 
 ### Interactivity with shiny alone
-Shiny can provide some interactivity to plots. Figure 8 shows linked brushing between facetted plots and a table. With Shiny, we are able to easily link plots together with other objects. This is done simply by attaching a 'plot_brush' input, and using the brushedPoints() function to return what has been selected to R. As we select on parts of the plot, we see this change occur as the other plot and the table updates and renders what has been selected. Other basic interactions include the addition of clicks (plot_click) and hovers (plot_hover).
+Shiny can provide some interactivity to plots. Figure 2.9 shows linked brushing between facetted plots and a table. With Shiny, we are able to easily link plots together with other objects. This is done simply by attaching a 'plot_brush' input, and using the brushedPoints() function to return what has been selected to R. As we select on parts of the plot, we see this change occur as the other plot and the table updates and renders what has been selected. Other basic interactions include the addition of clicks (plot_click) and hovers (plot_hover).
 
 ```{r, echo = FALSE, message = FALSE, eval = FALSE}
 
@@ -215,9 +215,9 @@ shinyApp(ui, server)
 
 ```
 
-*Figure 8: Facetted ggplot with linked brushing and hovers*
+*Figure 2.9: Facetted ggplot with linked brushing and hovers*
 
-However, these basic interactive tools only work on base R plots or plots rendered with ggplot2 and work best on scatter plots. This is because the pixel co-ordinates of the plot are correctly mapped to the data. When we try this on a lattice plot as seen below in Figure 9, this mapping condition fails as the co-ordinates system differs between the data and the plot itself. It is possible to create your own mappings to a plot or image, however it may be complex to develop.
+However, these basic interactive tools only work on base R plots or plots rendered with ggplot2 and work best on scatter plots. This is because the pixel co-ordinates of the plot are correctly mapped to the data. When we try this on a lattice plot as seen below in Figure 2.10, this mapping condition fails as the co-ordinates system differs between the data and the plot itself. It is possible to create your own mappings to a plot or image, however it may be complex to develop.
 
 ```{r, echo = FALSE, message = FALSE, eval = FALSE}
 
@@ -243,7 +243,7 @@ server <- function(input, output) {
 
 ```
 
-*Figure 9: A lattice plot that fails to produce correct mapping*
+*Figure 2.10: A lattice plot that fails to produce correct mapping*
 
 With Shiny alone, we can achieve some basic interactivity along with user interface options that are outside of the plot. Despite being limited to plot interactions (clicks, brushes and hovers), we can link these plot interactions to other parts that may give us more information about the data. However, these methods only work for plots that are rendered in base R graphics and ggplot2, and cannot be extended onto other R plots.
 Because the plots displayed are in an image format, we can only view these plots as a single object and cannot pull apart elements on the plot. We are unable to further extend and add onto a plot, such as add a trendline when brushing or change colors of points when clicked on.
@@ -297,9 +297,9 @@ shinyApp(ui, server)
 
 ```
 
-*Figure 10: a Shiny app with a Plotly plot with linked brushing*
+*Figure 2.11: a Shiny app with a Plotly plot with linked brushing*
 
-Most HTMLwidgets and ggvis have their own way of incorporating plots into a Shiny application. In Figure 10, we can easily embed plots into Shiny using the ```plotlyOutput()``` function. The plotly package also has its own way of co-ordinating linked brushing and in-plot interactions to other Shiny outputs under a function called ```event_data()```. By combining it with Shiny, we are able to link different plots together and to the data itself that is displayed as a table below.These in-plot interactions are very similar to what Shiny provides for base plots and ggplot2. They work well on scatter plots, but not on other kinds of plots that plotly can provide. These can help generate or change different outputs on the page, but not within themselves. By combining the two together, we get 'on-plot' functionalities from the HTMLwidget, with 'off-plot' driven interactions from Shiny. Similarly, when we can combine ggvis and Shiny together we get similar results as seen in Figure 11. ggvis has its own functions (```ggvisOutput()``` and ```linked_brush()```) that allow for similar interactions to be achieved.
+Most HTMLwidgets and ggvis have their own way of incorporating plots into a Shiny application. In Figure 2.11, we can easily embed plots into Shiny using the ```plotlyOutput()``` function. The plotly package also has its own way of co-ordinating linked brushing and in-plot interactions to other Shiny outputs under a function called ```event_data()```. By combining it with Shiny, we are able to link different plots together and to the data itself that is displayed as a table below.These in-plot interactions are very similar to what Shiny provides for base plots and ggplot2. They work well on scatter plots, but not on other kinds of plots that plotly can provide. These can help generate or change different outputs on the page, but not within themselves. By combining the two together, we get 'on-plot' functionalities from the HTMLwidget, with 'off-plot' driven interactions from Shiny. Similarly, when we can combine ggvis and Shiny together we get similar results as seen in Figure 2.12. ggvis has its own functions (```ggvisOutput()``` and ```linked_brush()```) that allow for similar interactions to be achieved.
 
 ```{r, echo = FALSE, message = FALSE, eval = FALSE}
 shinyApp(
@@ -345,7 +345,7 @@ server <- function(input, output, session) {
 
 ```
 
-*Figure 11: an example of linked brushing between ggvis plots*
+*Figure 2.12: an example of linked brushing between ggvis plots*
 
 ### A comparison to non-web interactive tools
 
@@ -359,10 +359,10 @@ iPlots is an R package designed to produce interactive graphs for exploratory da
 
 ```
 
-*Figure 12: Several windows of iPlots that all link together*
+*Figure 2.13: Several windows of iPlots that all link together*
 
-In Figure 12, we can generate several windows of plots that are seamlessly linked together. When we select on a scatterplot, the selection will appear on any of the other plots including box plots, histograms and bar plots. Furthermore, we can query back the selection to find out the data. The performance and efficiency of these plots is uncompromised when dealing with large datasets.
+In Figure 2.13, we can generate several windows of plots that are seamlessly linked together. When we select on a scatterplot, the selection will appear on any of the other plots including box plots, histograms and bar plots. Furthermore, we can query back the selection to find out the data. The performance and efficiency of these plots is uncompromised when dealing with large datasets.
 
 However, both tools require installation of software. Both iPlots and Mondrian require Java in order to run its interface and produce its plots. Despite being able to handle large queries and seamlessly link many plots together, it does not look visually appealling which may deter users to use something with a more modernistic feel like Shiny. Furthermore, the results generated cannot be easily to shared with others. With these tools, we find that there is a gap between existing tools on the web.
 
-From assessing these tools, it is difficult to expand on-plot interactions as it requires an in-depth knowledge of the tool itself and how these interactions are defined. We can use these tools for easily visualise our data with standard interactive plots, but if the user wishes to customise interactivity or extend it further, it presents a dead end or a need for learning its respective API. Next, we look at how we could achieve specific on-plot interactions by combining JavaScript with lower levels tools including gridSVG, shiny and DOM.
+From assessing these tools, it is difficult to expand on-plot interactions as it requires an in-depth knowledge of the tool itself and how these interactions are defined. We can use these tools for easily visualise our data with standard interactive plots, but if the user wishes to customise interactivity or extend it further, it presents a dead end or a need for learning its respective API. Next, we look at how we could achieve specific on-plot interactions by combining JavaScript with lower levels tools.

@@ -38,7 +38,7 @@ However, if it is based upon a defined plotting system without a consistent nami
 
 Another limitation is the number of interactions that can be attached. So far, the examples expressed in Chapter 4.3 require a single element to be controlled. We can attach many interactions and events to a single element at a time, but not many elements to many different interactions at once. There is a need for a more flexible system when dealing with multiple interactions for achieving more complex interactions. Furthermore, only one kind of interaction can be expressed for a single event. This means that the function created by the user must be fully defined in a single function rather than multiple functions. For example, if a hover requires both adding a tooltip and to turn the element red, then this would need to be written as a single function as we can only attach one to each event.
 
-Code must also be written in a certain order to work. Plots in R must be drawn to a graphics device before being sent to the browser, while a new web page must be set up before we can start adding elements and interactions to the page. In cases of dealing with multiple plots, one of the disadvantages is that we lose information about the previous plot in R. This means that the user is required to identify what kind of information they need to extract before they move onto the next plot. This is demonstrated in the example of linking box plot to other plots together - before the user can move onto the scatter plot, the range of the box and viewports were stored in order to be used in the defined function. This means that we cannot jump back and forth between plots. A possible solution to this is to store the information about each plot that is sent to the web browser that can be retrievable by the user if needed.
+Code must also be written in a certain order to work. Plots in R must be drawn to a graphics device before being sent to the browser, while a new web page must be set up before we can start adding elements and interactions to the page. In cases of dealing with multiple plots, one of the disadvantages is that we lose information about the previous plot in R. This means that the user is required to identify what kind of information they need to extract before they move onto the next plot. This is demonstrated in the example of linking a box plot to other plots together - before the user can move onto the scatter plot, the range of the box and viewports were stored in order to be used in the defined function. This means that we cannot jump back and forth between plots. A possible solution to this is to store the information about each plot that is sent to the web browser that can be retrievable by the user if needed.
 
 *TODO: incorporate these*
 - WARNING from Paul about DOM:
@@ -50,17 +50,31 @@ Code must also be written in a certain order to work. Plots in R must be drawn t
 
 ## Comparison to existing tools
 
-In most of the existing tools discussed in Chapter 2, they all rely on a JavaScript library to render their plots. These are not R plots. `interactr`'s main selling point is the ability to replicate plots or objects drawn in R and to easily achieve on-plot and off-plot interactivity. `shiny` can do this but you cannot easily attach specific interactions as the plot is rendered as a png. Furthermore, many of these existing tools rely on the `shiny` framework. One of the major disadvantages that `shiny` possesses is a tendency to recompute and redraw entire plots whenever an input changes. In `interactr`, only part of the plot that the user specifically targets is modified, and more on-plot interactions can be achieved.  It provides a possible way of linking different types of plots together, whereas existing tools, specifically crosstalk, have focused on linked brushing between 'row-as-observations' data. To put in perspective, the simple example of linking box plots to other kinds of plots together (Figure 4.2) is an interaction that is difficult to achieve without expert knowledge of their respective APIs.
+In most of the existing tools discussed in Chapter 2, they all rely on a JavaScript library to render their plots. These are not R plots. interactr's main selling point is the ability to replicate plots or objects drawn in R and to easily achieve on-plot and off-plot interactivity. shiny can do this but you cannot easily attach specific interactions as the plot is rendered as a png. Furthermore, many of these existing tools rely on the shiny framework. One of the major disadvantages that shiny possesses is a tendency to recompute and redraw entire plots whenever an input changes. In `interactr`, only part of the plot that the user specifically targets is modified, and more on-plot interactions can be achieved.  It provides a possible way of linking different types of plots together, whereas existing tools, specifically crosstalk, have focused on linked brushing between 'row-as-observations' data. To put in perspective, the simple example of linking box plots to other kinds of plots together (Figure 4.2) is an interaction that is difficult to achieve without expert knowledge of their respective APIs.
 
-In comparison to ggvis, the `interactr` package may not be able to win against its simpler API. `ggvis` is one of the few packages that uses the `shiny` infrastructure but does not redraw whenever an input changes.
-However,
+In comparison to ggvis, the interactr package may not be able to win against its simpler API. ggvis is one of the few packages that uses the shiny infrastructure but does not redraw when ever an input changes.
 
-- could mention that in shiny, whenever they redraw, axes will automatically change. In `interactr` axes don't change, so it's a 'fair' comparison (however, if it requires changing, then we've got a limitation)
+```{r, eval = FALSE}
 
-Because many of these existing tools are still being developed, it is likely that they may resolve these limitations in the future. However, these tools still require the user to be very familiar with its API. An example of this is the `plotly` package that has expanded further into achieving linking between other types of plots without the use of crosstalk or shiny and the ability to prevent redrawing when used with `shiny`. It requires the user to know both the `plotly` and `shiny` API, along with some D3 knowledge.
+```
+*control density bandwidth using ggvis*
+
+```{r, eval = FALSE}
+
+```
+*control density bandwidth using interactr*
+
+```{r, eval = FALSE}
+
+```
+*control density bandwidth using shiny*
+
+- could mention that in shiny, whenever they redraw, axes will automatically change. In interactr axes don't change, so it's a 'fair' comparison (however, if it requires changing, then we've got a limitation)
+
+Because many of these existing tools are still being developed, it is likely that they may resolve these limitations in the future. However, these tools still require the user to be very familiar with its API. An example of this is the plotly package that has expanded further into achieving linking between other types of plots without the use of crosstalk or shiny and the ability to prevent redrawing when used with shiny. It requires the user to know both the plotly and shiny API, along with some D3 knowledge.
 
 ## Future directions and further problems
 
-The problem of handling large data sets is still present because the browser cannot handle too many SVG elements at once. This is a general problem that occurs across all existing tools. A solution is to render using webGL and HTML canvas environments which allow for many elements to be rendered without compromising speed. However, the problem with this is that it is not as straightforward to attach events to these elements as they are generally treated as a single object. 
+The problem of handling large data sets is still present because the browser cannot handle too many SVG elements at once. This is a general problem that occurs across all existing tools. A solution is to render using webGL and HTML canvas environments which allow for many elements to be rendered without compromising speed. However, the problem with this is that it is not as straightforward to attach events to these elements as they are generally treated as a single object.
 
-There is potential in developing `interactr` further to try achieve complex interactions that are more useful in exploratory data analysis. Currently, only a small number of examples have been successful. There is also a need for making it more simpler and versatile for users without compromising the flexibility in which the user can define interactions. Possible ideas would include integrating plots with **D3** and other **htmlwidgets** to achieve special effects such as zooming and panning of a plot and to achieve multi-directional linking.
+There is potential in developing interactr further to try achieve complex interactions that are more useful in exploratory data analysis. Currently, only a small number of examples have been successful. There is also a need for making it more simpler and versatile for users without compromising the flexibility in which the user can define interactions. Possible ideas would include integrating plots with **D3** and other **htmlwidgets** to achieve special effects such as zooming and panning of a plot and to achieve multi-directional linking.

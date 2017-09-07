@@ -213,9 +213,10 @@ shinyApp(
 )
 
 ```
+
 ![Figure 3.1.2: A replica of Figure 2.1.3, but only the trendline changes](./fig/tl-shiny.png)
 
-When we compare Figure 13 back with Figure 7. In Figure 7, the plots are rendered using PNG format and as a single image to which whenever an input is changed (such as whenever the slider moves), the plot is recomputed back in R before being sent back as an image to the browser. In Figure 14, by using gridSVG to generate the SVG plot, we can pinpoint the line the makes up the smoother on the plot and recompute its coordinates whenever the slider changes.
+When we compare Figure 3.1.2 back with Figure 7. In Figure 7, the plots are rendered using PNG format and as a single image to which whenever an input is changed (such as whenever the slider moves), the plot is recomputed back in R before being sent back as an image to the browser. In Figure 14, by using gridSVG to generate the SVG plot, we can pinpoint the line the makes up the smoother on the plot and recompute its coordinates whenever the slider changes.
 
 This solves the problem of being only limited to base plots and ggplot2, as now we can render grid graphics and achieve the same effect, but also customise our own interactions while maintaining a connection between R and the browser using Shiny. However, it requires the knowledge of JavaScript and the limitations of how much information can be sent through this channel are unknown as it is uncommonly used.
 
@@ -234,9 +235,10 @@ Using DOM allows us to write certain commands that would be analogous to what we
 ```{r, echo = TRUE, eval = FALSE}
 library(DOM)
 page <- htmlPage()
-grid.circle()
-grid.export()
-appendChild()
+grid.circle(1, 1, 1, name = "circle")
+svg <- grid.export(NULL)$svg
+appendChild(page, svg, ...)
+circle <- getElementById(page, "circle.1.1")
 setAttribute()
 
 ```

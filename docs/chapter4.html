@@ -355,7 +355,7 @@ div.tocify {
 <li>Attach interactions and define events</li>
 <li>Send defined interactions and plot to the browser</li>
 </ul>
-<p><em>Diagram illustrating the basic process of creating interactions</em></p>
+<p><em>Figure 4.1: Diagram illustrating the basic process of creating interactions</em></p>
 <p>To demonstrate this idea, we have created the <code>interactr</code> package which builds upon three main packages: DOM, grid and gridSVG. It is designed to allow users to define their own interactions to plots in R, without a full understanding of the web and these lower level tools.</p>
 <p><em>TODO: some key points to note, but should these be mentioned in chapter 3?</em></p>
 <p>To put the idea into practice, the following examples have been replicated using the <code>interactr</code> package.</p>
@@ -377,8 +377,11 @@ interactions &lt;-<span class="st"> </span><span class="kw">list</span>(<span cl
                                                      <span class="dt">fill.opacity =</span> <span class="st">&quot;1&quot;</span>)))</code></pre></div>
 <p>Note that the interaction has only been defined, but not attached yet. Finally, in order to view our plot in the web browser, we send the plot and our interactions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">draw</span>(bw, box, interactions, <span class="dt">new.page =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p>In this step, we have sent the plot we drew in R to a new web page. We can also attach an interaction to the <code>box</code> element we identified earlier to attach the hover interaction to. On the page, we see that when the user hovers over the box, the box turns red.</p>
-<p><em>INSERT FIGURE!</em></p>
+<p>In this step, we have sent the plot we drew in R to a new web page. We can also attach an interaction to the <code>box</code> element we identified earlier to attach the hover interaction to. On the page (Figure 4.2), we see that when the user hovers over the box, the box turns red.</p>
+<div class="figure">
+<img src="fig/int-bp-1.png" alt="Figure 4.2: Boxplot with a hover interaction" />
+<p class="caption">Figure 4.2: Boxplot with a hover interaction</p>
+</div>
 <p>Before we move on to drawing the scatter plot, we need to make sure we identify the interquartile range of the box plot and extract any other information we may require from the plot before moving onto the next.</p>
 <p>This is one of the disadvantages of this process - if there is anything</p>
 <p>Here, we can return the range of the box plot and store it in a variable called <code>range</code>.</p>
@@ -390,8 +393,11 @@ interactions &lt;-<span class="st"> </span><span class="kw">list</span>(<span cl
 <span class="kw">listElements</span>(sp)
 points &lt;-<span class="st"> &quot;plot_01.xyplot.points.panel.1.1&quot;</span>
 <span class="kw">draw</span>(sp) <span class="co">#by default, new.page = FALSE</span></code></pre></div>
-<p>Here, we see that the boxplot and the scatterplot we drew in R are now on the same web page.</p>
-<p><em>[FIGURE]</em></p>
+<p>Here, we see that the box plot and the scatter plot we drew in R are now on the same web page (Figure 4.3).</p>
+<div class="figure">
+<img src="fig/int-bp-2.png" alt="Figure 4.3: Box plot and scatter plot on the same web page" />
+<p class="caption">Figure 4.3: Box plot and scatter plot on the same web page</p>
+</div>
 <p>To highlight the points in the scatterplot that lie in the range of the box, the user can define the function as follows. We can determine the index of the points that lie within the range of the box, and then pass that index through a function called <code>setPoints</code> to highlight these in red and group them together in a class called <code>selected</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">highlightPoints &lt;-<span class="st"> </span><span class="cf">function</span>(ptr) {
   <span class="co">#identify index</span>
@@ -408,11 +414,26 @@ points &lt;-<span class="st"> &quot;plot_01.xyplot.points.panel.1.1&quot;</span>
 <p>This function can be easily modified by the user and requires them to make the connection between the data they are dealing with (in this case, the iris data). As we have defined this interaction, we need to define the event to call this interaction to before we can send it to the browser.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">boxClick &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">onclick =</span> <span class="st">&#39;highlightPoints&#39;</span>)
 <span class="kw">addInteractions</span>(box, boxClick)</code></pre></div>
-<p>Here, we insert the function name to run when a ‘click’ is done. Next, we append this defined interaction to the box element, so that when we click on the box, the points in the scatterplot that lie within that range should light up in red.</p>
-<p><em>insert Figure here</em></p>
+<p>Here, we insert the function name to run when a ‘click’ is done. Next, we append this defined interaction to the box element, so that when we click on the box, the points in the scatterplot that lie within that range should light up in red. This is shown in Figure 4.4.</p>
+<div class="figure">
+<img src="fig/int-bp-3.png" alt="Figure 4.4: Click on box plot to light up points on scatter plot" />
+<p class="caption">Figure 4.4: Click on box plot to light up points on scatter plot</p>
+</div>
+<p><em>could insert a gif/video here</em></p>
 <p>This example can be further extended by linking the box plot to both a scatter plot and density plot. Here, we have taken some census data and wish to find out the density of girls who have the heights that lie within that interquartile range of the boys heights.</p>
 <p>We begin by drawing the box plot of boys heights.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bw &lt;-<span class="st"> </span><span class="kw">bwplot</span>(boys<span class="op">$</span>height, <span class="dt">main =</span> <span class="st">&quot;Boxplot of boys&#39; heights&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#get dataset off web:</span>
+census &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://new.censusatschool.org.nz/wp-content/uploads/2016/08/CaS2009_subset.csv&quot;</span>,
+         <span class="dt">header =</span> <span class="ot">TRUE</span>)
+
+<span class="co">#subset the first 500 values... since gridSVG can&#39;t handle all 15000 values on the scatter plot:</span>
+census &lt;-<span class="st"> </span>census[<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, ]
+
+<span class="co"># separate girls and boys:</span>
+boys &lt;-<span class="st"> </span>census[census<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;male&quot;</span>, ]
+girls &lt;-<span class="st"> </span>census[census<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;female&quot;</span>, ]
+
+bw &lt;-<span class="st"> </span><span class="kw">bwplot</span>(boys<span class="op">$</span>height, <span class="dt">main =</span> <span class="st">&quot;Boxplot of boys&#39; heights&quot;</span>)
 bw.elements &lt;-<span class="st"> </span><span class="kw">listElements</span>(bw, <span class="st">&quot;boys_height&quot;</span>)
 box &lt;-<span class="st"> &quot;boys_height.bwplot.box.polygon.panel.1.1&quot;</span>
 interactions &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">hover =</span> <span class="kw">styleHover</span>(<span class="dt">attrs =</span> <span class="kw">list</span>(<span class="dt">fill =</span> <span class="st">&quot;red&quot;</span>,
@@ -436,7 +457,10 @@ d.elements &lt;-<span class="st"> </span><span class="kw">listElements</span>(dp
 dlist &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">points =</span> <span class="st">&quot;girls_height.density.points.panel.1.1&quot;</span>,
               <span class="dt">lines =</span> <span class="st">&quot;girls_height.density.lines.panel.1.1&quot;</span>)
 <span class="kw">draw</span>(dplot)</code></pre></div>
-<p><em>[FIGURE]</em></p>
+<div class="figure">
+<img src="fig/int-bp-4.png" alt="Figure 4.5: All three plots on the same web page" />
+<p class="caption">Figure 4.5: All three plots on the same web page</p>
+</div>
 <p>In order to highlight a certain region of the density plot, we need to add a new element to the page. This can be done using the <code>addPolygon</code> function. Ideally, it should be added to the same group as where the density lines are located. We can use the <code>findPanel</code> function to identify the correct viewport to attach to.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># add invisible polygon to the page:</span>
 panel &lt;-<span class="st"> </span><span class="kw">findPanel</span>(dlist<span class="op">$</span>lines)
@@ -481,14 +505,92 @@ panel &lt;-<span class="st"> </span><span class="kw">findPanel</span>(dlist<span
 <p>Finally, we define and attach our interactions to the page.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">boxClick &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">onclick =</span> <span class="st">&quot;highlightRange&quot;</span>)
 <span class="kw">addInteractions</span>(box, boxClick)</code></pre></div>
-<p>When the user now clicks on the box plot, it lights up the points and the density that lie within that range.</p>
-<p><em>FIGURE</em></p>
+<p>When the user now clicks on the box plot, it lights up the points and the density that lie within that range as seen in Figure 4.6.</p>
+<div class="figure">
+<img src="fig/int-bp-5.png" alt="Figure 4.6: A single click on the box plot links the density and scatterplot together" />
+<p class="caption">Figure 4.6: A single click on the box plot links the density and scatterplot together</p>
+</div>
 </div>
 <div id="changing-a-trendline" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Changing a trendline</h3>
-<p>Another example that can be done is driving an off-plot interaction with a slider. The slider controls the smoothing of the trendline.</p>
-<p>Here, it becomes more complex:</p>
-<p><strong>NEED TO WRITE THIS…</strong></p>
+<p>Another example that can be done is driving an off-plot interaction with a slider. The slider controls the smoothing of the trend line.</p>
+<p>Here, it becomes more complex as it requires information to be sent and queried in both ways: from R to the browser and from the browser back to R.</p>
+<p>Once again, we begin by drawing a plot.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iris.plot &lt;-<span class="st"> </span><span class="kw">xyplot</span>(Petal.Length<span class="op">~</span>Petal.Width,
+                    <span class="dt">data =</span> iris,
+                    <span class="dt">pch =</span> <span class="dv">19</span>,
+                    <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;smooth&quot;</span>),
+                    <span class="dt">col.line =</span> <span class="st">&quot;orange&quot;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)
+<span class="co">#list elements and print plot</span>
+<span class="kw">listElements</span>(iris.plot)
+<span class="co">#send plot to browser</span>
+<span class="kw">draw</span>(iris.plot, <span class="dt">new.page =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>Next, we add a slider to the page. This has not been linked up to any elements yet.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#add slider to page:</span>
+<span class="kw">addSlider</span>(<span class="st">&quot;slider&quot;</span>, <span class="dt">min =</span> <span class="fl">0.5</span>, <span class="dt">max =</span> <span class="dv">1</span>, <span class="dt">step =</span> <span class="fl">0.05</span>)</code></pre></div>
+<div class="figure">
+<img src="fig/int-slider-1.png" alt="Figure 4.7: Plot with slider" />
+<p class="caption">Figure 4.7: Plot with slider</p>
+</div>
+<p>To define what happens when the slider moves, the user can write a function with the argument <code>value</code>. This passes the value of the slider (as a character) from the web page back to R. Here, we can use the value to control the span of the trend line. To translate the new x and y values of the trend line, we need to convert them into the right scale before updating these points.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTrendline &lt;-<span class="st"> </span><span class="cf">function</span>(value) {
+  <span class="kw">showValue</span>(value) <span class="co">#to show value of the slider</span>
+  value &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(value)
+
+  <span class="co">#user defines what to do next: (here, recalculates x and y)</span>
+  x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">min</span>(iris<span class="op">$</span>Petal.Width), <span class="kw">max</span>(iris<span class="op">$</span>Petal.Width), <span class="dt">length =</span> <span class="dv">20</span>)
+  lo &lt;-<span class="st"> </span><span class="kw">loess</span>(Petal.Length<span class="op">~</span>Petal.Width, <span class="dt">data =</span> iris, <span class="dt">span =</span> value)
+  y &lt;-<span class="st"> </span><span class="kw">predict</span>(lo, x)
+
+  <span class="co">#convert coordinates and set points:</span>
+  panel &lt;-<span class="st"> </span><span class="kw">findPanel</span>(<span class="st">&#39;plot_01.xyplot.points.panel.1.1&#39;</span>)
+  pt &lt;-<span class="st"> </span><span class="kw">convertXY</span>(x, y, panel)
+  <span class="kw">setPoints</span>(<span class="st">&quot;plot_01.loess.lines.panel.1.1&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;coords&quot;</span>, <span class="dt">value =</span> pt)
+}</code></pre></div>
+<p>Once this is done, we need to pass this function to retrieve the value of the slider as it moves. Here, we have a special function called <code>sliderCallback</code> for this. This redefines and creates the entire function that is now called <code>sliderValue</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#pass defined function through sliderCallback to pass slider value correctly</span>
+sliderValue &lt;-<span class="st"> </span><span class="kw">sliderCallback</span>(controlTrendline)</code></pre></div>
+<p>Finally, we can link this certain interaction back to the slider, such that when the slider moves, the trend line will be updated based upon the value of the slider as seen in Figure 4.7.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">int &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">oninput =</span> <span class="st">&quot;sliderValue&quot;</span>)
+<span class="kw">addInteractions</span>(<span class="st">&quot;slider&quot;</span>, int)</code></pre></div>
+<div class="figure">
+<img src="fig/int-slider-2.png" alt="Figure 4.7: Plot with slider that controls the smoothness of the trend line" />
+<p class="caption">Figure 4.7: Plot with slider that controls the smoothness of the trend line</p>
+</div>
+<p>Another feature that the user may want to achieve is to be able to select a set of points and compute a trend line using those specific points. To be able to do this, we need to add a new element to the page to represent this special trend line. This can be done using the <code>addLine</code> function. Here, we have added it to the same group where these points are.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panel &lt;-<span class="st"> </span><span class="kw">findPanel</span>(<span class="st">&quot;plot_01.xyplot.points.panel.1.1&quot;</span>)
+<span class="kw">addLine</span>(<span class="st">&quot;newSmooth&quot;</span>, panel, <span class="dt">class =</span> <span class="st">&quot;hello&quot;</span>, <span class="kw">list</span>(<span class="dt">stroke =</span> <span class="st">&quot;red&quot;</span>,
+                                                  <span class="dt">stroke.width =</span> <span class="st">&quot;1&quot;</span>,
+                                                  <span class="dt">fill =</span> <span class="st">&quot;none&quot;</span>))</code></pre></div>
+<p>Note that this appears to be hidden on the page, as the points of this line have not been defined yet.</p>
+<p>Next, the function needs to be defined to be able to compute this new smoother.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create new smoother:</span>
+createSmooth  =<span class="st"> </span><span class="cf">function</span>(index) {
+  <span class="co">#this returns the indices of the points selected</span>
+  <span class="co"># could use DOM 0.5 and pass JSON through to avoid this step...</span>
+  index &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">unlist</span>(<span class="kw">strsplit</span>(index, <span class="st">&quot;,&quot;</span>)))
+  <span class="co">#filter selected points:</span>
+  <span class="cf">if</span> (<span class="kw">length</span>(index) <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>) {
+    selected &lt;-<span class="st"> </span>iris[index, ]
+    x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">min</span>(selected<span class="op">$</span>Petal.Width), <span class="kw">max</span>(selected<span class="op">$</span>Petal.Width), <span class="dt">length =</span> <span class="dv">20</span>)
+    lo &lt;&lt;-<span class="st"> </span><span class="kw">loess</span>(Petal.Length <span class="op">~</span>Petal.Width, <span class="dt">data =</span> selected, <span class="dt">span =</span> <span class="dv">1</span>)
+    y &lt;-<span class="st"> </span><span class="kw">predict</span>(lo, x)
+    <span class="co">#convert co-ordinates:</span>
+    pt &lt;-<span class="st"> </span><span class="kw">convertXY</span>(x, y, panel)
+  } <span class="cf">else</span> {
+    pt &lt;-<span class="st"> &quot;&quot;</span>
+  }
+  <span class="kw">setPoints</span>(<span class="st">&quot;newSmooth&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;coords&quot;</span>, <span class="dt">value =</span> pt)
+}</code></pre></div>
+<p>Because the index of the points need to be returned from the browser back to R, we use <code>boxCallback</code> to help us link these functions together. As linking a selection box is a special kind of interaction, we can pass our defined function through to the <code>addSelectionBox</code> function which adds on the selection box and links the defined interactions together to compute the new smoother.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#link callback functions together to pass index values to function</span>
+boxIndex =<span class="st"> </span><span class="kw">boxCallback</span>(createSmooth)
+<span class="kw">addSelectionBox</span>(<span class="dt">plotNum =</span> <span class="dv">1</span>, <span class="dt">el =</span> <span class="st">&quot;plot_01.xyplot.points.panel.1.1&quot;</span>, <span class="dt">f =</span> <span class="st">&quot;boxIndex&quot;</span>)</code></pre></div>
+<div class="figure">
+<img src="fig/int-slider-3.png" alt="Figure 4.8: Plot that has a selection box feature that draws a separate smoother" />
+<p class="caption">Figure 4.8: Plot that has a selection box feature that draws a separate smoother</p>
+</div>
+<p>On the page, the user now can draw a selection box over a set of points, and a new smoother should render on the page based upon these points. The notion of having special functions are required when there is a need for querying the browser for more information (such as the value of the slider, or the points selected on a page). In our previous example, that information was stored back in R which did not require a special callback function. These types of interactions are more complex to handle.</p>
 </div>
 </div>
 <div id="compatibility-with-other-graphics-systems" class="section level2">
@@ -497,7 +599,25 @@ panel &lt;-<span class="st"> </span><span class="kw">findPanel</span>(dlist<span
 <div id="using-graphics-plots" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Using graphics plots</h3>
 <p>As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the <strong>gridGraphics</strong> package, which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The <code>grid.echo()</code> function achieves this.</p>
-<p>An example of a graphics plot (left) that is converted into a grid plot (right) using gridGraphics</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(grid)
+<span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)
+<span class="kw">grid.ls</span>()
+gridGraphics<span class="op">::</span><span class="kw">grid.echo</span>()
+<span class="kw">grid.ls</span>()</code></pre></div>
+<p><img src="chapter4_files/figure-html/unnamed-chunk-24-1.png" width="672" /> <img src="chapter4_files/figure-html/unnamed-chunk-24-2.png" width="672" /></p>
+<pre><code>## graphics-background
+## graphics-plot-1-points-1
+## graphics-plot-1-bottom-axis-line-1
+## graphics-plot-1-bottom-axis-ticks-1
+## graphics-plot-1-bottom-axis-labels-1
+## graphics-plot-1-left-axis-line-1
+## graphics-plot-1-left-axis-ticks-1
+## graphics-plot-1-left-axis-labels-1
+## graphics-plot-1-box-1
+## graphics-plot-1-xlab-1
+## graphics-plot-1-ylab-1</code></pre>
+<p>Figure 4.9: An example of a graphics plot that is converted into a grid plot using gridGraphics</p>
+<p>The code above produces a graphics plot that has been converted to a grid plot (as seen in Figure 4.9). To check this, we have called <code>grid.ls()</code> to check whether is a grid object. In the first call, it returns nothing because it is not a grid object. Once we call <code>grid.echo()</code>, <code>grid.ls()</code> returns a list of elements that make up the plot.</p>
 <p>Another problem that arises is that when we plot or try save it into a variable, it does not plot to the graphics device. To solve this, we can use <code>recordPlot</code> to record the plot that has been drawn to further process it.</p>
 <p>The only change that we need to do is run an extra <code>recordPlot</code> command before we call <code>listElements</code>.</p>
 <p>Once again, we begin by drawing the plot. We then record the plot before listing its elements. This will automatically convert the plot using <code>grid.echo()</code>.</p>
@@ -533,7 +653,10 @@ highlightPoints &lt;-<span class="st"> </span><span class="cf">function</span>(p
 
 boxClick &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">onclick =</span> <span class="st">&quot;highlightPoints&quot;</span>)
 <span class="kw">addInteractions</span>(box, boxClick)</code></pre></div>
-<p><em>Figure</em></p>
+<div class="figure">
+<img src="fig/int-bp-graphics.png" alt="Figure 4.10: box plot example replicated using a graphics plot" />
+<p class="caption">Figure 4.10: box plot example replicated using a graphics plot</p>
+</div>
 <p>This shows that there is potential for customising interactions onto graphics plots. The process is the same, except due to the nature of the graphics plot not being a ‘grid’ plot.</p>
 </div>
 <div id="using-ggplot2" class="section level3">
@@ -573,10 +696,13 @@ highlightPoints &lt;-<span class="st"> </span><span class="cf">function</span>(p
 
 boxClick &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">onclick =</span> <span class="st">&quot;highlightPoints&quot;</span>)
 <span class="kw">addInteractions</span>(box, boxClick)</code></pre></div>
-<p><em>insert figure</em></p>
-<p>Note that the only difference are the tags for how each element is defined. Because ggplot2 does not have a consistent naming scheme like , we can use the <code>findElement</code> function to allow the user to easily find which element they want to refer to.</p>
-<p>This demonstrates that there is a possible way of achieving interactions with ggplot2 and there is potential for the <code>interactr</code> to plug into different R plotting systems. Consequently it also means that when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.</p>
-<p>The <code>interactr</code> package acts as a proof-of-concept that aims to be a general solution for adding simple interactions to plots generated in R. There is potential in plugging into different plotting systems, however it depends on how compatible these systems are with the underlying tools of the <code>interactr</code> package. It is based upon a very simple process of defining what you want to draw in R, identifying elements drawn, and defining specific interactions to attach to certain elements drawn that can be viewed in a web browser.</p>
+<div class="figure">
+<img src="fig/int-bp-ggplot2.png" alt="Figure 4.12: box plot example replicated using a graphics plot" />
+<p class="caption">Figure 4.12: box plot example replicated using a graphics plot</p>
+</div>
+<p>Note that the only difference are the tags for how each element is defined. Because ggplot2 does not have a consistent naming scheme like <strong>lattice</strong> we can use the <code>findElement</code> function to allow the user to easily find which element they want to refer to.</p>
+<p>This demonstrates that there is a possible way of achieving interactions with ggplot2 and there is potential for the <strong>interactr</strong> to plug into different R plotting systems. Consequently it also means that when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.</p>
+<p>The <strong>interactr</strong> package acts as a proof-of-concept that aims to be a general solution for adding simple interactions to plots generated in R. There is potential in plugging into different plotting systems, however it depends on how compatible these systems are with the underlying tools of the <strong>interactr</strong> package. It is based upon a very simple process of defining what you want to draw in R, identifying elements drawn, and defining specific interactions to attach to certain elements drawn that can be viewed in a web browser.</p>
 </div>
 </div>
 </div>

@@ -5,6 +5,4 @@ output: html_document
 
 # Abstract{-}
 
-Approaches for creating web-interactive data visualisations have gained momentum in the present day. However many of these existing tools are limited in achieving customised interactions. By using more flexible tools, we aim to potentially create more impactful and fluid interactions for users to help them explore data from their own perspective.
-
 *TODO: REWRITE ABSTRACT*
