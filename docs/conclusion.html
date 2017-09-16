@@ -246,12 +246,14 @@ $(document).ready(function () {
 <p><br></p>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>There is more that can be achieved in expanding interactive graphics to create better data visualisations for users. Despite having many tools available such as htmlwidgets, ggvis and shiny, these generally produce standard interactive plots outside of R without allowing the user to further extend or customize interactions easily. There is a possible solution to allow the control and creation of simple interactive R plots through the interactr package. This provides a way of driving interactions without the need of learning too many tools, while utilising R’s power of statistical computing to aid changes in plots. However, more assessment and development is required on building more sophisticated interactive visualisations before it can be used in the future.</p>
+<p>There is a need in expanding web interactive graphics to create better data visualisations for users. Despite having many tools available including plotly, ggvis and shiny, these generally produce standard interactive plots outside of R that are hard to customise. interactr provides a way of driving interactions without the need of learning web technologies while utilising R’s power of statistical computing to aid changes in plots. However, more assessment and development is required on building more informative interactive visualisations before it can catch up to the capabilities of older desktop applications and be used in the future.</p>
 <div id="additional-resources" class="section level2">
 <h2>Additional resources</h2>
 <p>The <strong>interactr</strong> package is currently hosted on Github <a href="https://github.com/ysoh286/interactr">here</a>.</p>
-<p>To install <strong>interactr</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;ysoh286/interactr&#39;</span>)</code></pre></div>
+<p>To install <strong>interactr</strong>, you need to install DOM v0.4:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;https://github.com/pmur002/DOM/archive/v0.4.tar.gz&quot;</span>,
+                <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;ysoh286/interactr&#39;</span>)</code></pre></div>
 <p>For more details about this project, visit this <a href="https://github.com/ysoh286/honours-project-2017">repository</a> which contains code and additional notes.</p>
 </div>
 </div>

@@ -1,8 +1,8 @@
 ---
 output: html_document
 ---
-<br> 
+<br>
 
 # Abstract{-}
 
-*TODO: REWRITE ABSTRACT*
+*TODO: WRITE ABSTRACT once everything is finalized*

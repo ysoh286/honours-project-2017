@@ -6,12 +6,44 @@ output: html_document
 
 # Executive Summary{-}
 
-The purpose of this research is to assess and investigate modern tools for creating web interactive plots in **R**, and to further find an easier approach for transforming static plots into interactive plots. The motivation behind this research comes from the idea of creating interactive plots with **iNZight**, a data visualisation software from the University of Auckland.
+Interactive statistical graphics have been achieved through desktop applications
+since the nineties, however they are generally inaccessible to users and require special
+software to be installed. Results are hard to reproduce and share. Recently, new tools have focused on
+using the web as a platform to solve this but they do not possess the capabilities
+that these desktop applications have.
 
-An overview of tools were investigated including **plotly**, **ggvis** and **shiny**. These are primarily used for creating standard interactive statistical graphics and applications in R. To identify their strengths and weaknesses, we decided to come up with possible examples of interactions that users may want to achieve for further analysis. Many of these tools provided standard interactions but were hard to extend further in terms of customising specific interactions onto plots. This would require a deeper understanding of these packages and the web programming language JavaScript.
+The purpose of this research is to try make progress towards designing and prototyping a
+more extensible infrastructure for creating web interactive graphics in R.
+The motivation behind this research comes from the idea of creating interactive
+ plots with **iNZight**, a data visualisation software from the University of Auckland.
 
-A different approach was taken by investigating **gridSVG** and **DOM**. It was relatively easier to customise interactions with these tools. However, to use them effectively would require the user to learn how the grid system works with gridSVG and web technologies including the Document Object Model. This presents a steeper learning curve than using plotly and ggvis. There is a trade off - to achieve custom interactions, a user would be required to know how to link all these tools together, where as standard tools have a shorter learning curve that allows the user to focus on creating easy visuals and standard interactive plots. To solve this, we combined **grid**, **gridSVG** and **DOM** to create the **interactr** package. This is designed to allow users to create simple interactive plots in R without a steep learning curve. It is based upon a simple idea of knowing what object to target, what kind of interaction to attach to which objects and defining what happens after an interaction is initiated. To test this idea, we implemented and recreated examples that were compatible with other plotting systems including those made with **graphics**, **lattice**, and **ggplot2**.
+An overview of modern web tools were investigated including **plotly**, **ggvis** and
+**shiny**.  It is easy to achieve certain interactions, but hard to extend beyond their capabilities without a deeper understanding of these packages and lower level coding. This makes it inaccessible to the majority of users.  Furthermore, many online systems have a
+tendency to redraw everything every time any graphical element is changed. This
+leads to unnecessary computations and a slow experience to users.
 
-The interactr package stands out as it brings interactivity to plots that were originally generated in R as many of the tools discussed render their plots using JavaScript. However, it is developmental and currently serves as a proof-of-concept. It presents several limitations including that only objects originally drawn in R can be used. It is currently not shareable in a multi-user environment.
+A different approach was taken by investigating lower level tools, specifically **gridSVG** and **DOM**. These tools are extensible, however, to use them effectively requires a
+knowledge about how the grid system works with gridSVG and web technologies including the Document Object Model. This presents a steeper learning curve than using plotly and ggvis, and consequently a trade off - to achieve custom interactions, a user would be required to know how to link all these tools together, where as other tools are easier to use but cannot be extended further.
 
-The future of web interactive statistical graphics remains dynamic as many of these tools are developing over time. It is possible that the interactr package may be a solution for allowing users to control interactions more easily on plots in R and thus for iNZight, but requires more attention and development for creating more sophisicated and stable visuals.
+To solve this, we have developed a new approach by
+combining lower level tools (grid, gridSVG and DOM) to create the
+**interactr** package. This is designed to create simple
+interactive plots in R without a steep learning curve. It is based upon a simple
+idea of knowing what object to target, what kind of interaction to attach to
+which objects and defining what happens after an interaction is initiated. To
+test this idea, we implemented and recreated simple examples that were
+compatible with other plotting systems including those made with
+**graphics**, **lattice**, and **ggplot2**.
+
+The interactr package stands out as it brings interactivity to plots that
+were originally generated in R. However, it only serves
+as a proof-of-concept. It presents several limitations including that only
+objects originally drawn in R can be used and that only a few
+interactions have been achieved. It is currently not shareable
+in a multi-user environment nor ready for production purposes.
+
+The future of web interactive statistical graphics remains dynamic as many
+of these tools are developing over time. It is possible that the interactr
+package may become a solution for allowing users to control interactions more
+easily on plots in R and thus for iNZight, but requires more attention and
+development for creating more sophisticated and stable visuals.

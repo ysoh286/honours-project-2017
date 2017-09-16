@@ -301,26 +301,42 @@ div.tocify {
 <p><br /></p>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>The purpose of this report is to investigate current solutions for creating web interactive data visualisations in R.</p>
+<p>The purpose of this report is to investigate current solutions for creating web interactive data visualisations in R before designing a more flexible approach for customising interactions onto plots.</p>
 <div id="the-need-for-interactive-graphics" class="section level2">
 <h2><span class="header-section-number">1.1</span> The need for interactive graphics</h2>
-<p><em>TODO: Introduction is still weak. Needs more resources to back up.</em></p>
-<p>Interactive graphics have become popular in helping users explore data freely and explain topics to a wider audience. As Murray (2012) suggests, static visualisations can only ‘offer pre-composed ’views’ of data’, whereas interactive plots can provide us with different perspectives. To be able to interact with a plot allows us to explore data, discover trends and relationships that cannot be seen with a static graph. The power of interactive graphics can aid us during exploratory data analysis, to which we can display data and query it to answer specific questions the user has (Cook and Swayne, 2007).</p>
+<p>Interactive graphics have become popular in helping users explore data freely and explain topics to a wider audience. As <span class="citation">Murray (2013)</span> suggests, static visualisations can only ‘offer pre-composed ’views’ of data’, where as interactive plots can provide us with different perspectives. To be able to interact with a plot allows us to explore data, discover trends and relationships that cannot be seen with a static graph. The power of interactive graphics can aid us during exploratory data analysis, to which we can display and query data to answer specific questions the user has (<span class="citation">Cook and Swayne (2007)</span>).</p>
 <p>The term “interactive graphics” can have different meanings. Theus(1996) and Unwin(1999) have suggested that there are 3 broad components: querying, selection and linking, and varying plot characteristics. We can also split it into two broader categories - ‘on-plot’ and ‘off-plot’ interactivity. We focus on ‘on-plot’ interactivity, where a user can interact directly on the plot to query, select and explore the data.</p>
-<p>R (Ihaka and Gentleman, 1996) is a powerful open source tool for generating flexible static graphics. However, it is not focused on interactivity. Previously, there have been different programs to help create interactive plots to aid analysis including ggobi(Swayne et al, 2007), cranvas(Xie et al, 2013), iplots(Urbanek, 2007), and Mondrian(Theus, 2013). Despite their capabilities, all these require installation of software which makes it difficult to share and reproduce results. More recently, new visualisation tools have begun to use the web browser to render plots and drive interactivity.</p>
+<p>R (<span class="citation">Ihaka and Gentleman (1996)</span>) is a powerful open source tool for generating flexible static graphics. However, it is not focused on interactivity. Previously, there have been different programs to help create interactive plots to aid analysis including ggobi(Swayne et al, 2007), cranvas(Xie et al, 2013), iplots(Urbanek, 2007), and Mondrian(<span class="citation">Theus (2002)</span>). Despite their capabilities, all these require installation of software which makes it difficult to share and reproduce results. More recently, new visualisation tools have begun to use the web browser to render plots and drive interactivity.</p>
 </div>
 <div id="the-web-and-its-main-technologies" class="section level2">
 <h2><span class="header-section-number">1.2</span> The web and its main technologies</h2>
-<p>The web provides an ideal platform for communicating and exchanging information in the present day. It has become accessible to everyone without the worry of technical issues such as device compatibility and installation. We find web interactive visualisations are commonly used in teaching statistics, education, data journalism and is likely to continue to be demanded for in the future.</p>
-<p>The main web technologies are HTML, CSS and JavaScript. Hyper Text Markup Language (known as HTML) is the language used to describe content on a webpage. Cascading style sheets (known as CSS) is the language that controls how elements look and are presented on a web page (such as color, shape, strokes and fills, borders). These can be used to define specific elements on the page. JavaScript is the main programming language for the web, which is used to add interactivity to web pages. Whenever we interact with a website that has a button to click on or hover over text, these are driven by JavaScript.</p>
-<p><em>TODO: The Document Object Model…</em></p>
-<p>The Document Object Model (known as the DOM)…</p>
+<p>The web is an ideal platform for communicating and exchanging information in the present day. It has become accessible to everyone without the worries of device compatibility and installation. Web interactive visualisations are commonly used in areas including data journalism, informative dashboards for business analytics and decision making, and education. These will be continually demanded for in the future.</p>
+<p>The main web technologies are HTML, CSS and JavaScript. Hyper Text Markup Language (known as HTML) is the language used to describe content on a webpage. Cascading style sheets (known as CSS) is the language that controls how elements look and are presented on a web page (such as color, shape, strokes and fills, borders). These can be used to define how specific types of elements are rendered on the page. JavaScript is the main programming language for the web, which is used to add interactivity to web pages. Whenever we interact with a website that has a button to click on or hover over text, these are driven by JavaScript. The Document Object Model (known as the DOM) is the ‘programming interface for HTML and XML documents’ (MDN, 2017). A single web page can be considered as a document made up of nodes and objects with a certain structure. We can use the DOM to refer to specific elements, attributes and nodes on the page that we wish to modify and get information about using different programming languages, specifically JavaScript. This allows us to create and change a dynamic web page.</p>
+<p>Application programming interfaces (APIs) are defined as ‘a set of routines, protocols, and tools for building software applications’ (MISSING REFERENCE). When we see a map from Google Maps embedded in a web page, that web page is calling the GoogleMaps API to provide the map. Through the context of this report, APIs generally refer to JavaScript libraries that are called upon and used to render plots.</p>
 <p>Many interactive visuals on the web are generally rendered using Scalable Vector Graphics (known as SVG). This XML based format is widely used because it is easy to attach events and interactions to certain elements through the DOM. This cannot be done with a raster image, as a raster image (PNG or JPEG) is treated as an entire element.</p>
 </div>
 <div id="motivational-problem" class="section level2">
 <h2><span class="header-section-number">1.3</span> Motivational problem</h2>
-<p>The main motivation for this project stemmed upon whether there is an easier and intuitive way to generate simple interactive visuals from R without learning many tools. This solution could ideally be used with iNZight, a data visualisation software from the University of Auckland.</p>
-<p>The approach is to identify and assess existing tools for creating web interactive visuals in R before building a viable solution that could potentially solve this problem.</p>
+<p>The main motivation for this project stemmed upon whether there is a more intuitive way to generate simple interactive visuals from R without learning many tools. The solution could ideally be used to advance features in iNZight, a data visualisation software from the University of Auckland.</p>
+<p>The approach is to identify and assess existing tools for creating web interactive visuals in R (Chapters 2 and 3) before building a viable solution (Chapter 4) that could potentially solve this problem.</p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<p><strong>Note: currently just testing references and citations. Not all are referenced yet!</strong></p>
+<div id="refs" class="references">
+<div id="ref-cosway07">
+<p>Cook, Dianne, and Deborah F. Swayne. 2007. <em>Interactive and Dynamic Graphics for Data Analysis - with R and Ggobi</em>. Use R. Springer. doi:<a href="https://doi.org/10.1007/978-0-387-71762-3">10.1007/978-0-387-71762-3</a>.</p>
+</div>
+<div id="ref-ihaka96">
+<p>Ihaka, Ross, and Robert Gentleman. 1996. “R: A Language for Data Analysis and Graphics.” <em>Journal of Computational and Graphical Statistics</em> 5 (3): 299–314.</p>
+</div>
+<div id="ref-murray13">
+<p>Murray, Scott. 2013. <em>Interactive Data Visualization for the Web</em>. O’Reilly Media, Inc.</p>
+</div>
+<div id="ref-theus02">
+<p>Theus, Martin. 2002. “Interactive Data Visualization Using Mondrian.” <em>Journal of Statistical Software, Articles</em> 7 (11): 1–9. doi:<a href="https://doi.org/10.18637/jss.v007.i11">10.18637/jss.v007.i11</a>.</p>
+</div>
 </div>
 </div>
 
