@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="504px" height="504px" viewBox="0 0 504 504" version="1.1">
+  <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
+    <gridsvg:generator name="gridSVG" version="1.5-0" time="2017-04-06 09:08:51"/>
+    <gridsvg:argument name="name" value="boxplot.svg"/>
+    <gridsvg:argument name="exportCoords" value="none"/>
+    <gridsvg:argument name="exportMappings" value="none"/>
+    <gridsvg:argument name="exportJS" value="none"/>
+    <gridsvg:argument name="res" value="72"/>
+    <gridsvg:argument name="prefix" value=""/>
+    <gridsvg:argument name="addClasses" value="FALSE"/>
+    <gridsvg:argument name="indent" value="TRUE"/>
+    <gridsvg:argument name="htmlWrapper" value="FALSE"/>
+    <gridsvg:argument name="usePaths" value="vpPaths"/>
+    <gridsvg:argument name="uniqueNames" value="TRUE"/>
+    <gridsvg:separator name="id.sep" value="."/>
+    <gridsvg:separator name="gPath.sep" value="::"/>
+    <gridsvg:separator name="vpPath.sep" value="::"/>
+  </metadata>
+  <g transform="translate(0, 504) scale(1, -1)">
+    <g id="gridSVG" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" font-size="12" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill-opacity="0" font-weight="normal" font-style="normal">
+      <defs>
+        <symbol id="gridSVG.pch21" viewBox="-5 -5 10 10" overflow="visible">
+          <circle cx="0" cy="0" r="3.75"/>
+        </symbol>
+      </defs>
+      <g id="container.1" font-size="12">
+        <g id="container::VP:TOPlayout.1">
+          <g id="container::VP:TOPlayout::GRID.VP.376.1"/>
+          <g id="container::VP:TOPlayout::GRID.VP.377.1">
+            <g id="GRID.text.254.1">
+              <g id="GRID.text.254.1.1" transform="translate(252, 493.69)" stroke-width="0.1">
+                <g id="GRID.text.254.1.1.scale" transform="scale(1, -1)">
+                  <text x="0" y="0" id="GRID.text.254.1.1.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1" font-size="14.4">
+                    <tspan id="GRID.text.254.1.1.tspan.1" dy="5.15" x="0">weekly_hrs</tspan>
+                  </text>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g id="container.2" font-size="12">
+        <g id="container::VP:TOPlayout.2">
+          <g id="container::VP:TOPlayout::GRID.VP.378.1">
+            <g id="GRID.text.255.1">
+              <g id="GRID.text.255.1.1" transform="translate(201.51, 8.64)" stroke-width="0.1">
+                <g id="GRID.text.255.1.1.scale" transform="scale(1, -1)">
+                  <text x="0" y="0" id="GRID.text.255.1.1.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1" font-size="12">
+                    <tspan id="GRID.text.255.1.1.tspan.1" dy="4.29" x="0">weekly_hrs</tspan>
+                  </text>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g id="container.3" font-size="12">
+        <g id="container::VP:TOPlayout.3">
+          <g id="container::VP:TOPlayout::GRID.VP.379.1">
+            <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout.1"/>
+          </g>
+        </g>
+      </g>
+      <g id="container.4" font-size="12">
+        <g id="container::VP:TOPlayout.4">
+          <g id="container::VP:TOPlayout::GRID.VP.379.2">
+            <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout.2">
+              <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380.1">
+                <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380::GRID.VP.370.1">
+                  <g id="GRID.frame.260.1">
+                    <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380::GRID.VP.370::GRID.VP.371.1">
+                      <g id="GRID.cellGrob.261.1">
+                        <g id="GRID.text.256.1">
+                          <g id="GRID.text.256.1.1" transform="translate(456.39, 275.36)" stroke-width="0.1">
+                            <g id="GRID.text.256.1.1.scale" transform="scale(1, -1)">
+                              <text x="0" y="0" id="GRID.text.256.1.1.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1" font-size="12">
+                                <tspan id="GRID.text.256.1.1.tspan.1" dy="4.29" x="0">sex</tspan>
+                              </text>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                    <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380::GRID.VP.370::GRID.VP.372.1">
+                      <g id="GRID.cellGrob.263.1">
+                        <g id="GRID.points.262.1">
+                          <use id="GRID.points.262.1.1" xlink:href="#gridSVG.pch21" x="436.39" y="250.98" width="12" height="12" transform="translate(-6,-6)" stroke="rgb(230,159,0)" stroke-width="1.25" fill="rgb(230,159,0)" stroke-opacity="1" fill-opacity="1" font-size="12"/>
+                        </g>
+                      </g>
+                    </g>
+                    <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380::GRID.VP.370::GRID.VP.373.1">
+                      <g id="GRID.cellGrob.265.1">
+                        <g id="GRID.text.264.1">
+                          <g id="GRID.text.264.1.1" transform="translate(450.79, 250.98)" stroke-width="0.1">
+                            <g id="GRID.text.264.1.1.scale" transform="scale(1, -1)">
+                              <text x="0" y="0" id="GRID.text.264.1.1.text" text-anchor="start" fill="rgb(0,0,0)" fill-opacity="1" font-size="12">
+                                <tspan id="GRID.text.264.1.1.tspan.1" dy="4.29" x="0">Female</tspan>
+                              </text>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                    <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380::GRID.VP.370::GRID.VP.374.1">
+                      <g id="GRID.cellGrob.267.1">
+                        <g id="GRID.points.266.1">
+                          <use id="GRID.points.266.1.1" xlink:href="#gridSVG.pch21" x="436.39" y="233.8" width="12" height="12" transform="translate(-6,-6)" stroke="rgb(86,170,233)" stroke-width="1.25" fill="rgb(86,170,233)" stroke-opacity="1" fill-opacity="1" font-size="12"/>
+                        </g>
+                      </g>
+                    </g>
+                    <g id="container::VP:TOPlayout::GRID.VP.379::VP:LEGlayout::GRID.VP.380::GRID.VP.370::GRID.VP.375.1">
+                      <g id="GRID.cellGrob.269.1">
+                        <g id="GRID.text.268.1">
+                          <g id="GRID.text.268.1.1" transform="translate(450.79, 233.8)" stroke-width="0.1">
+                            <g id="GRID.text.268.1.1.scale" transform="scale(1, -1)">
+                              <text x="0" y="0" id="GRID.text.268.1.1.text" text-anchor="start" fill="rgb(0,0,0)" fill-opacity="1" font-size="12">
+                                <tspan id="GRID.text.268.1.1.tspan.1" dy="4.29" x="0">Male</tspan>
+                              </text>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g id="container.5" font-size="12">
+        <g id="container::VP:TOPlayout.5">
+          <g id="container::VP:TOPlayout::GRID.VP.381.1">
+            <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout.1"/>
+          </g>
+        </g>
+      </g>
+      <g id="container.6" font-size="12">
+        <g id="container::VP:TOPlayout.6">
+          <g id="container::VP:TOPlayout::GRID.VP.381.2">
+            <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout.2">
+              <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382.1" font-size="14.4">
+                <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383.1">
+                  <defs>
+                    <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.1.clipPath">
+                      <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                    </clipPath>
+                  </defs>
+                  <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.1" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.1.clipPath)">
+                    <g id="GRID.rect.271.1">
+                      <rect id="GRID.rect.271.1.1" x="23.04" y="48.81" width="356.95" height="411.53" fill="rgb(238,238,238)" stroke-dasharray="" fill-opacity="1"/>
+                    </g>
+                    <g id="GRID.polyline.272.1">
+                      <polyline id="GRID.polyline.272.1.1" points="17.34,48.81 17.34,460.34" stroke="rgb(255,255,255)" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+                      <polyline id="GRID.polyline.272.1.2" points="105.04,48.81 105.04,460.34" stroke="rgb(255,255,255)" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+                      <polyline id="GRID.polyline.272.1.3" points="192.74,48.81 192.74,460.34" stroke="rgb(255,255,255)" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+                      <polyline id="GRID.polyline.272.1.4" points="280.44,48.81 280.44,460.34" stroke="rgb(255,255,255)" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+                      <polyline id="GRID.polyline.272.1.5" points="368.15,48.81 368.15,460.34" stroke="rgb(255,255,255)" stroke-width="0.75" stroke-opacity="1" fill="none"/>
+                    </g>
+                    <defs>
+                      <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.1.clipPath">
+                        <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                      </clipPath>
+                    </defs>
+                    <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.1" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.1.clipPath)"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g id="container.7" font-size="12">
+        <g id="container::VP:TOPlayout.7">
+          <g id="container::VP:TOPlayout::GRID.VP.381.3">
+            <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout.3">
+              <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382.2" font-size="14.4">
+                <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383.2">
+                  <defs>
+                    <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.2.clipPath">
+                      <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                    </clipPath>
+                  </defs>
+                  <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.2" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.2.clipPath)">
+                    <defs>
+                      <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.2.clipPath">
+                        <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                      </clipPath>
+                    </defs>
+                    <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.2" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.2.clipPath)">
+                      <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.384.1">
+                        <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.384::GRID.VP.385.1">
+                          <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.384::GRID.VP.385::GRID.VP.386.1"/>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g id="container.8" font-size="12">
+        <g id="container::VP:TOPlayout.8">
+          <g id="container::VP:TOPlayout::GRID.VP.381.4">
+            <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout.4">
+              <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382.3" font-size="14.4">
+                <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383.3">
+                  <defs>
+                    <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.3.clipPath">
+                      <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                    </clipPath>
+                  </defs>
+                  <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.3" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.3.clipPath)">
+                    <defs>
+                      <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.3.clipPath">
+                        <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                      </clipPath>
+                    </defs>
+                    <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.3" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.3.clipPath)">
+                      <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.387.1">
+                        <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.387::GRID.VP.388.1">
+                          <defs>
+                            <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.387::GRID.VP.388::GRID.VP.389.1.clipPath">
+                              <rect x="23.04" y="48.81" width="356.95" height="102.88" fill="none" stroke="none"/>
+                            </clipPath>
+                          </defs>
+                          <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.387::GRID.VP.388::GRID.VP.389.1" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.387::GRID.VP.388::GRID.VP.389.1.clipPath)">
+                            <g id="GRID.polygon.273.1">
+                              <polygon id="GRID.polygon.273.1.1" points="130.26,69.39 130.26,131.12 179.59,131.12 179.59,69.39" stroke-width="1.5" fill="rgb(229,229,229)" fill-opacity="1"/>
+                              <polygon id="GRID.polygon.273.1.2" points="179.59,69.39 179.59,131.12 192.74,131.12 192.74,69.39" stroke-width="1.5" fill="rgb(229,229,229)" fill-opacity="1"/>
+                            </g>
+                            <g id="GRID.polyline.274.1">
+                              <polyline id="GRID.polyline.274.1.1" points="39.26,100.25 130.26,100.25" stroke-width="0.52" fill="none"/>
+                              <polyline id="GRID.polyline.274.1.2" points="192.74,100.25 363.76,100.25" stroke-width="0.52" fill="none"/>
+                            </g>
+                          </g>
+                          <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels::GRID.VP.387::GRID.VP.388::VP:plotregion.1">
+                            <g id="DOTPOINTS.1">
+                              <use id="DOTPOINTS.1.1" xlink:href="#gridSVG.pch21" x="39.26" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.2" xlink:href="#gridSVG.pch21" x="48.04" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.3" xlink:href="#gridSVG.pch21" x="52.42" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.4" xlink:href="#gridSVG.pch21" x="52.42" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.5" xlink:href="#gridSVG.pch21" x="56.81" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.6" xlink:href="#gridSVG.pch21" x="61.19" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.7" xlink:href="#gridSVG.pch21" x="61.19" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.8" xlink:href="#gridSVG.pch21" x="65.58" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.9" xlink:href="#gridSVG.pch21" x="69.96" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.10" xlink:href="#gridSVG.pch21" x="78.73" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.11" xlink:href="#gridSVG.pch21" x="78.73" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.12" xlink:href="#gridSVG.pch21" x="78.73" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.13" xlink:href="#gridSVG.pch21" x="96.27" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.14" xlink:href="#gridSVG.pch21" x="100.66" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.15" xlink:href="#gridSVG.pch21" x="105.04" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.16" xlink:href="#gridSVG.pch21" x="105.04" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.17" xlink:href="#gridSVG.pch21" x="113.81" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.18" xlink:href="#gridSVG.pch21" x="118.2" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.19" xlink:href="#gridSVG.pch21" x="118.2" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.20" xlink:href="#gridSVG.pch21" x="122.58" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.21" xlink:href="#gridSVG.pch21" x="122.58" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.22" xlink:href="#gridSVG.pch21" x="122.58" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.23" xlink:href="#gridSVG.pch21" x="126.97" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.24" xlink:href="#gridSVG.pch21" x="126.97" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.25" xlink:href="#gridSVG.pch21" x="126.97" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.26" xlink:href="#gridSVG.pch21" x="131.35" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.27" xlink:href="#gridSVG.pch21" x="131.35" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.28" xlink:href="#gridSVG.pch21" x="135.74" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.29" xlink:href="#gridSVG.pch21" x="135.74" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.30" xlink:href="#gridSVG.pch21" x="135.74" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.31" xlink:href="#gridSVG.pch21" x="140.12" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.32" xlink:href="#gridSVG.pch21" x="140.12" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.33" xlink:href="#gridSVG.pch21" x="140.12" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.34" xlink:href="#gridSVG.pch21" x="144.51" y="179.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.35" xlink:href="#gridSVG.pch21" x="144.51" y="186.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.36" xlink:href="#gridSVG.pch21" x="144.51" y="193.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.37" xlink:href="#gridSVG.pch21" x="144.51" y="200.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.38" xlink:href="#gridSVG.pch21" x="144.51" y="207.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.39" xlink:href="#gridSVG.pch21" x="148.89" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.40" xlink:href="#gridSVG.pch21" x="148.89" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.41" xlink:href="#gridSVG.pch21" x="148.89" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.42" xlink:href="#gridSVG.pch21" x="153.28" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.43" xlink:href="#gridSVG.pch21" x="153.28" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.44" xlink:href="#gridSVG.pch21" x="157.66" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.45" xlink:href="#gridSVG.pch21" x="170.82" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.46" xlink:href="#gridSVG.pch21" x="170.82" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.47" xlink:href="#gridSVG.pch21" x="170.82" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.48" xlink:href="#gridSVG.pch21" x="175.2" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.49" xlink:href="#gridSVG.pch21" x="179.59" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.50" xlink:href="#gridSVG.pch21" x="179.59" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.51" xlink:href="#gridSVG.pch21" x="179.59" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.52" xlink:href="#gridSVG.pch21" x="179.59" y="179.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.53" xlink:href="#gridSVG.pch21" x="183.97" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.54" xlink:href="#gridSVG.pch21" x="183.97" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.55" xlink:href="#gridSVG.pch21" x="183.97" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.56" xlink:href="#gridSVG.pch21" x="183.97" y="179.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.57" xlink:href="#gridSVG.pch21" x="183.97" y="186.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.58" xlink:href="#gridSVG.pch21" x="188.36" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.59" xlink:href="#gridSVG.pch21" x="188.36" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.60" xlink:href="#gridSVG.pch21" x="192.74" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.61" xlink:href="#gridSVG.pch21" x="192.74" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.62" xlink:href="#gridSVG.pch21" x="192.74" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.63" xlink:href="#gridSVG.pch21" x="192.74" y="179.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.64" xlink:href="#gridSVG.pch21" x="192.74" y="186.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.65" xlink:href="#gridSVG.pch21" x="192.74" y="193.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.66" xlink:href="#gridSVG.pch21" x="192.74" y="200.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.67" xlink:href="#gridSVG.pch21" x="192.74" y="207.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.68" xlink:href="#gridSVG.pch21" x="192.74" y="214.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.69" xlink:href="#gridSVG.pch21" x="192.74" y="221.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.70" xlink:href="#gridSVG.pch21" x="192.74" y="228.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.71" xlink:href="#gridSVG.pch21" x="192.74" y="235.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.72" xlink:href="#gridSVG.pch21" x="192.74" y="242.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.73" xlink:href="#gridSVG.pch21" x="192.74" y="249.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.74" xlink:href="#gridSVG.pch21" x="192.74" y="256.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.75" xlink:href="#gridSVG.pch21" x="192.74" y="263.68" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.76" xlink:href="#gridSVG.pch21" x="192.74" y="270.67" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.77" xlink:href="#gridSVG.pch21" x="192.74" y="277.67" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.78" xlink:href="#gridSVG.pch21" x="201.51" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.79" xlink:href="#gridSVG.pch21" x="205.9" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.80" xlink:href="#gridSVG.pch21" x="205.9" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.81" xlink:href="#gridSVG.pch21" x="205.9" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.82" xlink:href="#gridSVG.pch21" x="210.28" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.83" xlink:href="#gridSVG.pch21" x="214.67" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.84" xlink:href="#gridSVG.pch21" x="214.67" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.85" xlink:href="#gridSVG.pch21" x="214.67" y="172.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.86" xlink:href="#gridSVG.pch21" x="214.67" y="179.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.87" xlink:href="#gridSVG.pch21" x="219.05" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.88" xlink:href="#gridSVG.pch21" x="227.82" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.89" xlink:href="#gridSVG.pch21" x="232.21" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.90" xlink:href="#gridSVG.pch21" x="236.59" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.91" xlink:href="#gridSVG.pch21" x="245.36" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.92" xlink:href="#gridSVG.pch21" x="245.36" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.93" xlink:href="#gridSVG.pch21" x="262.9" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.94" xlink:href="#gridSVG.pch21" x="262.9" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.95" xlink:href="#gridSVG.pch21" x="276.06" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.96" xlink:href="#gridSVG.pch21" x="297.99" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.97" xlink:href="#gridSVG.pch21" x="302.37" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.98" xlink:href="#gridSVG.pch21" x="350.61" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.99" xlink:href="#gridSVG.pch21" x="350.61" y="165.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(230,159,0)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                              <use id="DOTPOINTS.1.100" xlink:href="#gridSVG.pch21" x="363.76" y="158.69" width="7.2" height="7.2" transform="translate(-3.6,-3.6)" stroke="rgb(86,170,233)" stroke-width="2.08" opacity="1" fill="none" stroke-opacity="1" fill-opacity="0" font-size="6"/>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g id="container.9" font-size="12">
+        <g id="container::VP:TOPlayout.9">
+          <g id="container::VP:TOPlayout::GRID.VP.381.5">
+            <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout.5">
+              <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382.4" font-size="14.4">
+                <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383.4">
+                  <defs>
+                    <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.4.clipPath">
+                      <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                    </clipPath>
+                  </defs>
+                  <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.4" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points.4.clipPath)">
+                    <defs>
+                      <clipPath id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.4.clipPath">
+                        <rect x="23.04" y="48.81" width="356.95" height="411.53" fill="none" stroke="none"/>
+                      </clipPath>
+                    </defs>
+                    <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.4" clip-path="url(#container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::VP:locate.these.points::VP:dotplot-levels.4.clipPath)"/>
+                  </g>
+                  <g id="GRID.rect.275.1">
+                    <rect id="GRID.rect.275.1.1" x="23.04" y="48.81" width="356.95" height="411.53" fill="none" fill-opacity="0"/>
+                  </g>
+                  <g id="container::VP:TOPlayout::GRID.VP.381::VP:PLOTlayout::GRID.VP.382::GRID.VP.383::GRID.VP.390.1">
+                    <g id="GRID.xaxis.276.1" font-size="9.6">
+                      <g id="major.1">
+                        <polyline id="major.1.1" points="105.04,48.81 368.15,48.81" fill="none"/>
+                      </g>
+                      <g id="ticks.1">
+                        <polyline id="ticks.1.1" points="105.04,48.81 105.04,40.17" fill="none"/>
+                        <polyline id="ticks.1.2" points="192.74,48.81 192.74,40.17" fill="none"/>
+                        <polyline id="ticks.1.3" points="280.44,48.81 280.44,40.17" fill="none"/>
+                        <polyline id="ticks.1.4" points="368.15,48.81 368.15,40.17" fill="none"/>
+                      </g>
+                      <g id="labels.1">
+                        <g id="labels.1.1" transform="translate(105.04, 22.89)" stroke-width="0.1">
+                          <g id="labels.1.1.scale" transform="scale(1, -1)">
+                            <text x="0" y="0" id="labels.1.1.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1">
+                              <tspan id="labels.1.1.tspan.1" dy="5.15" x="0">20</tspan>
+                            </text>
+                          </g>
+                        </g>
+                        <g id="labels.1.2" transform="translate(192.74, 22.89)" stroke-width="0.1">
+                          <g id="labels.1.2.scale" transform="scale(1, -1)">
+                            <text x="0" y="0" id="labels.1.2.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1">
+                              <tspan id="labels.1.2.tspan.1" dy="5.15" x="0">40</tspan>
+                            </text>
+                          </g>
+                        </g>
+                        <g id="labels.1.3" transform="translate(280.44, 22.89)" stroke-width="0.1">
+                          <g id="labels.1.3.scale" transform="scale(1, -1)">
+                            <text x="0" y="0" id="labels.1.3.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1">
+                              <tspan id="labels.1.3.tspan.1" dy="5.15" x="0">60</tspan>
+                            </text>
+                          </g>
+                        </g>
+                        <g id="labels.1.4" transform="translate(368.15, 22.89)" stroke-width="0.1">
+                          <g id="labels.1.4.scale" transform="scale(1, -1)">
+                            <text x="0" y="0" id="labels.1.4.text" text-anchor="middle" fill="rgb(0,0,0)" fill-opacity="1">
+                              <tspan id="labels.1.4.tspan.1" dy="5.15" x="0">80</tspan>
+                            </text>
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <script type="application/ecmascript" id="script"><![CDATA[
+// Boxplot challenge - simple interaction:
+
+var Grob = 'DOTPOINTS.1',
+    count = document.getElementById(Grob).childElementCount;
+
+//To get boxes:
+//Obtaining the 'polygon' boxes associated with the boxplot:
+var polygonBox = document.getElementsByTagName('polygon');
+var polygonId = polygonBox[polygonBox.length -1].id;
+var idLine = polygonId.substring(0, polygonId.lastIndexOf('.'));
+
+for (i = 1; i <= polygonBox.length; i ++) {
+  if (polygonBox[i-1].id.indexOf(idLine) >= 0){
+    polygonBox[i-1].setAttribute('class', 'box');
+  }
+}
+
+//Box Plot interactions:
+var box = document.getElementsByClassName('box');
+var lowerBox = box[0];
+var upperBox = box[1];
+
+//setting interactions and colors for lower box:
+  lowerBox.addEventListener('mouseover', fillBox, false);
+  lowerBox.addEventListener('mouseout', normalBox, false);
+  lowerBox.addEventListener('click', showPoints, false);
+  //box[i].addEventListener('click', showBox, false);
+
+
+function fillBox() {
+  lowerBox.setAttribute('fill', 'red');
+};
+
+function normalBox() {
+  lowerBox.setAttribute('fill', 'transparent');
+};
+
+function showPoints() {
+  //Get the min and max of x:
+  var points = lowerBox.getAttribute('points').split(" ");
+  var x1 = points[0].split(",")[0];
+  var x2 = points[2].split(",")[0];
+
+  for (i = 1; i <= count; i ++) {
+    var dot = document.getElementById(Grob + '.' + i);
+    var x = dot.x.baseVal.value;
+    //run condition where if x is between the min and max of the box:
+    if (x1 <= x && x <= x2) {
+      dot.setAttribute('fill', 'red');
+      dot.setAttribute('fill-opacity', '1');
+    } else {
+      dot.setAttribute('fill', 'none');
+      dot.setAttribute('fill-opacity', '0');
+    }
+  }
+
+
+}
+]]></script>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

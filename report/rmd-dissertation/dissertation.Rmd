@@ -8,6 +8,7 @@ header-includes:
 - \usepackage{graphicx}
 - \usepackage{framed}
 - \usepackage{dsfont}
+- \usepackage{float}
 highlight: tango
 linkcolor: black
 output:
@@ -15,13 +16,15 @@ output:
     number_sections: yes
     toc_depth: 3
 urlcolor: blue
+bibliography: bibliography.bib
 ---
 
 <!-- this dissertation thesis was adapted from https://rosannavanhespenresearch.wordpress.com/2016/03/30/writing-your-thesis-with-r-markdown-5-the-thesis-layout/  -->
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.path = 'figures/',
-                       warning = FALSE, message = FALSE)
+                       warning = FALSE, message = FALSE,
+                       fig.align = "center", fig.pos = "H", out.extra = "")
 ```
 
 \pagenumbering{gobble}
@@ -36,8 +39,15 @@ knitr::opts_chunk$set(fig.path = 'figures/',
 ```
 
 \newpage
+
+```{r child = 'exec-sum.Rmd'}
+```
+
+\newpage
 \tableofcontents
 \listoffigures
+
+\newpage
 
 ```{r child = 'chapter1.Rmd'}
 ```
@@ -69,4 +79,4 @@ knitr::opts_chunk$set(fig.path = 'figures/',
 
 \newpage
 
-Missing a bibliography!
+# References

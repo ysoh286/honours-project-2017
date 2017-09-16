@@ -1,0 +1,39 @@
+# Executive Summary{-}
+
+Interactive statistical graphics have been successful through desktop applications
+since the nineties, however they are generally inaccessible to users and require special
+software to be installed. Results are hard to reproduce and share. Recently, new tools have focused on
+using the web as a platform to solve this but do not possess the all the capabilities
+that these desktop applications have.
+
+The purpose of this research is to try make progress towards designing and prototyping a
+more extensible infrastructure for creating web interactive graphics in R.
+The motivation behind this research comes from the idea of creating interactive
+ plots with **iNZight**, a data visualisation software from the University of Auckland.
+
+An overview of modern web tools were investigated including **plotly**, **ggvis** and
+**shiny**.  It is easy to achieve certain interactions, but hard to extend beyond their capabilities without a deeper understanding of these packages and lower level coding. This makes it inaccessible to the majority of users.  Furthermore, many online systems have a tendency to redraw everything every time any graphical element is changed. This leads to unnecessary computations and a slow experience for users.
+
+A different approach was taken by investigating lower level tools, specifically **gridSVG** and **DOM** to try solve these limitations. These tools are extensible. However, to use them effectively requires a
+knowledge about how the grid system works with gridSVG and web technologies including the Document Object Model. This presents a steeper learning curve than using plotly and ggvis, and consequently a trade off - to achieve custom interactions, a user would be required to know how to link all these tools together, where as other tools are easier to use but are difficult to extend further.
+
+To solve this, a new approach was developed by
+combining lower level tools (grid, gridSVG and DOM) to create
+**interactr**, an R package designed to create simple
+interactive plots in R without a steep learning curve. It is based upon a simple
+idea of knowing what object to target, what kind of interaction to attach to
+which objects and defining what happens after an interaction is initiated. To
+test this idea, we implemented and recreated simple examples that were
+compatible with other plotting systems including those made with
+**graphics**, **lattice**, and **ggplot2**. This stands out as it brings interactivity to plots that
+were originally generated in R. However, it only serves
+as a proof-of-concept. There are several limitations including that only
+objects originally drawn in R can be used and that only a few
+interactions have been achieved via targeting a single element. It is currently not shareable
+in a multi-user environment nor ready for production purposes.
+
+The future of web interactive statistical graphics remains dynamic as many
+of these tools are developing over time. The interactr
+package may become a solution for allowing users to create and control interactions more
+easily on plots generated in R and thus for iNZight, but requires more attention and
+development for creating more sophisticated and stable visuals.
