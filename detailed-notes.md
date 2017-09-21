@@ -1,26 +1,49 @@
 **Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
 
-Draft writing!
-- An HTML/interactive version (new and still in testing stages + figures missing):
-  https://ysoh286.github.io/honours-project-2017/
-  TODOS:
-    - fill in gifs + screen capture + images
-    - Chapter 4: write trend line example
-    - Chapter 3: shiny custom messaging, expand on DOM + async callback?
-    - review, reread, edit
-    - REFERENCES!
-    - acknowledgements
-
-- pdf version lies in report/rmd-dissertation folder
-
----
-
 ## REPORT:
-- Proposed final report structure/outline:
-*report > [report-draft-outline.txt](https://github.com/ysoh286/honours-project-2017/blob/master/report/report-draft-outline.txt)*  
-- Write in Rmd + in chapters
-  - Draft written
-- Interactive version requires a shiny server/DOM server
+- HTML/interactive version:
+  https://ysoh286.github.io/honours-project-2017/
+- pdf version lies in report/rmd-dissertation folder for final submission
+
+**Progress:**
+- Exec Summary (needs reviewing once all chapters are written and finalized)
+- Chapter 1 (introduction - it does feel a bit weird to simply just introduce all the web tech terms. Should I mention R's graphics systems?)
+- Chapter 2: getting feedback and needs a rewrite
+- Chapter 3: under review
+- Chapter 4 (80% done, under review)
+    - could add more examples/'applications' if there's time...
+
+**Worry:**
+- Not confident/strong enough to claim that interactr could be used without full knowledge of grid/gridSVG/DOM so far  - requires rethinking and how things work internally in the package (considering it's still very early stages... + only specific examples work.)
+- Too much content... zzzzzzzz
+
+**TODOS:**
+
+GET SOMEONE TO PROOFREAD! (preferably someone who doesn't know much)
+  - ~~send Chapter 3 up for review~~
+  - animint package: review + assess limitations
+  - Chapter 2 needs reviewing for plotly/htmlwidgets + animint + Chris's feedback
+  - once chapter 2 is finalized, email Paul which shiny apps to put up
+  - Chapter 5 (50% done) - needs to be more detailed + provide examples for comparison
+  - reference list - find resources + cite
+  - acknowledge Paul + Chris
+  - write abstract
+
+Once you get this done (which seems like forever), you can go back and play with DOM and interactr! :)
+
+
+**note to self:**
+- Citing and cross referencing is a bit of a hassle in rmarkdown.
+- Maybe try bookdown next time, or stick to Rnw
+- Try out the xaringan package for presentation slides
+
+**other random things:**
+- Stumbled across RStudio's new 'community forum' and one of them mentioned ggvis and asked if it was going to be continued.
+[ggvis forum post](https://community.rstudio.com/t/lets-clarify-the-successor-to-ggvis/392)
+   - some people actually think ggiraph is more of a successor to interactive ggplot2 rather than ggplotly (one stated could we just stick to '+' rather than switching everything to the pipe (%>%) ...which is what most htmlwidgets use, another suggested ggvis is the way to go for consistency of using %>%)
+   - Agreeable: everything's compatible with shiny, but not fully 'complete'
+   - It's hard to find one tool that would fit everyone's needs (plotly's trying to do a good job, but yes - its API is a little overwhelming, but the upside is there's good documentation).
+   - For now, ggvis isn't active - not on the priority list for RStudio
 
 ---
 
@@ -47,7 +70,7 @@ Draft writing!
 - Functions (and maybe more to come) for specific interactions (such as attaching a selection box, driving a slider, e.t.c) but it should be flexible enough so that the user can still achieve what they want.
 
 **Assumptions?:**
-- requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use ```ggplot_build()```)
+- requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use `ggplot_build()`)
 - assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the df.) In cases where data taken in is rearranged and sorted (like iNZightPlots), this causes the 'indexes' of the points to differ to the original dataframe.
 -  assumes that most grid objects represent a single object in SVG (which sometimes is not the case - see iNZightPlot boxplot version)
 
@@ -74,16 +97,19 @@ Draft writing!
 - mapElements function?
 
 **Issues/Bugs/TODO/TOFIX:**
-- ~~The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)~~
+- VALIDATION/TEST STOPS (read up on what is unit testing)
+- Vectorise existing for-loops - can this even be vectorised? :/
 - instead of using grid tags, use SVG tags instead for consistency with cases that do not use gridSVG? (use getSVGMappings() to get correct id/selectors - in a case of gridSVG, the tags are not the same as those generated by grid.) - temp solution of adding '.1.1'
+  - this needs to be revised for adding interactions onto multiple elements (or elements that do not end with a '1', or are part of a group( ie. like the last point of ))
+- Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
+- Example of histogram/barplot control
+- ~~The 'fill/unfill' function can be replaced with a style sheet rule instead (to try)~~
 - ~~Fix up the boxplot filter on scatterplot (relate back to DATA via using conversion coordinates - grid/gridSVG)~~
 - ~~Fix up package for Paul to use in meetings~~
 - ~~Generalize density-boxplot challenge~~
 - ~~Fix CSS selectors (be able to pass an id?)~~
 - ~~NOTE: if there's more than one plot, add prefixes!~~
 - ~~Extend highlight-boxplot to density plots~~
-- VALIDATION/TEST STOPS
-- ~~Vectorise existing for-loops~~
 - Revise ```returnRange``` - for ggplot2
 - ~~Make trendlines work!~~
 - ~~add selection box onto trendline-challenge~~
@@ -93,12 +119,12 @@ Draft writing!
 - ~~STOP USING GLOBALS IN THE PACKAGE!~~
 - ~~Is there a way to find the panel/viewport based upon returning a grob? YES~~ see ```findPanel()```
 - ~~Hide DOM passing functions~~
-- Plot to table example?
-- Find a way to expand to multiple elements + how to deal if there are multiple svg elements corresponding to a single grid object (see iNZightPlots example)
-- Example of histogram/barplot control
+- ~~Plot to table example?~~
 
 Would you want to use the ```interactr``` package with iNZight?
-  Not at the moment. Still entirely developmental and unstable. Shiny's still better.
+  NO. IT'S NOT READY AT ALL.
+  Still entirely developmental and unstable.
+  shiny's still better.
 
 #### NOTES:
 
@@ -174,6 +200,12 @@ plotly needs revising. Updating notes.
 - [Dash](https://medium.com/@plotlygraphs/introducing-dash-5ecf7191b503) is almost the 'Shiny' for python.
 
 **Report setup - ideas**
+- Proposed final report structure/outline:
+*report > [report-draft-outline.txt](https://github.com/ysoh286/honours-project-2017/blob/master/report/report-draft-outline.txt)*  
+- Write in Rmd + in chapters
+  - Draft written
+- Interactive version requires a shiny server/DOM server
+
 The problem is a lot of the examples in chapter 2 and 3 rely on the shiny framework (that's inclusive of the ggvis examples, plotly + shiny, shiny + gridSVG, shiny by itself).
 
   - OPTIONS:
