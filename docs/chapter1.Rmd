@@ -30,6 +30,15 @@ Interactive graphics have become popular in helping users explore data freely an
 
 The term "interactive graphics" can have different meanings. Theus(1996) and Unwin(1999) have suggested that there are 3 broad components: querying, selection and linking, and varying plot characteristics. We can also split it into two broader categories - 'on-plot' and 'off-plot' interactivity. We focus on 'on-plot' interactivity, where a user can interact directly on the plot to query, select and explore the data.
 
+
+**TODO:
+*somewhere early needs a discussion defining the interactions outside and interactions with a plot,
+and why that matters*
+- What are off-plot and on-plot interactions?
+- Why do they matter in interactive graphics?
+need to expand on why the different types of interactions are important and how they differ**
+
+
 R (@ihaka96) is a powerful open source tool for generating flexible static graphics. However, it is not focused on interactivity. Previously, there have been different programs to help create interactive plots to aid analysis including ggobi(Swayne et al, 2007), cranvas(Xie et al, 2013), iplots(Urbanek, 2007), and Mondrian(@theus02). Despite their capabilities, all these require installation of software which makes it difficult to share and reproduce results. More recently, new visualisation tools have begun to use the web browser to render plots and drive interactivity.
 
 ## The web and its main technologies

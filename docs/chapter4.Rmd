@@ -21,7 +21,7 @@ knitr::opts_chunk$set(warning = FALSE,
 
 # Designing a more flexible way of producing simple interactions
 
-By using gridSVG, DOM and JavaScript, we can customise interactions onto plots. However, these are too specific and assumes a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user without a steep learning curve.
+By using gridSVG, DOM and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user without a steep learning curve. This section discusses a potential solution using grid, gridSVG and DOM to drive web interactive graphics.
 
 ## The main idea using grid, gridSVG and DOM
 
@@ -33,25 +33,24 @@ In each of the previous examples defined, they all have a certain pattern. In or
   - Attach interactions and define events
   - Send defined interactions and plot to the browser
 
-
 ```{r, echo = FALSE, fig.cap = "Figure 4.1: grid, gridSVG and DOM in the process"}
 knitr::include_graphics('./fig/main-idea.svg')
 ```
 
-From the process above (Figure 4.1), we can use the relationships between grid, gridSVG and DOM to put things together.
-We can use the relationship between grid and gridSVG elements explained in Chapter 3.1 to allow users to define and identify which element to target. We can use DOM to attach interactions to certain elements and send these across to a web page. The reason for using DOM rather than shiny is that there are more complexities that work under the shiny framework including reactive programming, which is particularly difficult to grasp in detail. Because it is so low level, we can use DOM to create different types of interactions, but it is unreasonable for the majority of users as it requires some understanding of web technologies and takes too much effort. As seen in Figure 3.7, it take roughly 40 lines of code to achieve a simple hover effect, and about 200 lines of code to link a slider to a smoother (Figure 3.9).
+The process above (Figure 4.1) can be implemented using grid, gridSVG and DOM.
+We can use the relationship between grid and gridSVG elements explained in Chapter 3.1 to allow users to define and identify which element to target. We can use DOM to attach interactions to certain elements and send these across to a web page. The reason for using DOM rather than shiny is that there are more complexities that work under the shiny framework including reactive programming, which is particularly difficult to grasp in detail. Because it is so low level, we can use DOM to create different types of interactions, but it is unreasonable for the majority of users as it requires some understanding of web technologies and takes too much effort. As seen in Figure 3.7, it take roughly 40 lines of code to achieve a simple hover effect (with or without writing JavaScript), and about 200 lines of code to link a slider to a smoother (Figure 3.9).
 
-We need a system that is more convenient for users, not too strenuous to code up or require too many prerequisites, but flexible enough to achieve different interactions. With this in mind, we have created the `interactr` package which builds upon the three packages. It is designed to allow users to define their own interactions to plots in R, without a full understanding of the web and these lower level tools.
+We need a system that is more convenient for users, not too strenuous to code up or require too many prerequisites, but flexible enough to achieve different interactions. We have created the `interactr` package that attempts to build upon this idea. It aims to allow users to define their own interactions to plots in R without the need for a full understanding of the web technologies involved.
 
 We have recreated some examples using `interactr` to demonstrate this idea.
 
 ## Examples
 
-### Linking box plots
+### A linked box plot
 
 **Note: the following images in this section are static.**
 
-The goal in this example is to link the interquartile range of the box plot to a scatter plot, followed by a density plot. When the user clicks on the box plot, it highlights the range of the box plot on the other respective plots.
+The goal for this example is to link the interquartile range of the box plot to a scatter plot, followed by a density plot. When the user clicks on the box plot, it highlights the range of the box plot on the other respective plots.
 
 Our first step is to draw the box plot in R.
 ```{r}
@@ -76,7 +75,7 @@ interactions <- list(hover = styleHover(attrs = list(fill = "red",
                                                      fill.opacity = "1")))
 ```
 
-Note that the interaction has only been defined, but not attached yet.
+Note that the interaction has only been defined but not attached yet.
 We attach an interaction to the `box` element we identified earlier to attach the hover interaction to. Finally, we can send the plot and these interactions to the web page. We see that when the user hovers over the box, the box turns red as seen in Figure 4.2.
 
 ```{r, eval = FALSE}
@@ -106,13 +105,15 @@ points <- "plot_01.xyplot.points.panel.1.1"
 draw(sp) #by default, new.page = FALSE
 ```
 
-Here, we see that the box plot and the scatter plot we drew in R are now on the same web page (Figure 4.3).
+We see that the box plot and the scatter plot we drew in R are now on the same web page (Figure 4.3).
 
 ```{r, echo = FALSE, fig.cap = "Figure 4.3: Box plot and scatter plot on the same web page"}
 knitr::include_graphics('./fig/int-bp-2.png')
 ```
 
 To highlight the points in the scatterplot that lie in the range of the box, the user can define the function as follows. We can determine the index of the points that lie within the range of the box, and then pass that index through a function called `setPoints` to highlight these in red and group them together in a class called `selected`.
+
+<a id="highlightPoints"> </a>
 
 ```{r, eval = FALSE}
 highlightPoints <- function(ptr) {
@@ -137,29 +138,29 @@ boxClick <- list(onclick = 'highlightPoints')
 addInteractions(box, boxClick)
 ```
 
-Here, we insert the function name to run when a 'click' is done. Next, we append this defined interaction to the box element, so that when we click on the box, the points in the scatterplot that lie within that range should light up in red. This is shown in Figure 4.4.
+We then insert the function name to run when a 'click' is done. Next, we append this defined interaction to the box element, so that when we click on the box, the points in the scatterplot that lie within that range should light up in red. This is shown in Figure 4.4.
 
 
 ```{r, echo = FALSE, fig.cap = "Figure 4.4: Click on box plot to light up points on scatter plot"}
 knitr::include_graphics('./fig/int-bp-3.png')
 ```
 
-This example can be further extended by linking the box plot to both a scatter plot and density plot. Here, we have taken some census data and wish to find out the density of girls who have the heights that lie within that interquartile range of the boys heights.
-
-We begin by drawing the box plot of boys heights.
+This example can be further extended by linking the box plot to both a scatter plot and density plot. Here, we have taken the first 500 observations from a census conducted with school kids in 2009 (from CensusAtSchool, 2009) and wish to find out the density of girls who have the heights that lie within that interquartile range of the boys heights.
 
 ```{r, echo = FALSE, eval = FALSE}
-#get dataset off web:
+# get dataset off web
 census <- read.csv("http://new.censusatschool.org.nz/wp-content/uploads/2016/08/CaS2009_subset.csv",
          header = TRUE)
 
-#subset the first 500 values:
+# subset the first 500 values
 census <- census[1:500, ]
 
-# separate girls and boys:
+# separate girls and boys
 boys <- census[census$gender == "male", ]
 girls <- census[census$gender == "female", ]
 ```
+
+First, we draw a box plot of boys heights and attach a hover effect to the box, similar to what was done previously. The range of the box is identified for further use.
 
 ```{r, eval = FALSE}
 bw <- bwplot(boys$height, main = "Boxplot of boys' heights")
@@ -172,7 +173,7 @@ draw(bw, box, interactions, new.page = TRUE)
 range <- returnRange(box)
 ```
 
-Next, we add the scatterplot to the page.
+Next, we add the scatter plot between boys' heights and armspan to the page.
 
 ```{r, eval = FALSE}
 sp <- xyplot(boys$armspan ~ boys$height,
@@ -228,7 +229,7 @@ highlightRange <- function(ptr) {
   xval <- coords$x[index]
   yval <- coords$y[index]
 
-  # add start and end:
+  # add start and end points for drawing the region to be highlighted
   xval <- c(xval[1], xval, xval[length(xval)])
   yval <- c(-1, yval, -1)
 
@@ -237,11 +238,12 @@ highlightRange <- function(ptr) {
   #set points on added polygon
   setPoints("highlightRegion", type = "coords", value = pt)
 
-  # highlight points in scatter plot:
+  # highlight points on scatter plot, remove missing values
   index <- which(min(range) <= boys$height  
                  & boys$height <= max(range)
                  & !is.na(boys$armspan))
-  # note that if armspans are missing, remove missing values
+
+  # set points that will highlight according to index
   setPoints(points,
             type = "index",
             value = index,
@@ -266,9 +268,9 @@ When the user now clicks on the box plot, it lights up the points and the densit
 knitr::include_graphics('./fig/int-bp-5.png')
 ```
 
-### Changing a trendline
+### Changing the smoothing of a trend line
 
-Another example that can be done is driving an off-plot interaction with a slider. The slider controls the smoothing of the trend line.
+Another example that can be done is driving an interaction using a slider. The slider controls the smoothing of the trend curve.
 
 Here, it becomes more complex as it requires information to be sent and queried back and forth between R and the browser.
 
@@ -284,6 +286,7 @@ listElements(iris.plot)
 #send plot to browser
 draw(iris.plot, new.page = TRUE)
 ```
+
 Next, we add a slider to the page. This has not been linked up to any elements yet (Figure 4.7).
 
 ```{r, eval = FALSE}
@@ -291,19 +294,18 @@ Next, we add a slider to the page. This has not been linked up to any elements y
 addSlider("slider", min = 0.5, max = 1, step = 0.05)
 ```
 
-
 ```{r, echo = FALSE, fig.cap = "Figure 4.7: Plot with slider"}
 knitr::include_graphics('./fig/int-slider-1.png')
 ```
 
-The user can write a function with the argument `value` to define what happens when the slider moves. This passes the value of the slider from the web page back to R. Here, we can use the value to control the span of the trend line. To translate the new x and y values of the trend line, we need to convert them into SVG co-ordinates (as mentioned before in Chapter 3.1) before updating these points.
+The user can write a function with the argument `value` to define what happens when the slider moves. This passes the value of the slider from the web page back to R. Here, we want to use the value to control the span of the trend line. To translate the new x and y values of the trend line, we need to convert them into SVG co-ordinates (as mentioned before in Chapter 3.1) before updating these points.
 
 ```{r}
 controlTrendline <- function(value) {
   showValue(value) #to show value of the slider
   value <- as.numeric(value)
 
-  #user defines what to do next: (here, recalculates x and y)
+  #user defines what to do next (here, recalculates x and y)
   x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
   lo <- loess(Petal.Length~Petal.Width, data = iris, span = value)
   y <- predict(lo, x)
@@ -314,13 +316,14 @@ controlTrendline <- function(value) {
   setPoints("plot_01.loess.lines.panel.1.1", type = "coords", value = pt)
 }
 ```
-Once this is done, we need to pass this function to retrieve the value of the slider as it moves. Here, we have a special function called `sliderCallback` for this. This redefines and creates the entire function that is now called `sliderValue`.
+
+Once this is done, we need to pass this function to retrieve the value of the slider as it moves. To do this, have a special function called `sliderCallback`. This redefines and creates the entire function that is now called `sliderValue`.
 
 ```{r, eval = FALSE}
 #pass defined function through sliderCallback to pass slider value correctly
 sliderValue <- sliderCallback(controlTrendline)
 ```
-Finally, we can link this back to the slider such that when the slider moves, the trend line will be updated based upon the value of the slider as seen in Figure 4.8.
+Finally, we can link the `sliderValue` function back to the slider such that when the slider moves, the trend line will be updated based upon the value of the slider as seen in Figure 4.8.
 
 ```{r, eval = FALSE}
 int <- list(oninput = "sliderValue")
@@ -339,15 +342,14 @@ addLine("newSmooth", panel, class = "hello", list(stroke = "red",
                                                   stroke.width = "1",
                                                   fill = "none"))
 ```
-Note that this appears to be hidden on the page, as the points of this line have not been defined yet.
 
-Next, the function needs to be defined to be able to compute this new smoother.
+Note that this appears to be hidden on the page, as the points of this line have not been defined yet.
+Next, a new function needs to be defined to be able to compute this new smoother.
 
 ```{r, eval = FALSE}
 #create new smoother:
 createSmooth  = function(index) {
   #this returns the indices of the points selected
-  # could use DOM 0.5 and pass JSON through to avoid this step...
   index <- as.numeric(unlist(strsplit(index, ",")))
   #filter selected points:
   if (length(index) > 20) {
@@ -365,8 +367,7 @@ createSmooth  = function(index) {
 
 ```
 
-Because the index of the points need to be returned from the browser back to R, we use `boxCallback` to help us link these functions together.
-As linking a selection box is a special kind of interaction, we can pass our defined function through to the `addSelectionBox` function which adds on the selection box and links it together to compute the new smoother.
+Because the index of the points need to be returned from the browser back to R, we use `boxCallback` to help us link these functions together. As linking a selection box is a special type of interaction, we can pass our defined function through to the `addSelectionBox` function which adds on the selection box and links it together to compute the new smoother.
 
 ```{r, eval = FALSE}
 #link callback functions together to pass index values to function
@@ -382,7 +383,7 @@ The user now can draw a selection box over a set of points, and a new smoother s
 
 ## Compatibility with other graphics systems
 
-A possibility of extending this idea further is the compability with other R graphing systems including **lattice**, **graphics**, and **ggplot2**. As we have seen above, many of these examples are done with **lattice** plots. However, it is possible to achieve the same with different plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using graphics and ggplot2.
+A possibility of extending this idea further is the compatibility with other R graphing systems including **lattice**, **graphics**, and **ggplot2**. As we have seen above, many of these examples are done with **lattice** plots. However, it is possible to achieve the same with different plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using graphics and ggplot2.
 
 ### graphics plots
 
@@ -411,15 +412,17 @@ Another problem is that when we plot or try save it into a variable, it does not
 The only change that we need to do is run an extra `recordPlot` command before we call `listElements`.
 
 Once again, we begin by drawing the plot. We then record the plot before listing its elements. This will automatically convert the plot using `grid.echo()`.
+
 ```{r, eval = FALSE}
 boxplot(iris$Sepal.Length, horizontal = TRUE)
 pl <- recordPlot()
 listElements(pl)
 ```
 
-Next, the same process occurs. We see that the code is very similar to what was done previously with `lattice`.
+Next, the same process occurs. We see that the code is very similar to what was done previously with `lattice`. We can use the same [`highlightPoints`](#highlightPoints) function defined back in the `lattice` example.
 
 ```{r, eval = FALSE}
+# identify box in box plot and send the plot to the browser
 box = "graphics-plot-1-polygon-1"
 interactions <- list(hover = styleHover(attrs = list(fill = "red",
                                                      fill.opacity = "1")))
@@ -434,21 +437,10 @@ draw(sp)
 
 #add interactions
 points <- 'graphics-plot-1-points-1'
-highlightPoints <- function(ptr) {
-  #find the index of points that lie within the range of the box
-  index <- which(min(range) <= iris$Sepal.Length
-                 & iris$Sepal.Length <= max(range))
-  setPoints(points,
-            type = "index",
-            value = index,
-            attrs = list(fill = "red",
-                         fill.opacity = "1",
-                         class = "selected"))
-}
-
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 ```
+
 ```{r, echo = FALSE, fig.cap = "Figure 4.11: box plot example replicated using a graphics plot"}
 knitr::include_graphics('./fig/int-bp-graphics.png')
 ```
@@ -488,20 +480,18 @@ Next, we add the scatterplot to the page, define our interactions before sending
 sp <- ggplot(data = iris, aes(x = Sepal.Width, y =Sepal.Length)) + geom_point()
 sp.elements <- listElements(sp)
 draw(sp)
+```
+
+The difference is the naming of these grid elements do not have a clear structure in ggplot2. To locate the points on the plot, we can use `findElement` to return the element corresponding to these points.
+
+```{r, eval = FALSE}
 points <- findElement("geom_point.point")
+```
 
-highlightPoints <- function(ptr) {
-  #find the index of points that lie within the range of the box
-  index <- which(min(range) <= iris$Sepal.Length
-                 & iris$Sepal.Length <= max(range))
-  setPoints(points,
-            type = "index",
-            value = index,
-            attrs = list(fill = "red",
-                         fill.opacity = "1",
-                         class = "selected"))
-}
+Next, we can use the same function [`highlightPoints`](#highlightPoints) defined before sending these interactions to the browser.
 
+```{r, eval = FALSE}
+#using highlightPoints defined previously in 3.1
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 ```
@@ -510,8 +500,6 @@ addInteractions(box, boxClick)
 knitr::include_graphics('./fig/int-bp-ggplot2.png')
 ```
 
-Note that the only difference are the tags for how each element is defined. Because ggplot2 does not have a consistent naming scheme like **lattice** we can use the `findElement` function to allow the user to easily find which element they want to refer to.
+This demonstrates that there is a possible way of achieving interactions with ggplot2 and there is potential for **interactr** to plug into different R plotting systems. Consequently, when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.
 
-This demonstrates that there is a possible way of achieving interactions with ggplot2 and there is potential for the **interactr** to plug into different R plotting systems. Consequently, when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.
-
-The **interactr** package acts as a proof-of-concept that aims to be a general solution for adding simple interactions to plots generated in R. There is potential in plugging into different plotting systems, however it depends on how compatible these systems are with the underlying tools of the **interactr** package. It is based upon a very simple process of defining what you want to draw in R, identifying elements drawn, and defining specific interactions to attach to certain elements drawn that can be viewed in a web browser.
+The **interactr** package acts as a proof-of-concept and a starting point that aims to be a general solution for adding simple interactions to plots generated in R. There is potential in plugging into different plotting systems, however it depends on how compatible these systems are with the underlying tools of the **interactr** package. It is based upon a very simple process of defining what you want to draw in R, identifying elements drawn, and defining specific interactions to attach to certain elements drawn that can be viewed in a web browser. Next, we discuss the limitations and future directions of using this process to create web interactive graphics.

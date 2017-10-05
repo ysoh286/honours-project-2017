@@ -44,8 +44,8 @@ Code must also be written in a certain order to work. Plots in R must be drawn t
 - WARNING from Paul about DOM:
 > "DOM does nothing to help with synchronising cascades of updates (OR infinite loops of updates)"
 
-- requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use ```ggplot_build()```)
-- assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the df.) In cases where data taken in is rearranged and sorted (like iNZightPlots), this causes the 'indexes' of the points to differ to the original dataframe.
+- requires that units that are converted to 'native' via grid should represent the data. (for ggplot2, this doesn't hold and requires a different conversion scale. In cases like this, there should be an alternative based upon where it gets data from:  use `ggplot_build()`)
+- assumes no missing values and that plots generated via gridSVG should be in the order of the data frame. (ie point order should match with indices of the data frame.) In cases where data taken in is rearranged and sorted (like iNZightPlots), this causes the 'indexes' of the points to differ to the original dataframe.
 -  assumes that most grid objects represent a single object in SVG (which sometimes is not the case - see iNZightPlot boxplot version)
 
 ## Comparison to existing tools
