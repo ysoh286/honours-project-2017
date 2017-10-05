@@ -5,7 +5,7 @@ output: html_document
 <br>
 
 # Conclusion
-There is a need in expanding web interactive graphics to create better data visualisations for users. Despite having many tools available including plotly, ggvis and shiny, these generally produce standard interactive plots outside of R that are hard to customise. interactr provides a way of driving interactions without the need of learning web technologies while utilising R's power of statistical computing to aid changes in plots. However, more assessment and development is required on building more informative interactive visualisations before it can catch up to the capabilities of older desktop applications and be used in the future.
+There is a need in expanding web interactive graphics to create better data visualisations for users. Despite having many tools available including plotly, ggvis, shiny and animint and many other packages that produce htmlwidgets, these generally produce standard interactive plots outside of R that are hard to customise. interactr provides a way of driving interactions without the need of learning web technologies while utilising R's power of statistical computing to aid changes in plots originally drawn in R. However, more assessment and development is required on building more informative interactive visualisations before it can catch up to the capabilities of older desktop applications and existing tools to be used in the future.
 
 ## Additional resources
 The **interactr** package is currently hosted on Github [here](https://github.com/ysoh286/interactr).

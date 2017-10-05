@@ -374,10 +374,15 @@ Figure 4.1: grid, gridSVG and DOM in the process
 <p>Our first step is to draw the box plot in R.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(interactr)
 <span class="kw">library</span>(lattice)
-bw &lt;-<span class="st"> </span><span class="kw">bwplot</span>(iris<span class="op">$</span>Sepal.Length, <span class="dt">main =</span> <span class="st">&quot;boxplot&quot;</span>)</code></pre></div>
+bw &lt;-<span class="st"> </span><span class="kw">bwplot</span>(iris<span class="op">$</span>Sepal.Length, <span class="dt">main =</span> <span class="st">&quot;Sepal length&quot;</span>)</code></pre></div>
 <p>Here, we have stored the box plot into a variable called <code>bw</code>. To attach interactions, we need to identify what elements have been drawn. We can do that by listing the elements.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">listElements</span>(bw)</code></pre></div>
-<p><img src="chapter4_files/figure-html/unnamed-chunk-3-1.png" width="672"  style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center">
+<img src="chapter4_files/figure-html/unnamed-chunk-3-1.png" alt="Figure 4.2: Producing a box plot in R" width="672"  />
+<p class="caption">
+Figure 4.2: Producing a box plot in R
+</p>
+</div>
 <pre><code>## plot_01.background
 ## plot_01.main
 ## plot_01.xlab
@@ -615,7 +620,9 @@ Figure 4.9: Plot that has a selection box feature that draws a separate smoother
 </div>
 <div id="compatibility-with-other-graphics-systems" class="section level2">
 <h2><span class="header-section-number">4.3</span> Compatibility with other graphics systems</h2>
-<p>A possibility of extending this idea further is the compatibility with other R graphing systems including <strong>lattice</strong>, <strong>graphics</strong>, and <strong>ggplot2</strong>. As we have seen above, many of these examples are done with <strong>lattice</strong> plots. However, it is possible to achieve the same with different plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using graphics and ggplot2.</p>
+<p>A possibility of extending this idea further is the compatibility with other R graphing systems including <strong>lattice</strong>, <strong>graphics</strong> (also known as base R plots), and <strong>ggplot2</strong>.</p>
+<p>Before we begin, we will briefly mention the two different graphics systems in R. One is known as the <code>base</code> or <code>graphics</code> system, the other is known as the <code>grid</code> system. <em>insert Paul’s R Graphics tree diagram</em></p>
+<p>As we have seen previously in (Section 4.1), many of these examples are done with <strong>lattice</strong> plots. However, it is possible to achieve the same with different plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using graphics and ggplot2.</p>
 <div id="graphics-plots" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> graphics plots</h3>
 <p>As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the <strong>gridGraphics</strong> package, which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The <code>grid.echo()</code> function achieves this.</p>

@@ -56,12 +56,12 @@ Our first step is to draw the box plot in R.
 ```{r}
 library(interactr)
 library(lattice)
-bw <- bwplot(iris$Sepal.Length, main = "boxplot")
+bw <- bwplot(iris$Sepal.Length, main = "Sepal length")
 ```
 
 Here, we have stored the box plot into a variable called `bw`. To attach interactions, we need to identify what elements have been drawn. We can do that by listing the elements.
 
-```{r}
+```{r, fig.cap = "Figure 4.2: Producing a box plot in R"}
 listElements(bw)
 box <- "plot_01.bwplot.box.polygon.panel.1.1"
 ```
@@ -383,7 +383,12 @@ The user now can draw a selection box over a set of points, and a new smoother s
 
 ## Compatibility with other graphics systems
 
-A possibility of extending this idea further is the compatibility with other R graphing systems including **lattice**, **graphics**, and **ggplot2**. As we have seen above, many of these examples are done with **lattice** plots. However, it is possible to achieve the same with different plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using graphics and ggplot2.
+A possibility of extending this idea further is the compatibility with other R graphing systems including **lattice**, **graphics** (also known as base R plots), and **ggplot2**.
+
+Before we begin, we will briefly mention the two different graphics systems in R. One is known as the `base` or `graphics` system, the other is known as the `grid` system.
+*insert Paul's R Graphics tree diagram*
+
+As we have seen previously in (Section 4.1), many of these examples are done with **lattice** plots. However, it is possible to achieve the same with different plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using graphics and ggplot2.
 
 ### graphics plots
 
