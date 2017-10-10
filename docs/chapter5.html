@@ -351,8 +351,8 @@ div.tocify {
 <p>The <strong>interactr</strong> package provides a way of generating simple interactive R plots that can be viewed in a web browser. It is advantageous in the sense that we can define and customise interactions with flexibility. It can also achieve unidirectional linking between plots. However, there are many limitations present with its current implementation and is not yet recommended for general use. But it does have potential to be further developed in the future. In this section we will discuss the advantages <a href="#advantages">(Section 5.1)</a> and limitations of this method <a href="#limitations">(Section 5.2)</a>, further compare it to existing tools <a href="#comparison-to-existing-tools">(Section 5.3)</a>, and briefly comment on future directions for developing <strong>interactr</strong>.</p>
 <div id="advantages" class="section level2">
 <h2><span class="header-section-number">5.1</span> Advantages</h2>
-<p>The idea of <strong>interactr</strong> is inspired from finding a more easier way to customise certain interactions onto plots drawn in R without the need to learn JavaScript. It takes advantage of R’s flexible graphics system and caters for both <strong>graphics</strong> plots and <strong>grid</strong> type plots.</p>
-<p>Using DOM allows us to use R to recompute and do calculations that originally cannot be done in JavaScript, such as recomputing densities on a plot based upon a selection. (<em>create example</em>) This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM along with also creates a more responsive application.</p>
+<p>The idea of <strong>interactr</strong> is inspired from finding a more easier way to customise certain interactions onto plots drawn in R without the need to learn JavaScript. It takes advantage of R’s flexible graphics system and caters for both <strong>graphics</strong> and <strong>grid</strong> plots.</p>
+<p>Using DOM allows us to use R to recompute and do calculations that originally cannot be done in JavaScript, such as recomputing densities on a plot based upon a selection. (<em>insert DOM density example</em>) This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.</p>
 <p>Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools, as it requires information on how these plots are layered and rendered. With gridSVG underneath to provide a clear mapping structure of these layers, we can easily add on elements (that act as layers) to existing plots on the web page to show more about a user’s interaction (such as a selection or a click). They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added on top of the plot.</p>
 <p><strong>interactr</strong> can be used to create links between plots via clicks and selection boxes, where a single plot can control the rest of the plots. It may be possible to create multi-directional links, but becomes more complex to co-ordinate. It is a success in its own for providing basic interactions to any type of plot drawn in R. However, there are still many limitations that are present with its current implementation.</p>
 </div>
@@ -383,39 +383,39 @@ plot_01.border.panel.1.1</code></pre>
 <pre><code>layout
   background.1-7-10-1
   panel.6-4-6-4
-    grill.gTree.265
-      panel.background..rect.256
-      panel.grid.minor.y..polyline.258
-      panel.grid.minor.x..polyline.260
-      panel.grid.major.y..polyline.262
-      panel.grid.major.x..polyline.264
+    grill.gTree.77
+      panel.background..rect.68
+      panel.grid.minor.y..polyline.70
+      panel.grid.minor.x..polyline.72
+      panel.grid.major.y..polyline.74
+      panel.grid.major.x..polyline.76
     NULL
-    geom_point.points.252
+    geom_point.points.64
     NULL
-    panel.border..zeroGrob.253
+    panel.border..zeroGrob.65
   spacer.7-5-7-5
   spacer.7-3-7-3
   spacer.5-5-5-5
   spacer.5-3-5-3
   axis-t.5-4-5-4
   axis-l.6-3-6-3
-    axis.line.y.left..zeroGrob.278
+    axis.line.y.left..zeroGrob.90
     axis
       axis.1-1-1-1
-        GRID.text.275
+        GRID.text.87
       axis.1-2-1-2
   axis-r.6-5-6-5
   axis-b.7-4-7-4
-    axis.line.x.bottom..zeroGrob.271
+    axis.line.x.bottom..zeroGrob.83
     axis
       axis.1-1-1-1
       axis.2-1-2-1
-        GRID.text.268
+        GRID.text.80
   xlab-t.4-4-4-4
   xlab-b.8-4-8-4
-    GRID.text.282
+    GRID.text.94
   ylab-l.6-2-6-2
-    GRID.text.285
+    GRID.text.97
   ylab-r.6-6-6-6
   subtitle.3-4-3-4
   title.2-4-2-4

@@ -1,5 +1,5 @@
 ## gridSVG + gridSVGMappings + XML:
-# Resources: Simon Potter's thesis Chapter 2.6, 
+# Resources: Simon Potter's thesis Chapter 2.6,
 #             https://www.stat.auckland.ac.nz/~paul/Reports/gridSVGnames/generating-unique-names.html
 
 library(grid)
@@ -58,9 +58,50 @@ library(XML)
 
 # get all points (from Paul's DOM 0.2 example):
 # use of xpaths in order to specify what you want to target
-points <- getNodeSet(svg, 
+points <- getNodeSet(svg,
                      "//svg:use",
                      namespaces = c(svg = "http://www.w3.org/2000/svg"))
 
 # retrieve ids:
 ids <- xmlSApply(points, xmlGetAttr, "id")
+
+# what if I want just the polygons?
+id <- getSVGMappings("plot_01.xyplot.points.panel.1.1", "grob")
+points <- getNodeSet(svg,
+                    paste0("//svg:g[@id='", id,"']/child::node()"),
+                    namespaces = c(svg="http://www.w3.org/2000/svg"))
+ids <- xmlSApply(points, xmlGetAttr, "id")
+
+xmlElementsByTagName(points[[1]], id)
+
+
+## make sure that this works on any plot...
+par(mfrow = c(1, 2))
+
+#plot both:
+plot(mtcars$mpg, mtcars$wt,
+     pch = 19, xlab = "miles per gallon", col = mtcars$am,
+    ylab = "car weight")
+barplot(table(mtcars$cyl))
+pl <- recordPlot()
+gridGraphics::grid.echo()
+grid.ls()
+
+svgall <- grid.export(NULL, exportCoords = "inline", exportMappings = "inline")
+svg <- svgall$svg
+mappings <- svgall$mappings
+coords <- svgall$coords
+gridSVGCoords(coords)
+gridSVGMappings(mappings)
+id <- getSVGMappings("graphics-plot-1-points-1", "grob")
+points <- getNodeSet(svg,
+                    paste0("//svg:g[@id='", id,"']/child::node()"),
+                    namespaces = c(svg="http://www.w3.org/2000/svg"))
+ids <- xmlSApply(points, xmlGetAttr, "id")
+
+# on the bar plot?
+id <- getSVGMappings("graphics-plot-2-rect-1", "grob")
+bars <- getNodeSet(svg,
+                    paste0("//svg:g[@id='", id,"']/child::node()"),
+                    namespaces = c(svg="http://www.w3.org/2000/svg"))
+barbar <- xmlSApply(bars, xmlGetAttr, "id")
