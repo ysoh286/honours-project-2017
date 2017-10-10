@@ -1,11 +1,26 @@
 ---
 output: pdf_document
 ---
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
 
-\begin{titlepage}
-  \vspace*{\fill}
-  \begin{center}
-  \huge{Web interactive plots in \textbf{R}} \\
-  \end{center}
-  \vspace*{\fill}
-\end{titlepage}
+\parindent=0cm
+\parskip=\baselineskip
+
+\begin{centering}
+\vspace*{\fill}
+\Huge{Web interactive plots in R} \\
+\vspace{2cm}
+\Large{Yu Han Soh} \\
+\vspace{1cm}
+\today \\
+\vspace{1cm}
+\includegraphics{figures/logo}\\
+\vspace{1cm}
+  Bachelor of Science (Honours)\\
+  Department of Statistics\\
+  The University of Auckland\\
+  New Zealand
+\vspace*{\fill}
+
+\end{centering}

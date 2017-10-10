@@ -1,0 +1,275 @@
+\begin{thebibliography}{41}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bostock et~al.(2011)Bostock, Ogievetsky, and Heer]{bostock01}
+Michael Bostock, Vadim Ogievetsky, and Jeffrey Heer.
+\newblock D3 data-driven documents.
+\newblock \emph{IEEE Transactions on Visualization and Computer Graphics},
+  17\penalty0 (12):\penalty0 2301--2309, December 2011.
+\newblock ISSN 1077-2626.
+\newblock \doi{10.1109/TVCG.2011.185}.
+\newblock URL \url{http://dx.doi.org/10.1109/TVCG.2011.185}.
+
+\bibitem[CensusAtSchool(2009)]{census01}
+CensusAtSchool.
+\newblock \emph{CensusAtSchool 2009 data subset}, 2009.
+\newblock URL
+  \url{http://new.censusatschool.org.nz/resource/2009-censusatschool-data-subset/}.
+
+\bibitem[Chang and Wickham(2016)]{ggvis01}
+Winston Chang and Hadley Wickham.
+\newblock \emph{ggvis: Interactive Grammar of Graphics}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=ggvis}.
+\newblock R package version 0.4.3.
+
+\bibitem[Chang et~al.(2017)Chang, Cheng, Allaire, Xie, and McPherson]{shiny01}
+Winston Chang, Joe Cheng, JJ~Allaire, Yihui Xie, and Jonathan McPherson.
+\newblock \emph{shiny: Web Application Framework for R}, 2017.
+\newblock URL \url{https://CRAN.R-project.org/package=shiny}.
+\newblock R package version 1.0.5.
+
+\bibitem[Cheng(2016)]{cheng16}
+Joe Cheng.
+\newblock \emph{crosstalk: Inter-Widget Interactivity for HTML Widgets}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=crosstalk,
+  https://rstudio.github.io/crosstalk/}.
+\newblock R package version 1.0.0.
+
+\bibitem[Cheng(2017{\natexlab{a}})]{promise01}
+Joe Cheng.
+\newblock \emph{promises: What the Package Does (Title Case)},
+  2017{\natexlab{a}}.
+\newblock R package version 0.1.0.9000.
+
+\bibitem[Cheng(2017{\natexlab{b}})]{promise02}
+Joe Cheng.
+\newblock \emph{Async Programming in R and Shiny}, 2017{\natexlab{b}}.
+\newblock URL
+  \url{https://medium.com/@joe.cheng/async-programming-in-r-and-shiny-ebe8c5010790}.
+
+\bibitem[Cheng et~al.(2017)Cheng, Karambelkar, and Xie]{leaf01}
+Joe Cheng, Bhaskar Karambelkar, and Yihui Xie.
+\newblock \emph{leaflet: Create Interactive Web Maps with the JavaScript
+  'Leaflet' Library}, 2017.
+\newblock URL \url{http://rstudio.github.io/leaflet/}.
+\newblock R package version 1.1.0.9000.
+
+\bibitem[Cook and Swayne(2007)]{cosway07}
+Dianne Cook and Deborah~F. Swayne.
+\newblock \emph{Interactive and Dynamic Graphics for Data Analysis - With {R}
+  and GGobi}.
+\newblock Use {R}. Springer, 2007.
+\newblock ISBN 978-0-387-71761-6.
+\newblock \doi{10.1007/978-0-387-71762-3}.
+\newblock URL \url{https://doi.org/10.1007/978-0-387-71762-3}.
+
+\bibitem[Gesmann and de~Castillo(2011)]{gesman01}
+Markus Gesmann and Diego de~Castillo.
+\newblock googlevis: Interface between r and the google visualisation api.
+\newblock \emph{The R Journal}, 3\penalty0 (2):\penalty0 40--44, December 2011.
+\newblock URL
+  \url{https://journal.r-project.org/archive/2011-2/RJournal_2011-2_Gesmann+de~Castillo.pdf}.
+
+\bibitem[Hafen(2016)]{hafen02}
+Ryan Hafen.
+\newblock \emph{rbokeh Version 0.5.0 Released}, 2016.
+\newblock URL \url{http://ryanhafen.com/blog/rbokeh-0-5-0}.
+
+\bibitem[Hafen and Continuum~Analytics(2016)]{hafen01}
+Ryan Hafen and Inc. Continuum~Analytics.
+\newblock \emph{rbokeh: R Interface for Bokeh}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=rbokeh}.
+\newblock R package version 0.5.0.
+
+\bibitem[Heckmann(2013)]{heckmann01}
+Mark Heckmann.
+\newblock \emph{Sending data from client to server and back using shiny}, 2013.
+\newblock URL
+  \url{https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/}.
+
+\bibitem[Hocking et~al.(2017)Hocking, VanderPlas, Sievert, Ferris, Tsai, and
+  Khan]{animint01}
+Toby~Dylan Hocking, Susan VanderPlas, Carson Sievert, Kevin Ferris, Tony Tsai,
+  and Faizan Khan.
+\newblock \emph{animint: Interactive animations}, 2017.
+\newblock URL \url{https://github.com/tdhock/animint}.
+\newblock R package version 2017.01.04.
+
+\bibitem[Ihaka and Gentleman(1996)]{ihaka96}
+Ross Ihaka and Robert Gentleman.
+\newblock {R: A Language for Data Analysis and Graphics}.
+\newblock \emph{Journal of Computational and Graphical Statistics}, 5\penalty0
+  (3):\penalty0 299--314, 1996.
+
+\bibitem[Kunst(2017)]{kunst01}
+Joshua Kunst.
+\newblock \emph{highcharter: A Wrapper for the 'Highcharts' Library}, 2017.
+\newblock URL \url{https://CRAN.R-project.org/package=highcharter,
+  https://github.com/jbkunst/highcharter}.
+\newblock R package version 0.5.0.
+
+\bibitem[Murray(2013)]{murray13}
+Scott Murray.
+\newblock \emph{Interactive Data Visualization for the Web}.
+\newblock O'Reilly Media, Inc., 2013.
+\newblock ISBN 1449339735, 9781449339739.
+
+\bibitem[Murrell(2011)]{rgraphics01}
+Paul Murrell.
+\newblock \emph{R Graphics}.
+\newblock CRC Press, Inc., Boca Raton, FL, USA, 2nd edition, 2011.
+\newblock ISBN 1439831769, 9781439831762.
+
+\bibitem[Murrell(2015)]{gridGra01}
+Paul Murrell.
+\newblock \emph{gridGraphics: Redraw Base Graphics Using 'grid' Graphics},
+  2015.
+\newblock URL \url{https://CRAN.R-project.org/package=gridGraphics}.
+\newblock R package version 0.1-5.
+
+\bibitem[Murrell(2016{\natexlab{a}})]{DOM01}
+Paul Murrell.
+\newblock \emph{DOM: Interact with Web Browser DOM}, 2016{\natexlab{a}}.
+\newblock R package version 0.5-1.
+
+\bibitem[Murrell(2016{\natexlab{b}})]{DOM02}
+Paul Murrell.
+\newblock \emph{An Introduction to the 'DOM' Package}, 2016{\natexlab{b}}.
+\newblock URL
+  \url{https://www.stat.auckland.ac.nz/~paul/Reports/DOM/Intro/DOM-Intro.html}.
+\newblock Accessed 10th October, 2017.
+
+\bibitem[Murrell and Potter(2012)]{gridSVG03}
+Paul Murrell and Simon Potter.
+\newblock \emph{Working with the gridSVG Coordinate System}, 2012.
+\newblock URL
+  \url{https://www.stat.auckland.ac.nz/~paul/Reports/gridSVGcoords/coordinates.html}.
+
+\bibitem[Murrell and Potter(2014)]{gridSVG02}
+Paul Murrell and Simon Potter.
+\newblock The gridsvg package.
+\newblock \emph{R Journal}, 6\penalty0 (1):\penalty0 133 -- 143, 2014.
+\newblock ISSN 20734859.
+\newblock URL
+  \url{https://journal.r-project.org/archive/2014/RJ-2014-013/RJ-2014-013.pdf}.
+
+\bibitem[Murrell and Potter(2017)]{gridSVG01}
+Paul Murrell and Simon Potter.
+\newblock \emph{gridSVG: Export 'grid' Graphics as SVG}, 2017.
+\newblock URL \url{https://CRAN.R-project.org/package=gridSVG}.
+\newblock R package version 1.5-1.
+
+\bibitem[Paul~Murrell and Allaire(2015)]{record01}
+Jeroen~Ooms Paul~Murrell and JJ~Allaire.
+\newblock \emph{Recording and Replaying the Graphics Engine Display List},
+  2015.
+\newblock URL
+  \url{https://www.stat.auckland.ac.nz/~paul/Reports/DisplayList/dl-record.html}.
+
+\bibitem[RStudio(2017{\natexlab{a}})]{shiny02}
+RStudio.
+\newblock \emph{Shiny}, 2017{\natexlab{a}}.
+\newblock URL \url{https://shiny.rstudio.com/}.
+
+\bibitem[RStudio(2017{\natexlab{b}})]{shiny03}
+RStudio.
+\newblock \emph{Interactive plots}, 2017{\natexlab{b}}.
+\newblock URL \url{https://shiny.rstudio.com/articles/plot-interaction.html,
+  https://shiny.rstudio.com/articles/plot-interaction-advanced.html}.
+
+\bibitem[RStudio(2017{\natexlab{c}})]{shiny04}
+RStudio.
+\newblock \emph{Shiny server}, 2017{\natexlab{c}}.
+\newblock URL \url{https://www.rstudio.com/products/shiny/shiny-server/}.
+\newblock Last accessed October 10, 2017.
+
+\bibitem[RStudio(2017{\natexlab{d}})]{shiny05}
+RStudio.
+\newblock \emph{Selecting rows of data}, 2017{\natexlab{d}}.
+\newblock URL
+  \url{https://shiny.rstudio.com/articles/selecting-rows-of-data.html}.
+
+\bibitem[Sievert(2017{\natexlab{a}})]{sievert01}
+Carson Sievert.
+\newblock \emph{plotly for R}.
+\newblock 2017{\natexlab{a}}.
+\newblock URL \url{https://plotly-book.cpsievert.me/}.
+
+\bibitem[Sievert(2017{\natexlab{b}})]{sievert03}
+Carson Sievert.
+\newblock \emph{plotly 4.7.1 now on CRAN}, 2017{\natexlab{b}}.
+\newblock URL \url{http://moderndata.plot.ly/plotly-4-7-1-now-on-cran/}.
+\newblock Last accessed October 10th, 2017.
+
+\bibitem[Sievert et~al.()Sievert, Parmer, Hocking, Chamberlain, Ram, rvellec,
+  and Despouy]{plotly01}
+Carson Sievert, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik Ram,
+  Marianne~Co rvellec, and Pedro Despouy.
+\newblock \emph{plotly: Create Interactive Web Graphics via 'plotly.js'}.
+\newblock URL \url{https://plot.ly/r, https://cpsievert.github.io/plotly_book/,
+  https://github.com/ropensci/plotly}.
+\newblock R package version 4.5.6.9000.
+
+\bibitem[Theus(2002)]{theus02}
+Martin Theus.
+\newblock Interactive data visualization using mondrian.
+\newblock \emph{Journal of Statistical Software, Articles}, 7\penalty0
+  (11):\penalty0 1--9, 2002.
+\newblock ISSN 1548-7660.
+\newblock \doi{10.18637/jss.v007.i11}.
+\newblock URL \url{https://www.jstatsoft.org/v007/i11}.
+
+\bibitem[Trifacta(2014)]{vega01}
+Trifacta.
+\newblock \emph{Vega}, 2014.
+\newblock URL \url{https://vega.github.io/vega/}.
+
+\bibitem[Vaidyanathan(2013)]{vaidyan13}
+Ramnath Vaidyanathan.
+\newblock \emph{rCharts: Interactive Charts using Javascript Visualization
+  Libraries}, 2013.
+\newblock R package version 0.4.5.
+
+\bibitem[W3C(2009)]{w3c}
+W3C.
+\newblock \emph{Document Object Model (DOM)}, 2009.
+\newblock URL \url{https://www.w3.org/DOM/}.
+\newblock Last accessed October 10th, 2017.
+
+\bibitem[Wickham(2009)]{ggplot01}
+Hadley Wickham.
+\newblock \emph{ggplot2: Elegant Graphics for Data Analysis}.
+\newblock Springer-Verlag New York, 2009.
+\newblock ISBN 978-0-387-98140-6.
+\newblock URL \url{http://ggplot2.org}.
+
+\bibitem[Wickham(2016)]{wickham01}
+Hadley Wickham.
+\newblock \emph{ggplot2: Elegant Graphics for Data Analysis}.
+\newblock Springer-Verlag New York, 2016.
+\newblock ISBN 978-3-319-24277-4.
+\newblock URL \url{http://ggplot2.org}.
+
+\bibitem[Wickham and Chang(2016)]{ggvis02}
+Hadley Wickham and Winston Chang.
+\newblock \emph{Interactivity}, 2016.
+\newblock URL \url{http://ggvis.rstudio.com/interactivity.html}.
+\newblock Last accessed October 9th, 2017.
+
+\bibitem[Wilkinson(2005)]{wilkin01}
+Leland Wilkinson.
+\newblock \emph{The Grammar of Graphics (Statistics and Computing)}.
+\newblock Springer-Verlag New York, Inc., Secaucus, NJ, USA, 2005.
+\newblock ISBN 0387245448.
+
+\bibitem[Xie(2016)]{dt01}
+Yihui Xie.
+\newblock \emph{DT: A Wrapper of the JavaScript Library 'DataTables'}, 2016.
+\newblock URL \url{http://rstudio.github.io/DT}.
+\newblock R package version 0.2.12.
+
+\end{thebibliography}

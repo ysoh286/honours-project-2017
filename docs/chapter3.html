@@ -23,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -305,9 +306,6 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="abstract.html">Abstract</a>
-</li>
-<li>
   <a href="exec-sum.html">Executive Summary</a>
 </li>
 <li>
@@ -328,6 +326,12 @@ div.tocify {
 <li>
   <a href="conclusion.html">Conclusion</a>
 </li>
+<li>
+  <a href="https://github.com/ysoh286/honours-project-2017">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -344,12 +348,12 @@ div.tocify {
 <p><br /></p>
 <div id="interactive-r-plots-using-lower-level-tools" class="section level1">
 <h1><span class="header-section-number">3</span> Interactive R plots using lower level tools</h1>
-<p>Web interactive graphics can be achieved by R users without the knowledge of HTML, CSS and JavaScript. However, many of these tools use an external JavaScript library to render their plots. This section discusses how we can use two lower level packages, gridSVG and DOM, along with a knowledge of web technologies to incorporate interactions into R plots and prevent redrawing. One approach to avoid redrawing in plots is to target parts of the plot that need to be updated. We need a system that renders SVG elements but has a mapping structure that allows elements be related back to data. In R, we can use the gridSVG package. By combining gridSVG, shiny and JavaScript, we are able to update specific parts of the plot when the user interacts with an input using functions that allow us to pass JavaScript messages between R and the browser. Because interactions are achieved through manipulating web content using the DOM, we can use the DOM package that directly allows us to drive web content from R without the need for writing JavaScript. We will discuss how these different approaches work and compare between them.</p>
+<p>Web interactive graphics can be achieved by R users without the knowledge of HTML, CSS and JavaScript. However, many of these tools use an external JavaScript library to render their plots. This section discusses how we can use two lower level packages, <strong>gridSVG</strong><span class="citation">(Murrell and Potter 2017)</span> and <strong>DOM</strong><span class="citation">(Murrell 2016b)</span> to incorporate interactions into R plots and prevent redrawing entire plots. One approach to avoid this is to target parts of the plot that need to be updated. We need a system that renders SVG elements but has a mapping structure that allows elements to be related back to data. In R, we can use the <strong>gridSVG</strong> package. By combining <strong>gridSVG</strong>, <strong>shiny</strong> and JavaScript, we are able to update specific parts of the plot when the user interacts with an input by passing JavaScript messages between R and the browser. Because interactions are achieved by manipulating web content using the <strong>DOM</strong>, we can alternatively use the <strong>DOM</strong> package that directly allows us to drive web content from R without the need for writing JavaScript. We will discuss how these different approaches work.</p>
 <div id="gridsvg" class="section level2">
 <h2><span class="header-section-number">3.1</span> gridSVG</h2>
-<p>gridSVG (Murrell and Potter, 2017) is an R package that allows for the conversion of grid graphics in R into SVG. This is powerful because it is easy to attach interactions to specific elements on the page. The advantage of using gridSVG over others is that there is a clear mapping structure between elements in the data set and SVG elements generated. This is not clear in plotly or ggvis and their JavaScript libraries, which makes it hard to identify or trace data back to the elements on the page. This also explains why it may be difficult to customise interactions on the plot. With gridSVG, we can add JavaScript to grid elements in R using <code>grid.script()</code> and <code>grid.garnish()</code> (Murrell and Potter, 2011).</p>
+<p><strong>gridSVG</strong> <span class="citation">(Murrell and Potter 2017)</span> is an R package that allows for the conversion of grid graphics in R into SVG. This is powerful because it is easy to attach interactions to specific elements on the page. The advantage of using <strong>gridSVG</strong> over others is that there is a clear mapping structure between elements in the data set and SVG elements generated. This is not clear in <strong>plotly</strong> or <strong>ggvis</strong> and their JavaScript libraries, which makes it hard to identify or trace data back to the elements on the page. This also explains why it may be difficult to customise interactions on the plot. With <strong>gridSVG</strong>, we can add JavaScript to <strong>grid</strong> elements in R using <code>grid.script()</code> and <code>grid.garnish()</code> <span class="citation">(Murrell and Potter 2014)</span>.</p>
 <embed src="./fig/circle.svg" type = "image/svg+xml" width = "200"/>
-<p>Figure 3.1: an interactive circle made using gridSVG</p>
+<p>Figure 3.1: an interactive circle made using <strong>gridSVG</strong></p>
 <p><strong>Hover over the circle above and it will turn red!</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grid.circle</span>(<span class="dt">x =</span> <span class="fl">0.5</span>, <span class="dt">y =</span> <span class="fl">0.5</span>, <span class="dt">r =</span> <span class="fl">0.25</span>, <span class="dt">name =</span> <span class="st">&quot;circle.A&quot;</span>, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">&quot;yellow&quot;</span>))
 <span class="kw">grid.garnish</span>(<span class="st">&#39;circle.A&#39;</span>, <span class="dt">onmouseover =</span> <span class="st">&quot;allred()&quot;</span>, <span class="dt">onmouseout =</span> <span class="st">&quot;allyellow()&quot;</span>, <span class="st">&quot;pointer-events&quot;</span> =<span class="st"> &quot;all&quot;</span>)
@@ -362,24 +366,24 @@ div.tocify {
 <span class="st">  circle.setAttribute(&#39;fill&#39;, &#39;yellow&#39;);</span>
 <span class="st">  }&quot;</span>)
 <span class="kw">grid.export</span>(<span class="st">&quot;circle.svg&quot;</span>)</code></pre></div>
-<p>In Figure 3.1, the circle has been drawn in R, named and have interactive elements added before being exported out as an SVG. A simple interaction has been attached to the circle where if the user hovers over the circle, it will turn red. This shows that there is a relationship between grid objects and SVG objects that are generated. In grid, we have named the circle as <code>circle.A</code>. gridSVG maintains this as an grouped SVG element with an id attribute of <code>circle.A.1</code>, where inside lies a single SVG circle element called <code>circle.A.1.1</code>. In R, we can refer back to these grid objects to attach interactions to their SVG counterparts.</p>
-<p>Another important feature that gridSVG has is the ability to translate between data and SVG coordinates. Suppose that a plot has been generated. The <code>exportCoords</code> argument in <code>grid.export</code> is able to generate data that retains the locations of viewports and scales from the original plot in R (Murrell and Potter, 2012). We can use this information to convert data to SVG coordinates and vice versa.</p>
+<p>In Figure 3.1, the circle has been drawn in R, named and have interactive elements added before being exported out as an SVG. A simple interaction has been attached to the circle where if the user hovers over the circle, it will turn red. This shows that there is a relationship between <strong>grid</strong> objects and SVG objects that are generated. In grid, we have named the circle as <code>circle.A</code>. <strong>gridSVG</strong> maintains this as an grouped SVG element with an id attribute of <code>circle.A.1</code>, where inside lies a single SVG circle element called <code>circle.A.1.1</code>. In R, we can refer back to these <strong>grid</strong> objects to attach interactions to their SVG counterparts.</p>
+<p>Another important feature <strong>gridSVG</strong> has is the ability to translate between data and SVG coordinates<span class="citation">(Murrell and Potter 2012)</span>. Suppose that a plot has been generated. The <code>exportCoords</code> argument in <code>grid.export</code> is able to generate data that retains the locations of viewports and scales from the original plot in R (Murrell and Potter, 2012). We can use this information to convert data to SVG coordinates and vice versa.</p>
 <p>To demonstrate, we have drawn a plot using the <code>cars</code> data set and exported its coordinate system with its corresponding SVG. We have separated the svg and the coordinates.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">xyplot</span>(dist <span class="op">~</span><span class="st"> </span>speed, <span class="dt">data =</span> cars)</code></pre></div>
 <p><img src="chapter3_files/figure-html/unnamed-chunk-2-1.png" width="672"  style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svgdoc &lt;-<span class="st"> </span><span class="kw">grid.export</span>(<span class="ot">NULL</span>, <span class="dt">exportCoords =</span> <span class="st">&quot;inline&quot;</span>)
 
-<span class="co">#separate the svg and coordinates</span>
+<span class="co"># separate the svg and coordinates</span>
 svg &lt;-<span class="st"> </span>svgdoc<span class="op">$</span>svg
 coords &lt;-<span class="st"> </span>svgdoc<span class="op">$</span>coords</code></pre></div>
 <p>To be able to use the coordinate system in R to convert between data and SVG coordinate systems, we need to load it in by calling <code>gridSVGCoords</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gridSVGCoords</span>(coords)</code></pre></div>
 <p>Suppose we have a new point at (4, 5). To be able to convert this in the correct coordinate space, we need to find the correct viewport (identified as <code>panel</code>) it lies in. This can then be easily translated into SVG co-ordinates and back using the functions <code>viewportConvertX</code> and <code>viewportConvertY</code> with <code>panel</code>.</p>
 <!-- *Chris wants to know where the panel comes from* -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#to identify the correct panel:</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># to identify the correct panel:</span>
 panel &lt;-<span class="st"> &quot;plot_01.toplevel.vp::plot_01.panel.1.1.vp.2&quot;</span>
 
-<span class="co">#if there&#39;s a new point we want to find the SVG coordinates of:</span>
+<span class="co"># if there&#39;s a new point we want to find the SVG coordinates of:</span>
 (x &lt;-<span class="st"> </span><span class="kw">viewportConvertX</span>(panel, <span class="dv">4</span>, <span class="st">&quot;native&quot;</span>))</code></pre></div>
 <pre><code>## [1] 79.48421</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(y &lt;-<span class="st"> </span><span class="kw">viewportConvertY</span>(panel, <span class="dv">5</span>, <span class="st">&quot;native&quot;</span>))</code></pre></div>
@@ -390,20 +394,20 @@ panel &lt;-<span class="st"> &quot;plot_01.toplevel.vp::plot_01.panel.1.1.vp.2&q
 <pre><code>## [1] 4</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">viewportConvertY</span>(panel, y, <span class="st">&quot;svg&quot;</span>, <span class="st">&quot;native&quot;</span>)</code></pre></div>
 <pre><code>## [1] 5</code></pre>
-<p>The main limitations of this package are clear by its name. Only plots that are defined by the <code>grid</code> graphics system can be converted into SVG. This means that plots defined using base R cannot be directly converted. There is a solution to this using the <code>gridGraphics</code> package that can converts base R graphics into <code>grid</code> graphics (further discussed in [Section 4.2.1]). Another point to note is that the process of converting elements to SVG becomes slow when there are many elements to render although work is under way on this to speed up conversion.</p>
+<p>The main limitations of this package are clear by its name. Only plots that are defined by the <strong>grid</strong> graphics system can be converted into SVG. This means that plots defined using base R cannot be directly converted <span class="citation">(Murrell and Potter 2014)</span>. There is a solution to this using the <strong>gridGraphics</strong> <span class="citation">(Murrell 2015)</span> package that can converts base R graphics into <strong>grid</strong> graphics (further demonstrated in Section 4.2.1). Another point to note is that the process of converting elements to SVG becomes slow when there are many elements to render although work is under way on this to speed up conversion.</p>
 <div id="customising-simple-plot-interactions" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Customising simple plot interactions</h3>
 <p>A clear limitation that is present in the existing tools discussed previously is letting the user add their own interactions on an existing plot.</p>
 <embed src="./fig/bp/boxplot.svg" type="image/svg+xml" />
-<p>Figure 3.2: An example of a customised box plot interaction on an iNZight plot using gridSVG, JavaScript</p>
+<p>Figure 3.2: An example of a customised box plot interaction on an iNZight plot using <strong>gridSVG</strong>, JavaScript</p>
 <p><strong>Hover over Figure 3.2’s box and it will light up in red. Click on the box to highlight the points that lie within that range.</strong></p>
-<p>One such example is highlighting part of a box plot to show certain values between the median and the lower quartile (Figure 3.2). When the user clicks on this box, it will highlight the points that lie within this range. While this can be achieved with gridSVG and custom JavaScript, it is not as straightforward with plotly or ggvis. Despite plotly and ggvis also rendering graphs in SVG, it is more difficult to identify which elements to target and add interactions to with these systems.</p>
+<p>One such example is highlighting part of a box plot to show certain values between the median and the lower quartile (Figure 3.2). When the user clicks on this box, it will highlight the points that lie within this range. While this can be achieved with <strong>gridSVG</strong> and custom JavaScript, it is not as straightforward with <strong>plotly</strong> or <strong>ggvis</strong>. Despite <strong>plotly</strong> and <strong>ggvis</strong> also rendering graphs in SVG, it is more difficult to identify which elements to target and add interactions to with these systems.</p>
 </div>
 <div id="preventing-redraws-in-shiny-using-javascript-messages-and-gridsvg" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Preventing redraws in shiny using JavaScript messages and gridSVG</h3>
-<p>As mentioned at the [end of Chapter 2], one of the downsides of using <code>shiny</code> along with plotly or other htmlwidgets is its nature to redraw plots every time an input changes. With R plots that are rendered using the <code>renderPlot</code> function, redrawing is required because the plot is viewed as a raster image. In other cases, <code>shiny</code> simply re-runs code when a user interacts with an input, which causes the plot to be redrawn. This means that we cannot specifically target elements on the page as the plot is viewed as a single object.</p>
-<p>A new approach is to render the plot in SVG and target certain elements that need to be redrawn while using shiny to communicate back to R. If we use SVG, we can separate out which components to target and add interactions without changing the rest of the plot. A complication to this is that we can no longer use the usual <code>shiny</code> input and output functions that link everything on the page. <code>shiny</code> also does not have specific functions to control SVG content. A different way to do this is to pass data between the browser and back to R using JavaScript to change certain elements on the web page. shiny provides a set of functions that allow for messages to be sent through this channel using two JavaScript functions: <code>shiny.onInputChange()</code> and <code>shiny.addCustomMessageHandler()</code>. To send data from the browser back to R, we use <code>shiny.onInputChange()</code>. This allows JavaScript objects to be sent back to the shiny server in a way which can be recognised in R. To send data from R back to the browser, we use <code>shiny.addCustomMessageHandler()</code>.</p>
-<p>To demonstrate how this is useful in updating certain parts of a plot, we provide an example by altering a smoothing curve using gridSVG and these JavaScript functions. First, we use gridSVG to generate our plot and identify the element corresponding to the trend line. We also need to export the coordinates in order to be able to transform data into the correct SVG coordinates when we update the co-ordinates of trend line.</p>
+<p>As mentioned at the end of Chapter 2, one of the downsides of using <strong>shiny</strong> along with <strong>plotly</strong> or other htmlwidgets is its nature to redraw plots every time an input changes. With R plots that are rendered using the <code>renderPlot</code> function, redrawing is required because the plot is viewed as a raster image. In other cases, <strong>shiny</strong> simply re-runs code when a user interacts with an input, which causes the plot to be redrawn. This means that we cannot specifically target elements on the page as the plot is viewed as a single object.</p>
+<p>A new approach is to render the plot in SVG and target certain elements that need to be redrawn while using <strong>shiny</strong> to communicate back to R. If we use SVG, we can separate out which components to target and add interactions without changing the rest of the plot. A complication to this is that we can no longer use the usual <strong>shiny</strong> input and output functions that link everything on the page. <strong>shiny</strong> also does not have specific functions to control SVG content. A different way to do this is to pass data between the browser and back to R using JavaScript to change certain elements on the web page. <strong>shiny</strong> provides a set of functions that allow for messages to be sent through this channel using two JavaScript functions: <code>shiny.onInputChange()</code> and <code>shiny.addCustomMessageHandler()</code> <span class="citation">(Heckmann 2013)</span>. To send data from the browser back to R, we use <code>shiny.onInputChange()</code>. This allows JavaScript objects to be sent back to the <strong>shiny</strong> server in a way which can be recognised in R. To send data from R back to the browser, we use <code>shiny.addCustomMessageHandler()</code>.</p>
+<p>To demonstrate how this is useful in updating certain parts of a plot, we provide an example by altering a smoothing curve using <strong>gridSVG</strong> and these JavaScript functions. First, we use <strong>gridSVG</strong> to generate our plot and identify the element corresponding to the trend line. We also need to export the coordinates in order to be able to transform data into the correct SVG coordinates when we update the co-ordinates of trend line.</p>
 <div class="figure" style="text-align: center">
 <img src="fig/tl-shiny-diagram.svg" alt="Figure 3.3: diagram of how things work using shiny's JavaScript functions in Figure 3.4"  />
 <p class="caption">
@@ -418,8 +422,8 @@ Figure 3.4: A replica of Figure 2.7, but only the trendline changes
 </p>
 </div>
 <p><strong>This is a static image. Click <a href="https://ysoh286.shinyapps.io/shiny-trendline-brush/">here</a> to view the shiny application of this example.</strong></p>
-<p>This example (Figure 3.4) is extensible as we can render grid graphics (such as lattice) and customise interactions while maintaining a connection between R and the browser using shiny. By doing this rather than redrawing the entire plot, we have only changed the trend line. This method does, however, require the knowledge of JavaScript and the limitations of how much information can be sent through are unknown as it is not commonly used.</p>
-<p>To stretch this example further, we added in a feature where the user can highlight over a set of points by dragging the mouse (as seen in Figure 3.5). We return the information about these highlighted points in order to further compute a smoother for just these points. To achieve this in shiny, we have written some JavaScript that returns the indices of these selected points back to R with <code>shiny.onInputChange()</code> to compute a suitable smoother which is then displayed.</p>
+<p>This example (Figure 3.4) is extensible as we can render <strong>grid</strong> graphics (such as <strong>lattice</strong>) and customise interactions while maintaining a connection between R and the browser using <strong>shiny</strong>. By doing this rather than redrawing the entire plot, we have only changed the trend line. This method does, however, require the knowledge of JavaScript and the limitations of how much information can be sent through are unknown as it is not commonly used.</p>
+<p>To stretch this example further, we added in a feature where the user can highlight over a set of points by dragging the mouse (as seen in Figure 3.5). We return the information about these highlighted points in order to further compute a smoother for just these points. To achieve this in <strong>shiny</strong>, we have written some JavaScript that returns the indices of these selected points back to R with <code>shiny.onInputChange()</code> to compute a suitable smoother which is then displayed.</p>
 <div class="figure" style="text-align: center">
 <img src="fig/tl-shiny-2.png" alt="Figure 3.5: Select over a set a points to show a smoother" width="700px"  />
 <p class="caption">
@@ -431,9 +435,9 @@ Figure 3.5: Select over a set a points to show a smoother
 </div>
 <div id="dom-package" class="section level2">
 <h2><span class="header-section-number">3.2</span> DOM package</h2>
-<p>As highlighted in section 1, many interactions driven on the web are done by DOM (Document Object Model) manipulation. In brief, the Document Object Model is a programming interface that allows developers to manipulate content on a web page. We can use it to navigate and pinpoint specific elements on the page to modify and add interactions to. Generally, this is accessed through by writing JavaScript functions.</p>
-<p>Because most interactions are driven by JavaScript and involve modifying content on the page, the DOM package (Murrell, 2016) allows for us to directly do this from R. We can send requests back and forth between R and the browser. This provides a basis for using the web browser as an ‘interactive output device’ (Murrell, 2016).</p>
-<p>Using the DOM package allows us to write certain commands that are analogous to what is written in JavaScript.This removes the burden of traversing between the two programming languages. Rather than writing JavaScript, we can write DOM commands in R that produce similar results. Going back to our circle example in Figure 3.1, we can change the colour of the circle by directly sending this request to the web page.</p>
+<p>As highlighted in section 1, many interactions driven on the web are done by <strong>DOM</strong> (Document Object Model) manipulation. In brief, the Document Object Model is a programming interface that allows developers to manipulate content on a web page <span class="citation">(W3C 2009)</span>. We can use it to navigate and pinpoint specific elements on the page to modify and add interactions to. Generally, this is accessed through by writing JavaScript functions.</p>
+<p>Because most interactions are driven by JavaScript and involve modifying content on the page, the <strong>DOM</strong> package <span class="citation">(Murrell 2016b)</span> allows for us to directly do this from R. We can send requests back and forth between R and the browser. This provides a basis for using the web browser as an ‘interactive output device’ <span class="citation">(Murrell 2016a)</span>.</p>
+<p>Using the <strong>DOM</strong> package allows us to write certain commands that are analogous to what is written in JavaScript. This removes the burden of traversing between the two programming languages. Rather than writing JavaScript, we can write <strong>DOM</strong> commands in R that produce similar results. Going back to our circle example in Figure 3.1, we can change the colour of the circle by directly sending this request to the web page.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">circle &lt;-<span class="st"> </span><span class="kw">getElementById</span>(page, <span class="st">&quot;circle.A.1.1&quot;</span>, <span class="dt">response =</span> <span class="kw">nodePtr</span>())
 <span class="kw">setAttribute</span>(page, circle, <span class="st">&quot;fill&quot;</span>, <span class="st">&quot;red&quot;</span>)</code></pre></div>
 <p>In contrast, the JavaScript code for changing this circle from yellow to red:</p>
@@ -443,8 +447,8 @@ Figure 3.5: Select over a set a points to show a smoother
 var circle = document.getElementById('circle.A.1.1');
 circle.setAttribute(fill, "red");
 </script>
-<p>The DOM package is also special in which we are able to do asynchronous programming (<code>async = TRUE</code>). Asynchronous programming is a concept where we are able to start an initial task and run different tasks at the same time. Here, the DOM package is able to run a task from R to the browser but also be able to run commands in R while the call to the browser is still running. This is important as it makes our web applications more efficient than trying to run each command or task one at a time. When we need to call back to R from the browser, these are all asynchronous events that can easily react to user interactions, making it more responsive and creates a smoother experience for the user.</p>
-<p>DOM allows R to be called from the browser and for requests from R to be sent to the browser. To demonstrate this, we will replicate the hover effects on the circle as shown in Figure 3.1. Figure 3.6 shows how this can be set up using DOM. We can use <code>setAttribute</code> to set the colour of the circle, and use the <code>RDOM.Rcall</code> function to send requests from the browser back to R. When the user hovers over the circle, the browser will send a request back to R to run the <code>turnRed</code> function, which in turn sends a request back to the browser to change the colour of the circle to red. Once the user hovers out, the browser will send a request back to R to turn it back to yellow. Our result is shown in Figure 3.7.</p>
+<p>The <strong>DOM</strong> package is also special in which we are able to do asynchronous programming (<code>async = TRUE</code>) <span class="citation">(Murrell 2016a)</span>. Asynchronous programming is a concept where we are able to start an initial task and run different tasks at the same time. Here, the <strong>DOM</strong> package is able to run a task from R to the browser but also be able to run commands in R while the call to the browser is still running. This is important as it makes our web applications more efficient than trying to run each command or task one at a time. When we need to call back to R from the browser, these are all asynchronous events that can easily react to user interactions, making it more responsive and creates a smoother experience for the user.</p>
+<p><strong>DOM</strong> allows R to be called from the browser and for requests from R to be sent to the browser. To demonstrate this, we will replicate the hover effects on the circle as shown in Figure 3.1. Figure 3.6 shows how this can be set up using <strong>DOM</strong>. We can use <code>setAttribute</code> to set the colour of the circle, and use the <code>RDOM.Rcall</code> function to send requests from the browser back to R. When the user hovers over the circle, the browser will send a request back to R to run the <code>turnRed</code> function, which in turn sends a request back to the browser to change the colour of the circle to red. Once the user hovers out, the browser will send a request back to R to turn it back to yellow. Our result is shown in Figure 3.7.</p>
 <div class="figure" style="text-align: center">
 <img src="fig/circle-DOM-diagram.svg" alt="Figure 3.6: Simple diagram showing how DOM works with from replicating Figure 3.1"  />
 <p class="caption">
@@ -458,17 +462,17 @@ Figure 3.7: DOM example of Figure 3.1 - when hovered, the circle turns red (righ
 </p>
 </div>
 <p><strong>Note: this is a static image. Click <a href="">here</a> to view this example.</strong></p>
-<p>The example (Figure 3.7) takes approximately 40 lines of code for a hover effect. It is much more ‘lower level’ and requires the user to know how the Document Object Model and main web technologies work together. Since we are only just changing the colour of the circle, it is more efficient to write JavaScript and send it to the browser instead rather than telling the browser to call back to R.</p>
+<p>The example (Figure 3.7) takes approximately 40 lines of code for a hover effect. It is much more ‘lower level’ and requires the user to know how the Document Object Model and main web technologies work together. A different approach would be to write some JavaScript and send it across to the browser from R. Since we are only just changing the colour of the circle, it is more efficient to write JavaScript and send it to the browser instead rather than telling the browser to call back to R. It is better to call back to R when a computation is necessary (such as recomputing a trend line’s co-ordinates in the Section 3.2.1).</p>
 <div id="comparing-dom-to-shiny" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Comparing DOM to shiny</h3>
-<p>DOM is similar to shiny as it establishes a connection between R and the browser. To compare, we have replicated Figure 3.4 using DOM.</p>
+<p><strong>DOM</strong> is similar to <strong>shiny</strong> as it establishes a connection between R and the browser. To compare, we have replicated Figure 3.4 using <strong>DOM</strong>.</p>
 <div class="figure" style="text-align: center">
 <img src="fig/tl-DOM-diagram.svg" alt="Figure 3.8: Steps on how a trend line can be altered using the DOM package"  />
 <p class="caption">
 Figure 3.8: Steps on how a trend line can be altered using the DOM package
 </p>
 </div>
-<p>The process of creating this example is similar to what was done with shiny. However, it is more difficult to set up as it requires the user to manually link all the components on the page. First, we draw the plot and save it as an SVG in memory. Next, we can add the SVG plot and a slider to the page. We identify which element corresponds to the trend line, and define what happens when the slider moves or when text is clicked. This requires an additional query to the browser to return the value of the slider before it can be returned back to R, as shown in in Figure 3.8. These are co-ordinated using asynchronous callbacks, where once a response is returned, we can schedule another task behind it. These can be viewed as a series of steps that are linked together. Once the value of the slider is returned, we can use it to recalculate the coordinates of the trend line before updating it on the page. Our final result is put together in Figure 3.9.</p>
+<p>The process of creating this example is similar to what was done with <strong>shiny</strong>. However, it is more difficult to set up as it requires the user to manually link all the components on the page. First, we draw the plot and save it as an SVG in memory. Next, we can add the SVG plot and a slider to the page. We identify which element corresponds to the trend line, and define what happens when the slider moves or when text is clicked. This requires an additional query to the browser to return the value of the slider before it can be returned back to R, as shown in Figure 3.8. These are co-ordinated using asynchronous callbacks, where once a response is returned, we can schedule another task behind it. These can be viewed as a series of steps that are linked together. Once the value of the slider is returned, we can use it to recalculate the coordinates of the trend line before updating it on the page. Our final result is put together in Figure 3.9.</p>
 <div class="figure" style="text-align: center">
 <img src="fig/tl-DOM-2.png" alt="Figure 3.9: DOM example of Fig 3.4 for changing a trendline using a slider" width="400px"  />
 <p class="caption">
@@ -476,10 +480,45 @@ Figure 3.9: DOM example of Fig 3.4 for changing a trendline using a slider
 </p>
 </div>
 <p><strong>Note: this is a static image.</strong></p>
-<p>DOM allows for more flexibility as we have control over the entire page. From a developer’s perspective, we can continue to modify elements on the page. Users have access to R while the the connection to the web page is running. We can also run a number of interactive web pages in a single R session. In shiny, we are unable to use R in a single session or be able to change it without stopping the application. Furthermore, a shiny application can only do one task at a time, and cannot run tasks asynchronously. However, this may be resolved by the <code>future</code> and <code>promises</code> packages in the near future, which allows for asynchronous programming within R and thus, more responsive shiny applications. A caveat of using the DOM package is that requires a lot more code to link everything together. In shiny, these links between inputs and outputs are much easier to co-ordinate.</p>
-<p>Internally, there are many limitations with this package. As this package is still developmental, only part of the DOM (Document Object Model) API has been expanded, and the connection between R and the browser requires extra attention. In some cases, it is still not possible to achieve certain interactions without JavaScript, such as capturing where the mouse’s position is on screen. Murrell (2016a) states that it can only be run locally and is currently aimed at a single user rather than multiple users.</p>
-<p>In both cases, these interactions cannot be achieved without the ability to write JavaScript. gridSVG, DOM and shiny provide ways in which we can bind custom JavaScript to elements, but requires the user to be able to define what kind of interactions they wish to achieve.</p>
-<p>There is a clear trade off between existing tools. It is possible to customise interactions on existing plots, but this requires a knowledge of JavaScript in order to do so. Comparatively, tools that provide standard interactive web plots are easier to use but are complex to modify and extend further. In the next section, we discuss how we can simplify the implementation of certain interactions on plots originally rendered in R and build a solution using these tools.</p>
+<p><strong>DOM</strong> allows for more flexibility as we have control over the entire page. From a developer’s perspective, we can continue to modify elements on the page. Users have access to R while the the connection to the web page is running. We can also run a number of interactive web pages in a single R session. In <strong>shiny</strong>, we are unable to use R in a single session or be able to change it without stopping the application. Furthermore, a <strong>shiny</strong> application can only do one task at a time, and cannot run tasks asynchronously. However, this may be resolved by the <strong>promises</strong> package <span class="citation">(Cheng 2017b)</span> in the near future, which allows for asynchronous programming within R and thus, more responsive <strong>shiny</strong> applications <span class="citation">(Cheng 2017a)</span>. A caveat of using the <strong>DOM</strong> package is that requires a lot more code to link everything together. In <strong>shiny</strong>, these links between inputs and outputs are much easier to co-ordinate.</p>
+<p>Internally, there are many limitations with this package. As this package is still developmental, only part of the <strong>DOM</strong> (Document Object Model) API has been expanded, and the connection between R and the browser requires extra attention <span class="citation">(Murrell 2016a)</span>. In some cases, it is still not possible to achieve certain interactions without JavaScript, such as capturing where the mouse’s position is on screen. Murrell <span class="citation">(2016a)</span> states that it can only be run locally and is currently aimed at a single user rather than multiple users.</p>
+<p><strong>gridSVG</strong>, <strong>DOM</strong> and <strong>shiny</strong> provide ways in which we can bind custom JavaScript to elements, but requires the user to be able to define what kind of interactions they wish to achieve.</p>
+<p>There is a clear trade off between existing tools. It is possible to customise interactions on existing plots, but this requires a knowledge of JavaScript in order to do so. Comparatively, tools that provide standard web interactive plots are easier to use but are complex to modify and extend further. In the next section, we discuss how we can simplify the implementation of certain interactions on plots originally rendered in R and build a solution using these tools.</p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-promise02">
+<p>Cheng, Joe. 2017a. <em>Async Programming in R and Shiny</em>. <a href="https://medium.com/@joe.cheng/async-programming-in-r-and-shiny-ebe8c5010790" class="uri">https://medium.com/@joe.cheng/async-programming-in-r-and-shiny-ebe8c5010790</a>.</p>
+</div>
+<div id="ref-promise01">
+<p>———. 2017b. <em>Promises: What the Package Does (Title Case)</em>.</p>
+</div>
+<div id="ref-heckmann01">
+<p>Heckmann, Mark. 2013. <em>Sending Data from Client to Server and Back Using Shiny</em>. <a href="https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/" class="uri">https://ryouready.wordpress.com/2013/11/20/sending-data-from-client-to-server-and-back-using-shiny/</a>.</p>
+</div>
+<div id="ref-gridGra01">
+<p>Murrell, Paul. 2015. <em>GridGraphics: Redraw Base Graphics Using ’Grid’ Graphics</em>. <a href="https://CRAN.R-project.org/package=gridGraphics" class="uri">https://CRAN.R-project.org/package=gridGraphics</a>.</p>
+</div>
+<div id="ref-DOM02">
+<p>———. 2016a. <em>An Introduction to the ’Dom’ Package</em>. <a href="https://www.stat.auckland.ac.nz/~paul/Reports/DOM/Intro/DOM-Intro.html" class="uri">https://www.stat.auckland.ac.nz/~paul/Reports/DOM/Intro/DOM-Intro.html</a>.</p>
+</div>
+<div id="ref-DOM01">
+<p>———. 2016b. <em>DOM: Interact with Web Browser Dom</em>.</p>
+</div>
+<div id="ref-gridSVG03">
+<p>Murrell, Paul, and Simon Potter. 2012. <em>Working with the gridSVG Coordinate System</em>. <a href="https://www.stat.auckland.ac.nz/~paul/Reports/gridSVGcoords/coordinates.html" class="uri">https://www.stat.auckland.ac.nz/~paul/Reports/gridSVGcoords/coordinates.html</a>.</p>
+</div>
+<div id="ref-gridSVG02">
+<p>———. 2014. “The gridSVG Package.” <em>R Journal</em> 6 (1): 133–43. <a href="https://journal.r-project.org/archive/2014/RJ-2014-013/RJ-2014-013.pdf" class="uri">https://journal.r-project.org/archive/2014/RJ-2014-013/RJ-2014-013.pdf</a>.</p>
+</div>
+<div id="ref-gridSVG01">
+<p>———. 2017. <em>GridSVG: Export ’Grid’ Graphics as Svg</em>. <a href="https://CRAN.R-project.org/package=gridSVG" class="uri">https://CRAN.R-project.org/package=gridSVG</a>.</p>
+</div>
+<div id="ref-w3c">
+<p>W3C. 2009. <em>Document Object Model (Dom)</em>. <a href="https://www.w3.org/DOM/" class="uri">https://www.w3.org/DOM/</a>.</p>
+</div>
 </div>
 </div>
 </div>

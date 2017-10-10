@@ -2,10 +2,20 @@
 title: "Web interactive plots in R"
 ---
 
-This is a test for an interactive version of a research report.
+This is an interactive HTML version of an honours project report to be submitted
+on Tuesday 31st October 2017 NZT.
 
 **THIS IS NOT COMPLETE AND IS CURRENTLY UNDER DEVELOPMENT.**
 
-DUE DATE: 31st October 12pm.
+## Abstract {-}
 
-*Now stop procrastinating and start reading/writing!*
+*TODO: write abstract*
+
+
+## Acknowledgements {-}
+
+Thank you to Dr Paul Murrell for his technical expertise and witty analogies that helped me understand the concepts and challenges of research and software development. Thank you for being an inspirational role model for becoming a better programmer.
+
+Thank you to Prof. Chris Wild for introducing me to the idea of interactive graphics, for inspiring me to investigate further into this topic for iNZight and for my own interests. Thank you for sharing ideas and challenging me further.
+
+This project would not have been possible without their dedicated supervision and support. I hope that it has helped in their own research and to inspire others to have fun in making their own interactive visuals in R.

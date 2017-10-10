@@ -7,18 +7,17 @@ output: html_document
 # Executive Summary{-}
 
 Interactive statistical graphics have been achieved through desktop applications
-since the nineties, however they are generally inaccessible to users and require special
+since the 90's, however they are generally inaccessible to users and require special
 software to be installed. Results are hard to reproduce and share. Recently, new tools have focused on
 using the web as a platform to solve this but they do not possess the capabilities
 that these desktop applications have.
 
-The purpose of this research is to try make progress towards designing and prototyping a
+The purpose of this research is to make progress towards designing and prototyping a
 more extensible infrastructure for creating web interactive graphics in R.
 The motivation behind this research comes from the idea of creating interactive
  plots with **iNZight**, a data visualisation software from the University of Auckland.
 
-An overview of modern web tools were investigated including **plotly**, **ggvis** and
-**shiny**.  It is easy to achieve certain interactions, but hard to extend beyond their capabilities without a deeper understanding of these packages and lower level coding. This makes it inaccessible to the majority of users.  Furthermore, many online systems have a
+An overview of modern web tools were investigated including **plotly**, **ggvis**, **shiny** and **animint**.  It is easy to achieve certain interactions, but hard to extend beyond their capabilities without a deeper understanding of these packages and lower level coding. This makes it inaccessible to the majority of users.  Furthermore, many online systems have a
 tendency to redraw everything every time any graphical element is changed. This
 leads to unnecessary computations and a slow experience to users.
 

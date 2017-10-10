@@ -2,17 +2,20 @@
 documentclass: report
 fig_caption: yes
 fontsize: 11pt
-geometry: margin = 3cm
+geometry: "left=3cm, right=3cm, top=3cm"
 header-includes:
 - \usepackage{amsmath}
 - \usepackage{graphicx}
 - \usepackage{framed}
 - \usepackage{dsfont}
 - \usepackage{float}
+- \usepackage{caption}
+- \usepackage{parskip}
 highlight: tango
 linkcolor: black
 output:
   pdf_document:
+    citation_package: natbib
     number_sections: yes
     toc_depth: 3
 urlcolor: blue
@@ -41,6 +44,9 @@ knitr::opts_chunk$set(fig.path = 'figures/',
 \newpage
 
 ```{r child = 'exec-sum.Rmd'}
+```
+
+```{r child = "ack.Rmd"}
 ```
 
 \newpage
@@ -79,4 +85,4 @@ knitr::opts_chunk$set(fig.path = 'figures/',
 
 \newpage
 
-# References
+# Bibliography

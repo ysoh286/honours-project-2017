@@ -3,8 +3,6 @@ output_dir: "."
 navbar:
   title: "Report"
   right:
-    - text: "Abstract"
-      href: abstract.html
     - text: "Executive Summary"
       href: exec-sum.html
     - text: "1 - Introduction"
@@ -19,6 +17,8 @@ navbar:
       href: chapter5.html
     - text: "Conclusion"
       href: conclusion.html
+    - icon: fa-github
+      href: https://github.com/ysoh286/honours-project-2017
 output:
   html_document:
     theme: cosmo
