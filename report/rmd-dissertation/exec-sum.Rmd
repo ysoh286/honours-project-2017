@@ -1,4 +1,4 @@
-\textsf{ggvis}# Executive Summary{-}
+# Executive Summary{-}
 
 Interactive statistical graphics have been achieved through desktop applications
 since the 90's, however they are generally inaccessible to users and require special
@@ -16,10 +16,10 @@ tendency to redraw everything every time any graphical element is changed. This
 leads to unnecessary computations and a slow experience to users.
 
 A different approach was taken by investigating lower level tools, specifically \textsf{gridSVG} and \textsf{DOM}. These tools are extensible, however, to use them effectively requires a
-knowledge about how the grid system works with gridSVG and web technologies including the Document Object Model. This presents a steeper learning curve than using \textsf{plotly} and \textsf{ggvis}, and consequently a trade off - to achieve custom interactions, a user would be required to know how to link all these tools together, where as other tools are easier to use but cannot be extended further.
+knowledge about how the grid system works with gridSVG and web technologies including the Document Object Model. This presents a steeper learning curve than using plotly and ggvis, and consequently a trade off - to achieve custom interactions, a user would be required to know how to link all these tools together, where as other tools are easier to use but cannot be extended further.
 
 To solve this, we have developed a new approach by
-combining lower level tools (grid, gridSVG and DOM) to create the
+combining lower level tools (\textsf{grid}, \textsf{gridSVG} and \textsf{DOM}) to create the
 \textsf{interactr} package. This is designed to create simple
 interactive plots in R without a steep learning curve. It is based upon a simple
 idea of knowing what object to target, what kind of interaction to attach to

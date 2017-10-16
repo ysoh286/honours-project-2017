@@ -3,6 +3,7 @@
 ```{r, include = FALSE}
 library(grid)
 library(gridSVG)
+library(lattice)
 ```
 
 Web interactive graphics can be achieved by R users without the knowledge of HTML, CSS and JavaScript. However, many of these tools use an external JavaScript library to render their plots. This section discusses how we can use two lower level packages,  \textsf{gridSVG}[@gridSVG01] and \textsf{DOM}[@DOM01] to incorporate interactions into R plots and prevent redrawing entire plots. One approach to avoid this is to target parts of the plot that need to be updated. We need a system that renders SVG elements but has a mapping structure that allows elements to be related back to data. In R, we can use the  \textsf{gridSVG} package. By combining  \textsf{gridSVG}, \textsf{shiny} and JavaScript, we are able to update specific parts of the plot when the user interacts with an input by passing JavaScript messages between R and the browser. Because interactions are achieved by manipulating web content using the \textsf{DOM}, we can alternatively use the \textsf{DOM} package that directly allows us to drive web content from R without the need for writing JavaScript. We will discuss how these different approaches work.
@@ -223,6 +224,6 @@ A caveat of using the \textsf{DOM} package is that requires a lot more code to l
 
 Internally, there are many limitations with this package. As this package is still developmental, only part of the \textsf{DOM} (Document Object Model) API has been expanded, and the connection between R and the browser requires extra attention [@DOM02]. In some cases, it is still not possible to achieve certain interactions without  JavaScript, such as capturing where the mouse's position is on screen. Murrell [-@DOM02] states that it can only be run locally and is currently aimed at a single user rather than multiple users.
 
-  \textsf{gridSVG}, \textsf{DOM} and \textsf{shiny} provide ways in which we can bind custom JavaScript to elements, but requires the user to be able to define what kind of interactions they wish to achieve.
+\textsf{gridSVG}, \textsf{DOM} and \textsf{shiny} provide ways in which we can bind custom JavaScript to elements, but requires the user to be able to define what kind of interactions they wish to achieve.
 
-There is a clear trade off between existing tools. It is possible to customise interactions on existing plots, but this requires a knowledge of JavaScript in order to do so. Comparatively, tools that provide standard web interactive  plots are easier to use but are complex to modify and extend further. In the next section, we discuss how we can simplify the implementation of certain interactions on plots originally rendered in R and build a solution using these tools.
+There is a clear trade off between existing tools. It is possible to customise interactions on existing plots, but this requires a knowledge of JavaScript in order to do so. Comparatively, tools that provide standard web interactive plots are easier to use but are complex to modify and extend further. In the next section, we discuss how we can simplify the implementation of certain interactions on plots originally rendered in R and build a solution using these tools.

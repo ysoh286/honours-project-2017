@@ -11,11 +11,15 @@ header-includes:
 - \usepackage{float}
 - \usepackage{caption}
 - \usepackage{parskip}
+- \renewcommand{\topfraction}{0.85}
+- \renewcommand{\textfraction}{0.1}
+- \parindent=0cm
+- \parskip=\baselineskip
 highlight: tango
 linkcolor: black
 output:
   pdf_document:
-    citation_package: natbib
+    keep_tex: TRUE
     number_sections: yes
     toc_depth: 3
 urlcolor: blue
@@ -76,11 +80,6 @@ knitr::opts_chunk$set(fig.path = 'figures/',
 \newpage
 
 ```{r child = 'chapter5.Rmd'}
-```
-
-\newpage
-
-```{r child = 'conclusion.Rmd'}
 ```
 
 \newpage
