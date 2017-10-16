@@ -97,15 +97,6 @@ MouseDrag = function(evt) {
          //SHINY VERSION: return selected rows to Shiny?
          Shiny.onInputChange("selectedPoints", selected);
 
-         //svg.setAttribute('data-select', selected);
-
-         //for DOM version 0.4 and lower:
-         //RDOM.Rcall("hello", this, [ "ptr" ], null);
-        //console.log(this); - test what 'this' returns
-
-        //test DOM version 0.5:
-        //RDOM.Rcall("hello", selected, [ "JSON" ], null);
-
         }
 };
 

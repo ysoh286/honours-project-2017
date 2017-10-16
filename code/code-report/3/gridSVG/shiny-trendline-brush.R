@@ -6,15 +6,15 @@ library(shiny)
 library(grid)
 library(gridSVG)
 
-#remember to set the file directories correctly!
-
 #draw plot:
 pdf(NULL)
 cols <- c("red", "green", "blue")
-lattice::xyplot(Petal.Length ~ Petal.Width, data = iris, col = cols[iris$Species], pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
+pl <- lattice::xyplot(Petal.Length ~ Petal.Width, data = iris,
+                      col = cols[iris$Species], pch = 19,
+                      type = c("p", "smooth"), col.line = "orange", lwd = 3)
+print(pl)
 #get svg output
-all <- gridSVG::grid.export(NULL, exportCoords = "inline", exportMappings = "inline", exportJS = "inline")
-mappings <- all$mappings
+all <- gridSVG::grid.export(NULL, exportCoords = "inline", exportJS = "inline")
 coords <- all$coords
 dev.off()
 svgOutput <- capture.output(all$svg)
@@ -24,33 +24,35 @@ panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
 #load co-ordinates:
 gridSVG::gridSVGCoords(coords)
 
-#trying out gridSVG conversion functions:
-viewportConvertWidth(panel, 300, "svg", "native")
-
 #build shiny app:
 shinyApp(
   ui <- fluidPage(
     titlePanel("Change a trendline without redrawing the entire plot:"),
     sidebarLayout(
       sidebarPanel(
-        selectInput("color", 
-                    label = "Select color", 
-                    choices = c("red", "blue"), 
+        selectInput("color",
+                    label = "Select color",
+                    choices = c("red", "blue"),
                     selected = "red"),
-        selectInput("trendline", 
-                    label = "Select trendline", 
-                    choices = c("Loess" = "loess", "Linear" = "linear", "GLM" = "glm"), 
+        selectInput("trendline",
+                    label = "Select trendline",
+                    choices = c("Loess" = "loess",
+                                "Linear" = "linear",
+                                "GLM" = "glm"),
                     selected = "loess"),
-        
+
         conditionalPanel(
           condition = "input.trendline == 'glm'",
           selectInput(
-            "family", 
+            "family",
             label = "Distribution",
-            choices = c("Gaussian" = "gaussian", "Binomial" = "binomial", "Poisson" = "poisson", "Gamma" = "gamma"),
+            choices = c("Gaussian" = "gaussian",
+                        "Binomial" = "binomial",
+                        "Poisson" = "poisson",
+                        "Gamma" = "gamma"),
             selected = "gaussian")
         ),
-        
+
         conditionalPanel(
           condition = "input.trendline == 'loess'",
           sliderInput(
@@ -59,7 +61,7 @@ shinyApp(
             min = 0.5, max = 1, value = 1, step = 0.01)
         )
       ),
-      
+
       mainPanel(
         #render the svg:
         HTML(svgOutput),
@@ -67,10 +69,10 @@ shinyApp(
         verbatimTextOutput("results")
       )
     ),
-    
+
     #attempting to send data from server to client: requires a use of a handler function.
     tags$script('
-                Shiny.addCustomMessageHandler("colorCall", 
+                Shiny.addCustomMessageHandler("colorCall",
                 function(color) {
                 var trendline = document.getElementById("plot_01.loess.lines.panel.1.1.1.1");
                 trendline.style.stroke = color;
@@ -97,12 +99,12 @@ shinyApp(
                 });'),
 
     #include script for brushing:
-    includeScript('js/linked-brush-lattice.js')
-      
+    includeScript('tl-shiny.js')
+
     ),
-  
+
   server <- function(input, output, session) {
-    
+
     #recalculate new smoother:
     observe({
       if (!is.null(input$selectedPoints) && length(input$selectedPoints) > 10) {
@@ -118,16 +120,16 @@ shinyApp(
         #conversion to SVG pixel co-ordinates:
         svg_x <- viewportConvertX(panel, x, "native")
         svg_y <- viewportConvertY(panel, y, "native")
-        
+
         #create 'points' string:
         newPt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
       } else {
-        newPt <- "0,0"
+        newPt <- ""
       }
-       session$sendCustomMessage(type = "newSmooth", newPt)
+      session$sendCustomMessage(type = "newSmooth", newPt)
 
     })
-    
+
     #to send data to handler function: use of an observer - sending a JS object:
     observe({
       if (input$color == "red") {
@@ -135,18 +137,18 @@ shinyApp(
         session$sendCustomMessage(type = "colorCall", color)
       } else {
         color = "blue"
-        session$sendCustomMessage(type = "colorCall", color) 
+        session$sendCustomMessage(type = "colorCall", color)
       }
     })
-    
-    
+
+
     observe({
       x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
-      
+
       if (input$trendline == "linear") {
         #linear model:
         linear <- lm(Petal.Length~Petal.Width, data = iris)
-        y <- linear$coefficients[1] + linear$coefficients[2]*x 
+        y <- linear$coefficients[1] + linear$coefficients[2]*x
       } else if (input$trendline == "loess") {
         #loess model:
         lo <- loess(Petal.Length~Petal.Width,data = iris, span = input$span)
@@ -154,22 +156,18 @@ shinyApp(
       } else {
         #general linear model:
         glm <- glm(Petal.Length~Petal.Width, data = iris, family = "gaussian")
-        y <- glm$coefficients[1] + glm$coefficients[2]*x 
+        y <- glm$coefficients[1] + glm$coefficients[2]*x
       }
-      
+
       #conversion to SVG pixel co-ordinates:
       svg_x <- viewportConvertX(panel, x, "native")
       svg_y <- viewportConvertY(panel, y, "native")
-      
+
       #create 'points' string:
       pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
       session$sendCustomMessage(type = "trendlineCall", pt)
-      
+
     })
-    
+
   }
-  )
-
-
-## TODO: Try this on a plot with more data, render plot with PNG, then overlay an svg line
-## Try gridSVGCoords version
+)

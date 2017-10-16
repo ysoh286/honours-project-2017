@@ -358,9 +358,5 @@ highlight  = function(index) {
 
 #returns element is undefined?? Requires more thought.
 
-
-## link to a bar plot/histogram??
-
-
 ## TO DOS:
 ## Weight example?
