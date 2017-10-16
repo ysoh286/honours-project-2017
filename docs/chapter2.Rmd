@@ -418,7 +418,7 @@ As of writing, this was not possible. However, in a recent version of plotly(4.7
 To illustrate, we create a simple example linking between gender and highest qualification to identify if there is a different in income from the nzincome data set (Figure 2.12). When we click on the bars of the plot (left), we can subset the data by gender, while we can further subset the groups into qualification by selecting the legend on the scatter plot on the right. Overall,
 across all qualification groups, there appears to be a difference between income levels by gender.
 
-<object type="text/html" data="./animint-ex/index.html"> </object>
+<iframe type="text/html" src="./animint-ex/index.html" width="700" height="900"> </iframe>
 
 ```{r, eval = FALSE}
 library(animint)

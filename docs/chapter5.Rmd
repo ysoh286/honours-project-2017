@@ -36,7 +36,7 @@ knitr::include_graphics('./fig/int-density-example.png')
 
  This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.
 
-The main advantage for identifying graphical elements to data is that we have more flexibility in targeting sub components of a plot. A prime example of an interaction that is difficult to implement across other tools is linking a part of the box plot to other plots (seen in Figure 4.2.1).
+The main advantage for identifying graphical elements to data is that we have more flexibility in targeting sub components of a plot. A prime example of an interaction that is difficult to implement across other tools is linking a part of the box plot to other plots (seen in Section 4.2.1).
 
 Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools as it requires information on how these plots are layered and rendered. With **gridSVG** underneath to provide a clear mapping structure of these layers, we can add on elements to existing plots on the web page to show more about a user's interaction such as a selection or a click. They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added to the plot.
 

@@ -356,7 +356,7 @@ Figure 5.1: Different selections (left) recompute different densities (right) wi
 </div>
 <p><strong>Note: this image is static.</strong></p>
 <p>This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.</p>
-<p>The main advantage for identifying graphical elements to data is that we have more flexibility in targeting sub components of a plot. A prime example of an interaction that is difficult to implement across other tools is linking a part of the box plot to other plots (seen in Figure 4.2.1).</p>
+<p>The main advantage for identifying graphical elements to data is that we have more flexibility in targeting sub components of a plot. A prime example of an interaction that is difficult to implement across other tools is linking a part of the box plot to other plots (seen in Section 4.2.1).</p>
 <p>Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools as it requires information on how these plots are layered and rendered. With <strong>gridSVG</strong> underneath to provide a clear mapping structure of these layers, we can add on elements to existing plots on the web page to show more about a user’s interaction such as a selection or a click. They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added to the plot.</p>
 <p><strong>interactr</strong> can be used to create links between plots via clicks and selection boxes, where a single plot can control the rest of the plots. It may be possible to create multi-directional links, but becomes more complex to co-ordinate. It is a success in its own for providing basic interactions to any type of plot drawn in R. However, there are still many limitations that are present with its current implementation.</p>
 </div>
@@ -387,39 +387,39 @@ plot_01.border.panel.1.1</code></pre>
 <pre><code>layout
   background.1-7-10-1
   panel.6-4-6-4
-    grill.gTree.2135
-      panel.background..rect.2126
-      panel.grid.minor.y..polyline.2128
-      panel.grid.minor.x..polyline.2130
-      panel.grid.major.y..polyline.2132
-      panel.grid.major.x..polyline.2134
+    grill.gTree.2229
+      panel.background..rect.2220
+      panel.grid.minor.y..polyline.2222
+      panel.grid.minor.x..polyline.2224
+      panel.grid.major.y..polyline.2226
+      panel.grid.major.x..polyline.2228
     NULL
-    geom_point.points.2122
+    geom_point.points.2216
     NULL
-    panel.border..zeroGrob.2123
+    panel.border..zeroGrob.2217
   spacer.7-5-7-5
   spacer.7-3-7-3
   spacer.5-5-5-5
   spacer.5-3-5-3
   axis-t.5-4-5-4
   axis-l.6-3-6-3
-    axis.line.y..zeroGrob.2154
+    axis.line.y..zeroGrob.2248
     axis
       axis.1-1-1-1
-        GRID.text.2151
+        GRID.text.2245
       axis.1-2-1-2
   axis-r.6-5-6-5
   axis-b.7-4-7-4
-    axis.line.x..zeroGrob.2147
+    axis.line.x..zeroGrob.2241
     axis
       axis.1-1-1-1
       axis.2-1-2-1
-        GRID.text.2144
+        GRID.text.2238
   xlab-t.4-4-4-4
   xlab-b.8-4-8-4
-    GRID.text.2138
+    GRID.text.2232
   ylab-l.6-2-6-2
-    GRID.text.2141
+    GRID.text.2235
   ylab-r.6-6-6-6
   subtitle.3-4-3-4
   title.2-4-2-4
