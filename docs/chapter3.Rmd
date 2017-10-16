@@ -1,4 +1,5 @@
 ---
+title: 3 Interactive R plots using lower level tools
 output:
   html_document:
     toc: true
@@ -6,7 +7,7 @@ output:
     toc_float: true
     pandoc_args: [
       "--number-sections",
-      "--number-offset=2"
+      "--number-offset=3"
     ]
 bibliography: bibliography.bib
 ---
@@ -21,14 +22,10 @@ library(gridSVG)
 library(lattice)
 ```
 
-<br />
-
-# Interactive R plots using lower level tools
-
 Web interactive graphics can be achieved by R users without the knowledge of HTML, CSS and JavaScript. However, many of these tools use an external JavaScript library to render their plots. This section discusses how we can use two lower level packages, **gridSVG**[@gridSVG01] and **DOM**[@DOM01] to incorporate interactions into R plots and prevent redrawing entire plots. One approach to avoid this is to target parts of the plot that need to be updated. We need a system that renders SVG elements but has a mapping structure that allows elements to be related back to data. In R, we can use the **gridSVG** package. By combining **gridSVG**, **shiny** and JavaScript, we are able to update specific parts of the plot when the user interacts with an input by passing JavaScript messages between R and the browser. Because interactions are achieved by manipulating web content using the **DOM**, we can alternatively use the **DOM** package that directly allows us to drive web content from R without the need for writing JavaScript. We will discuss how these different approaches work.
 
 ## gridSVG
-**gridSVG** [@gridSVG01] is an R package that allows for the conversion of grid graphics in R into SVG. This is powerful because it is easy to attach interactions to specific elements on the page. The advantage of using **gridSVG** over others is that there is a clear mapping structure between elements in the data set and SVG elements generated. This is not clear in **plotly** or **ggvis** and their JavaScript libraries, which makes it hard to identify or trace data back to the elements on the page. This also explains why it may be difficult to customise interactions on the plot. With **gridSVG**, we can add JavaScript to **grid** elements in R using `grid.script()` and `grid.garnish()` [@gridSVG02].
+**gridSVG** [@gridSVG01] is an R package that allows for the conversion of **grid** graphics in R into SVG. This is powerful because it is easy to attach interactions to specific elements on the page. The advantage of using **gridSVG** over others is that there is a clear mapping structure between elements in the data set and SVG elements generated. This is not clear in **plotly** or **ggvis** and their JavaScript libraries, which makes it hard to identify or trace data back to the elements on the page. This also explains why it may be difficult to customise interactions on the plot. With **gridSVG**, we can add JavaScript to **grid** elements in R using `grid.script()` and `grid.garnish()` [@gridSVG02].
 
 <embed src="./fig/circle.svg" type = "image/svg+xml" width = "200"/>
 
@@ -52,7 +49,7 @@ grid.export("circle.svg")
 
 In Figure 3.1, the circle has been drawn in R, named and have interactive elements added before being exported out as an SVG. A simple interaction has been attached to the circle where if the user hovers over the circle, it will turn red.
 This shows that there is a relationship between **grid** objects and SVG objects that are generated.
-In grid, we have named the circle as `circle.A`. **gridSVG** maintains this as an grouped SVG element with an id attribute of `circle.A.1`, where inside lies a single SVG circle element called `circle.A.1.1`. In R, we can refer back to these **grid** objects to attach interactions to their SVG counterparts.
+In **grid**, we have named the circle as `circle.A`. **gridSVG** maintains this as an grouped SVG element with an id attribute of `circle.A.1`, where inside lies a single SVG circle element called `circle.A.1.1`. In R, we can refer back to these **grid** objects to attach interactions to their SVG counterparts.
 
 Another important feature **gridSVG** has is the ability to translate between data and SVG coordinates[@gridSVG03]. Suppose that a plot has been generated. The `exportCoords` argument in `grid.export` is able to generate data that retains the locations of viewports and scales from the original plot in R (Murrell and Potter, 2012).
 We can use this information to convert data to SVG coordinates and vice versa.
@@ -76,7 +73,7 @@ gridSVGCoords(coords)
 
 Suppose we have a new point at (4, 5). To be able to convert this in the correct coordinate space, we need to find the correct viewport (identified as `panel`) it lies in. This can then be easily translated into SVG co-ordinates and back using the functions `viewportConvertX` and `viewportConvertY` with `panel`.
 
-<!-- *Chris wants to know where the panel comes from* -->
+<!-- Chris wants to know where panel comes from -->
 ```{r}
 # to identify the correct panel:
 panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
@@ -171,7 +168,7 @@ knitr::include_graphics('./fig/circle-DOM-diagram.svg')
 knitr::include_graphics('./fig/circle-DOM-1.png')
 ```
 
-**Note: this is a static image. Click [here]() to view this example.**
+**Note: this is a static image. Click [here](http://104.236.190.93:3838/YuHan/circle/) to view this example.**
 
 ```{r, echo = FALSE, eval = FALSE}
 # draw circle with grid
@@ -398,7 +395,7 @@ setAttribute(page,
 knitr::include_graphics('./fig/tl-DOM-2.png')
 ```
 
-**Note: this is a static image.**
+**Note: this is a static image. Click [here](http://104.236.190.93:3838/YuHan/slider-trendline/) to view this example.**
 
 **DOM** allows for more flexibility as we have control over the entire page. From a developer's perspective, we can continue to modify elements on the page. Users have access to R while the the connection to the web page is running. We can also run a number of interactive web pages in a single R session. In **shiny**, we are unable to use R in a single session or be able to change it without stopping the application. Furthermore, a **shiny** application can only do one task at a time, and cannot run tasks asynchronously. However, this may be resolved by the **promises** package [@promise01] in the near future, which allows for asynchronous programming within R and thus, more responsive **shiny** applications [@promise02].
 A caveat of using the **DOM** package is that requires a lot more code to link everything together. In **shiny**, these links between inputs and outputs are much easier to co-ordinate.

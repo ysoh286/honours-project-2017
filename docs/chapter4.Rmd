@@ -1,4 +1,5 @@
 ---
+title: 4 Designing a more flexible way of producing simple interactions
 output:
   html_document:
     toc: true
@@ -6,7 +7,7 @@ output:
     toc_float: true
     pandoc_args: [
       "--number-sections",
-      "--number-offset=3"
+      "--number-offset=4"
     ]
 bibliography: bibliography.bib
 ---
@@ -18,15 +19,11 @@ knitr::opts_chunk$set(warning = FALSE,
                       out.extra = "")
 ```
 
-<br />
-
-# Designing a more flexible way of producing simple interactions
-
-By using gridSVG, DOM and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user with a much less steeper learning curve. This section discusses a potential solution using grid, **gridSVG** and DOM to drive web interactive graphics.
+By using **gridSVG**, **DOM** and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user with a much less steeper learning curve. This section discusses a potential solution using grid, **gridSVG** and DOM to drive web interactive graphics.
 
 ## The main idea using grid, gridSVG and DOM
 
-In each of the previous examples, they is a certain pattern. In order to define a single interaction, it requires the need to know which SVG element to target, what type of interaction or event is to be attached to that element, and how to define what happens when an interaction occurs. This idea can be broken down into 5 simple steps:
+In each of the previous examples, there is a certain pattern. In order to define a single interaction, it requires the need to know which SVG element to target, what type of interaction or event is to be attached to that element, and how to define what happens when an interaction occurs. This idea can be broken down into 5 simple steps:
 
   - Draw the plot or elements in R
   - Identify elements to interact with
@@ -41,7 +38,7 @@ knitr::include_graphics('./fig/main-idea.svg')
 The process above (Figure 4.1) can be implemented using grid, **gridSVG** and DOM.
 We can use the relationship between grid and **gridSVG** elements explained in Chapter 3.1 to allow users to define and identify which elements to target. We can use DOM to attach interactions to certain elements and send these across to a web page. The reason for using DOM rather than shiny is that there are more complexities that work under the shiny framework including reactive programming, which is particularly difficult to grasp in detail. Because it is so low level, we can use DOM to create different types of interactions, but it is unreasonable for the majority of users as it requires some understanding of web technologies and takes too much effort. As seen in Figure 3.7, it takes roughly 40 lines of code to achieve a simple hover effect (with or without writing JavaScript), and about 200 lines of code to link a slider to a smoother (Figure 3.9).
 
-We need a system that is more convenient for users, not too strenuous to code up, does not require too many pre-requisites, but is flexible enough to achieve different interactions. We have created the **interactr** package that attempts to prototype this idea. It acts as a convenience wrapper for defining interactions with DOM, gridSVG and grid. It aims to allow users to define their own interactions to plots in R without the need for a full understanding of the web technologies involved.
+We need a system that is more convenient for users, not too strenuous to code up, does not require too many pre-requisites, but is flexible enough to achieve different interactions. We have created the **interactr** package that attempts to prototype this idea. It acts as a convenience wrapper for defining interactions with **DOM**, **gridSVG** and **grid**. It aims to allow users to define their own interactions to plots in R without the need for a full understanding of the web technologies involved.
 
 We have recreated some examples using **interactr** to demonstrate this idea. Many of the examples discussed below use functions that are found in this package.
 
@@ -148,6 +145,7 @@ We have inserted the function name to run when a 'click' is performed (line 1). 
 ```{r, echo = FALSE, fig.cap = "Figure 4.4: Click on box plot to light up points on scatter plot"}
 knitr::include_graphics('./fig/int-bp-3.png')
 ```
+**Click [here](http://104.236.190.93:3838/YuHan/link-box-lattice/) to view the example in Figure 4.4.**
 
 This example can be further extended by linking the box plot to both a scatter plot and density plot. Here, we have taken the first 500 observations from a survey conducted with school children in 2009 [@census01] and wish to find out the density of girls who have the heights that lie within that interquartile range of the boys heights.
 
@@ -274,6 +272,8 @@ When the user now clicks on the box plot, it lights up the points and the densit
 knitr::include_graphics('./fig/int-bp-5.png')
 ```
 
+**Click [here](http://104.236.190.93:3838/YuHan/box-density/) to view the example demonstrated in Figure 4.6.**
+
 ### Changing the degree of smoothing of a trend line
 
 Another example that can be done with **interactr** is driving an interaction using a slider. The slider controls the smoothing of the trend curve. We do not want to redraw the scatter plot when the smoothing settings change.
@@ -384,6 +384,7 @@ addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", f = "boxInd
 ```{r, echo = FALSE, fig.cap = "Figure 4.9: Plot that has a selection box feature that draws a separate smoother"}
 knitr::include_graphics('./fig/int-slider-3.png')
 ```
+**Click [here](http://104.236.190.93:3838/YuHan/link-trendline/) to view the entire example in Figure 4.9, which controls a trend line with a slider and a drag-box to create a new smoother.**
 
 The user now can draw a selection box over a set of points, and a new smoother should render on the page based upon these points (shown in Figure 4.9).
 
@@ -393,13 +394,13 @@ The notion of having special functions is required when there is a need for quer
 
 A useful feature of interactr is its compatibility with other R graphing systems including **lattice**, **graphics** (also known as base R plots), and **ggplot2**.
 
-Before we begin, we will briefly mention the two different graphics systems in R. One is known as the **graphics**, the other known as **grid** . A major difference between the two systems is that **grid** is not made to draw complete plots by a single function [@rgraphics01]. Rather, it is seen as a lower level graphics tool that has been used to build successful higher level plotting packages, including lattice and ggplot2. Packages that are built on top of the **grid** system can be accessible to the other **grid** tools available, including **gridSVG** and **grImport** [@rgraphics01]. Likewise, there are other tools that are only compatible with the **graphics** system. There are many other packages that are built on top of these two major systems that make up the graphics that we can produce in R.
+Before we begin, we will briefly mention the two different graphics systems in R. One is known as the **graphics**, the other known as **grid** . A major difference between the two systems is that **grid** is not made to draw complete plots by a single function [@rgraphics01]. Rather, it is seen as a lower level graphics tool that has been used to build successful higher level plotting packages, including **lattice** and **ggplot2**. Packages that are built on top of the **grid** system can be accessible to the other **grid** tools available, including **gridSVG** and **grImport** [@rgraphics01]. Likewise, there are other tools that are only compatible with the **graphics** system. There are many other packages that are built on top of these two major systems that make up the graphics that we can produce in R.
 
 The examples discussed so far with **interactr** have been done with **lattice** plots. However, it is possible to achieve the same with other plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using **graphics** and **ggplot2**.
 
 ### graphics plots
 
-As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the **gridGraphics** package [@gridGra01], which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The `grid.echo()` function achieves this.
+As briefly mentioned in Chapter 3, in order to convert SVG objects using **gridSVG** the objects must be **grid** objects. In the case of graphics plots, we cannot directly call **gridSVG** to convert it into an SVG. A simple solution to this is to use the **gridGraphics** package [@gridGra01], which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The `grid.echo()` function achieves this.
 
 ```{r, eval = FALSE}
 library(grid)
@@ -456,12 +457,13 @@ addInteractions(box, boxClick)
 ```{r, echo = FALSE, fig.cap = "Figure 4.11: box plot example replicated using a graphics plot"}
 knitr::include_graphics('./fig/int-bp-graphics.png')
 ```
+**Click [here](http://104.236.190.93:3838/YuHan/link-box-graphics/) to view the example shown in Figure 4.11.**
 
 The same interaction has been achieved in Figure 4.11. This shows that there is potential for customising interactions onto graphics plots. The process is the same, except for an additional step to convert a **graphics** plot into a **grid** type plot.
 
 ### ggplot2
 
-**ggplot2** [@ggplot01] is a popular plotting system in R based upon the "Grammar of Graphics". It is built upon the **grid** graphics system, which makes it compatible with gridSVG.
+**ggplot2** [@ggplot01] is a popular plotting system in R based upon the "Grammar of Graphics". It is built upon the **grid** graphics system, which makes it compatible with **gridSVG**.
 
 ```{r, eval = FALSE}
 library(ggplot2)
@@ -511,6 +513,7 @@ addInteractions(box, boxClick)
 ```{r, echo = FALSE, fig.cap = "Figure 4.12: box plot example replicated using ggplot2"}
 knitr::include_graphics('./fig/int-bp-ggplot2.png')
 ```
+**Click [here](http://104.236.190.93:3838/YuHan/link-box-ggplot2/) to view the example shown in Figure 4.12.**
 
 This demonstrates that there is a possible way of achieving interactions with **ggplot2** and that there is potential for **interactr** to plug into different R plotting systems. Consequently, when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.
 

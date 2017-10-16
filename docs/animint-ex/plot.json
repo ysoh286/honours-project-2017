@@ -1,0 +1,397 @@
+{
+ "geoms": {
+ "geom1_bar_p1": {
+ "geom": "rect",
+"classed": "geom1_bar_p1",
+"aes": {
+ "x": "sex",
+"clickSelects": "sex" 
+},
+"params": {
+ "na.rm": false,
+"na.rm": false 
+},
+"types": {
+ "count": "numeric",
+"prop": "numeric",
+"clickSelects": "factor",
+"PANEL": "integer",
+"group": "character",
+"ymin": "numeric",
+"ymax": "numeric",
+"xmin": "numeric",
+"xmax": "numeric" 
+},
+"PANEL": 1,
+"chunk_order": [],
+"nest_order": [],
+"subset_order": [],
+"chunks": 1,
+"total": 1 
+},
+"geom2_point_p2": {
+ "geom": "point",
+"classed": "geom2_point_p2",
+"aes": {
+ "x": "weekly_hrs",
+"y": "weekly_income",
+"showSelected": "sex",
+"colour": "highest_qualification",
+"showSelectedlegendcolour": "highest_qualification" 
+},
+"params": {
+ "na.rm": false,
+"na.rm": false 
+},
+"types": {
+ "colour": "rgb",
+"x": "numeric",
+"y": "numeric",
+"showSelected": "factor",
+"showSelectedlegendcolour": "factor",
+"PANEL": "integer",
+"fill": "rgb",
+"group": "character" 
+},
+"PANEL": 1,
+"chunk_order": [
+ "sex" 
+],
+"nest_order": [
+ "showSelectedlegendcolour" 
+],
+"subset_order": [
+ "showSelectedlegendcolour" 
+],
+"chunks": {
+ "Female": 1,
+"Male": 2 
+},
+"total": 2 
+} 
+},
+"selectors": {
+ "highest_qualification": {
+ "type": "multiple",
+"legend": true,
+"is.variable.value": false,
+"showSelected": true,
+"selected": [ "OthPostSec", "School", "NoQual", "Vocational", "BachDeg+" ],
+"levels": [ "OthPostSec", "School", "NoQual", "Vocational", "BachDeg+" ],
+"update": [
+ "geom2_point_p2" 
+] 
+},
+"sex": {
+ "is.variable.value": false,
+"type": "single",
+"clickSelects": true,
+"showSelected": true,
+"chunks": "sex",
+"selected": "Female",
+"levels": [ "Female", "Male" ],
+"update": [
+ "geom1_bar_p1",
+"geom2_point_p2" 
+] 
+} 
+},
+"plots": {
+ "p1": {
+ "panel_margin_lines":   0.25,
+"legend": {},
+"strips": {
+ "top": [
+ "" 
+],
+"right": [
+ "" 
+],
+"n": {
+ "top":      0,
+"right":      0 
+} 
+},
+"layout": {
+ "PANEL": [ 1 ],
+"ROW": [ 1 ],
+"COL": [ 1 ],
+"SCALE_X": [ 1 ],
+"SCALE_Y": [ 1 ],
+"AXIS_X": [ true ],
+"AXIS_Y": [ true ],
+"coord_fixed": [ false ],
+"width_proportion": [      1 ],
+"height_proportion": [      1 ] 
+},
+"panel_background": {
+ "fill": "#EBEBEB",
+"colour": "transparent",
+"size":    0.5,
+"linetype":      1 
+},
+"panel_border": [],
+"grid_major": {
+ "colour": "#FFFFFF",
+"size":    0.5,
+"linetype":      1,
+"lineend": "butt",
+"loc": {
+ "x": [
+ 1,
+2 
+],
+"y": [
+      0,
+  2000,
+  4000 
+] 
+} 
+},
+"grid_minor": {
+ "colour": "#FFFFFF",
+"size":   0.25,
+"linetype":      1,
+"lineend": "butt",
+"loc": {
+ "x": [],
+"y": [
+   1000,
+  3000,
+  5000 
+] 
+} 
+},
+"axis1": {
+ "x": [
+ 1,
+2 
+],
+"xlab": [
+ "Female",
+"Male" 
+],
+"xrange": [    0.4,    2.6 ],
+"xline": true,
+"xticks": true,
+"y": [
+      0,
+  2000,
+  4000 
+],
+"ylab": [
+ "0",
+"2000",
+"4000" 
+],
+"yrange": [ -283.4, 5951.4 ],
+"yline": true,
+"yticks": true 
+},
+"xtitle": "sex",
+"xanchor": "middle",
+"xangle":      0,
+"ytitle": "count",
+"yanchor": "end",
+"yangle":      0,
+"xlabs": [
+ "Female",
+"Male" 
+],
+"ylabs": [
+ "0",
+"2000",
+"4000" 
+],
+"options": {
+ "width":    400,
+"height":    400 
+},
+"geoms": [
+ "geom1_bar_p1" 
+] 
+},
+"p2": {
+ "panel_margin_lines":   0.25,
+"legend": {
+ "highest_qualification": {
+ "guide": "legend",
+"geoms": "point",
+"title": "highest_qualification",
+"class": "highest_qualification",
+"selector": "highest_qualification",
+"is_discrete": true,
+"legend_type": "colour",
+"entries": [
+ {
+ "pointcolour": "#F8766D",
+"pointshape":     19,
+"pointsize":    1.5,
+"pointstroke":    0.5,
+"label": "BachDeg+" 
+},
+{
+ "pointcolour": "#A3A500",
+"pointshape":     19,
+"pointsize":    1.5,
+"pointstroke":    0.5,
+"label": "NoQual" 
+},
+{
+ "pointcolour": "#00BF7D",
+"pointshape":     19,
+"pointsize":    1.5,
+"pointstroke":    0.5,
+"label": "OthPostSec" 
+},
+{
+ "pointcolour": "#00B0F6",
+"pointshape":     19,
+"pointsize":    1.5,
+"pointstroke":    0.5,
+"label": "School" 
+},
+{
+ "pointcolour": "#E76BF3",
+"pointshape":     19,
+"pointsize":    1.5,
+"pointstroke":    0.5,
+"label": "Vocational" 
+} 
+] 
+} 
+},
+"strips": {
+ "top": [
+ "" 
+],
+"right": [
+ "" 
+],
+"n": {
+ "top":      0,
+"right":      0 
+} 
+},
+"layout": {
+ "PANEL": [ 1 ],
+"ROW": [ 1 ],
+"COL": [ 1 ],
+"SCALE_X": [ 1 ],
+"SCALE_Y": [ 1 ],
+"AXIS_X": [ true ],
+"AXIS_Y": [ true ],
+"coord_fixed": [ false ],
+"width_proportion": [      1 ],
+"height_proportion": [      1 ] 
+},
+"panel_background": {
+ "fill": "#EBEBEB",
+"colour": "transparent",
+"size":    0.5,
+"linetype":      1 
+},
+"panel_border": [],
+"grid_major": {
+ "colour": "#FFFFFF",
+"size":    0.5,
+"linetype":      1,
+"lineend": "butt",
+"loc": {
+ "x": [
+      0,
+    50,
+   100,
+   150 
+],
+"y": [
+      0,
+  2500,
+  5000,
+  7500,
+ 10000 
+] 
+} 
+},
+"grid_minor": {
+ "colour": "#FFFFFF",
+"size":   0.25,
+"linetype":      1,
+"lineend": "butt",
+"loc": {
+ "x": [
+     25,
+    75,
+   125 
+],
+"y": [
+   1250,
+  3750,
+  6250,
+  8750 
+] 
+} 
+},
+"axis1": {
+ "x": [
+      0,
+    50,
+   100,
+   150 
+],
+"xlab": [
+ "0",
+"50",
+"100",
+"150" 
+],
+"xrange": [  -8.15, 171.15 ],
+"xline": true,
+"xticks": true,
+"y": [
+      0,
+  2500,
+  5000,
+  7500,
+ 10000 
+],
+"ylab": [
+ "0",
+"2500",
+"5000",
+"7500",
+"10000" 
+],
+"yrange": [ -485.5,  10196 ],
+"yline": true,
+"yticks": true 
+},
+"xtitle": "weekly_hrs",
+"xanchor": "middle",
+"xangle":      0,
+"ytitle": "weekly_income",
+"yanchor": "end",
+"yangle":      0,
+"xlabs": [
+ "0",
+"50",
+"100",
+"150" 
+],
+"ylabs": [
+ "0",
+"2500",
+"5000",
+"7500",
+"10000" 
+],
+"options": {
+ "width":    400,
+"height":    400 
+},
+"geoms": [
+ "geom2_point_p2" 
+] 
+} 
+} 
+}

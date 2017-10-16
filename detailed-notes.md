@@ -7,20 +7,13 @@
   https://ysoh286.github.io/honours-project-2017/
 - pdf version lies in report/rmd-dissertation folder for final submission
 
-**LAST TODOS BEFORE SUBMISSION: [WEEK 11-12]**
-
-CHAPTER 1: [TODO]
-- Include a glossary of web tech terms
-- background information...zzzz
-- ON PLOT + OFF PLOT INTERACTIONS - WHAT ARE THEY and why are they important?
-- set up DOM examples (ask Paul how to set up callbacks) - WAIT... this isn't going to work with interactr...
-- set up shiny examples
-- Write abstract
-- final check/read-through and review
-  - GET SOMEONE ELSE TO PROOFREAD! (preferably someone who doesn't know much)
+**LAST TODOS BEFORE SUBMISSION:**
+ALL EXAMPLES ARE NOW LIVE... (except for 1)
+WRITE: COMPLETE.
+- final check/read-through and review + proofreaders
 - sync html -> pdf version (may have to switch to LaTEX because rmarkdown's not good enough!)
 
-Once you get this done (which seems like forever), you can go back and play with DOM and interactr! :)
+Working on extras for interactr. :)
 
 **note to self:**
 - Cross referencing figures is a bit of a hassle in rmarkdown for html

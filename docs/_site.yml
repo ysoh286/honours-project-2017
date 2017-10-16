@@ -15,8 +15,6 @@ navbar:
       href: chapter4.html
     - text: "5 - Discussion"
       href: chapter5.html
-    - text: "Conclusion"
-      href: conclusion.html
     - icon: fa-github
       href: https://github.com/ysoh286/honours-project-2017
 output:

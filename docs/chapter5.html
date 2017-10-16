@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>5 Discussion</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -324,9 +324,6 @@ div.tocify {
   <a href="chapter5.html">5 - Discussion</a>
 </li>
 <li>
-  <a href="conclusion.html">Conclusion</a>
-</li>
-<li>
   <a href="https://github.com/ysoh286/honours-project-2017">
     <span class="fa fa-github"></span>
      
@@ -341,19 +338,26 @@ div.tocify {
 
 
 
+<h1 class="title toc-ignore">5 Discussion</h1>
 
 </div>
 
 
-<p><br></p>
-<div id="discussion" class="section level1">
-<h1><span class="header-section-number">5</span> Discussion</h1>
 <p>The <strong>interactr</strong> package provides a way of generating simple interactive R plots that can be viewed in a web browser. It is advantageous in the sense that we can define and customise interactions with flexibility. It can also achieve unidirectional linking between plots. However, there are many limitations present with its current implementation and is not yet recommended for general use. But it does have potential to be further developed in the future. In this section we will discuss the advantages <a href="#advantages">(Section 5.1)</a> and limitations of this method <a href="#limitations">(Section 5.2)</a>, further compare it to existing tools <a href="#comparison-to-existing-tools">(Section 5.3)</a>, and briefly comment on future directions for developing <strong>interactr</strong>.</p>
 <div id="advantages" class="section level2">
 <h2><span class="header-section-number">5.1</span> Advantages</h2>
 <p>The idea of <strong>interactr</strong> is inspired from finding a more easier way to customise certain interactions onto plots drawn in R without the need to learn JavaScript. It takes advantage of R’s flexible graphics system and caters for both <strong>graphics</strong> and <strong>grid</strong> plots.</p>
-<p>Using DOM allows us to use R to recompute and do calculations that originally cannot be done in JavaScript, such as recomputing densities on a plot based upon a selection. (<em>insert DOM density example</em>) This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.</p>
-<p>Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools, as it requires information on how these plots are layered and rendered. With gridSVG underneath to provide a clear mapping structure of these layers, we can easily add on elements (that act as layers) to existing plots on the web page to show more about a user’s interaction (such as a selection or a click). They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added on top of the plot.</p>
+<p>Using the DOM package allows us to use R to recompute and do calculations that originally cannot be done in JavaScript, such as recomputing densities on a plot based upon a selection. Below is an example of changing density plots based upon what the user has selected (Figure 5.1).</p>
+<div class="figure" style="text-align: center">
+<img src="fig/int-density-example.png" alt="Figure 5.1: Different selections (left) recompute different densities (right) with interactr" width="70%"  />
+<p class="caption">
+Figure 5.1: Different selections (left) recompute different densities (right) with interactr
+</p>
+</div>
+<p><strong>Note: this image is static.</strong></p>
+<p>This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.</p>
+<p>The main advantage for identifying graphical elements to data is that we have more flexibility in targeting sub components of a plot. A prime example of an interaction that is difficult to implement across other tools is linking a part of the box plot to other plots (seen in Figure 4.2.1).</p>
+<p>Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools as it requires information on how these plots are layered and rendered. With <strong>gridSVG</strong> underneath to provide a clear mapping structure of these layers, we can add on elements to existing plots on the web page to show more about a user’s interaction such as a selection or a click. They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added to the plot.</p>
 <p><strong>interactr</strong> can be used to create links between plots via clicks and selection boxes, where a single plot can control the rest of the plots. It may be possible to create multi-directional links, but becomes more complex to co-ordinate. It is a success in its own for providing basic interactions to any type of plot drawn in R. However, there are still many limitations that are present with its current implementation.</p>
 </div>
 <div id="limitations" class="section level2">
@@ -364,7 +368,7 @@ div.tocify {
 <p>Listing the elements from a plot produced with lattice:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sp &lt;-<span class="st"> </span><span class="kw">xyplot</span>(Petal.Length <span class="op">~</span><span class="st"> </span>Petal.Width, <span class="dt">data =</span> iris)
 <span class="kw">listElements</span>(sp)</code></pre></div>
-<p><img src="chapter5_files/figure-html/unnamed-chunk-2-1.png" width="70%"  style="display: block; margin: auto;" /></p>
+<p><img src="chapter5_files/figure-html/unnamed-chunk-3-1.png" width="70%"  style="display: block; margin: auto;" /></p>
 <pre><code>plot_01.background
 plot_01.xlab
 plot_01.ylab
@@ -379,43 +383,43 @@ plot_01.border.panel.1.1</code></pre>
 <p>Listing the elements from a plot produced with <strong>ggplot2</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(iris) <span class="op">+</span><span class="st"> </span><span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">y =</span> Petal.Length) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
 <span class="kw">listElements</span>(p)</code></pre></div>
-<p><img src="chapter5_files/figure-html/unnamed-chunk-3-1.png" width="70%"  style="display: block; margin: auto;" /></p>
+<p><img src="chapter5_files/figure-html/unnamed-chunk-4-1.png" width="70%"  style="display: block; margin: auto;" /></p>
 <pre><code>layout
   background.1-7-10-1
   panel.6-4-6-4
-    grill.gTree.77
-      panel.background..rect.68
-      panel.grid.minor.y..polyline.70
-      panel.grid.minor.x..polyline.72
-      panel.grid.major.y..polyline.74
-      panel.grid.major.x..polyline.76
+    grill.gTree.2135
+      panel.background..rect.2126
+      panel.grid.minor.y..polyline.2128
+      panel.grid.minor.x..polyline.2130
+      panel.grid.major.y..polyline.2132
+      panel.grid.major.x..polyline.2134
     NULL
-    geom_point.points.64
+    geom_point.points.2122
     NULL
-    panel.border..zeroGrob.65
+    panel.border..zeroGrob.2123
   spacer.7-5-7-5
   spacer.7-3-7-3
   spacer.5-5-5-5
   spacer.5-3-5-3
   axis-t.5-4-5-4
   axis-l.6-3-6-3
-    axis.line.y.left..zeroGrob.90
+    axis.line.y..zeroGrob.2154
     axis
       axis.1-1-1-1
-        GRID.text.87
+        GRID.text.2151
       axis.1-2-1-2
   axis-r.6-5-6-5
   axis-b.7-4-7-4
-    axis.line.x.bottom..zeroGrob.83
+    axis.line.x..zeroGrob.2147
     axis
       axis.1-1-1-1
       axis.2-1-2-1
-        GRID.text.80
+        GRID.text.2144
   xlab-t.4-4-4-4
   xlab-b.8-4-8-4
-    GRID.text.94
+    GRID.text.2138
   ylab-l.6-2-6-2
-    GRID.text.97
+    GRID.text.2141
   ylab-r.6-6-6-6
   subtitle.3-4-3-4
   title.2-4-2-4
@@ -428,35 +432,35 @@ plot_01.border.panel.1.1</code></pre>
 <h2><span class="header-section-number">5.3</span> Comparison to existing tools</h2>
 <p><strong>interactr</strong>‘s main point of difference is the ability to replicate plots or objects drawn in R (in both graphics systems) and to achieve on-plot and off-plot interactivity. <strong>shiny</strong> can do this but you cannot easily attach specific interactions as the whole plot is rendered as a single raster image file (such as a png). Furthermore, many of these existing tools rely on the <strong>shiny</strong> framework. As highlighted in Section 2.3, one of the major disadvantages that <strong>shiny</strong> possesses is a tendency to recompute and redraw entire plots whenever an input changes. In <strong>interactr</strong>, only the part of the plot that the user specifically targets is modified and customised interactions can be achieved. It provides a possible way of linking different types of plots together, whereas existing tools, specifically crosstalk, have focused on linked brushing between ’row-observation’ data. To put this in perspective, the simple example of linking box plots to other types of plots in Figure 4.2 is an interaction that is difficult to achieve without expert knowledge of their respective APIs.</p>
 <p>In comparison to the existing tools discussed in Section 2, <strong>interactr</strong> has a more complex API for users. The main reason for this is to increase flexibility across creating different types of interactions. But this is entirely developmental. In comparison to using <strong>DOM</strong> and <strong>gridSVG</strong> directly, it provides convenience for certain processes, such as drawing an SVG plot and adding elements to the web page and styling hovers. Currently, only certain interactions highlighted in Section 4.2 can be achieved.</p>
-<p>There is potential for designing a more simpler and structured API that is more intuitive for developers and users. An example to highlight this is changing the bandwidth of a density plot (shown below with <strong>interactr</strong> in Figure 5.1). This example has been replicated with <strong>ggvis</strong>(Figure 5.2), <strong>shiny</strong>(Figure 5.3), and with <strong>plotly+shiny</strong> (Figure 5.4). The <strong>animint</strong> package will not be able to do this because it is restricted to clicks and selection.</p>
+<p>There is potential for designing a more simpler and structured API that is more intuitive for developers and users. An example to highlight this is changing the bandwidth of a density plot (shown below with <strong>interactr</strong> in Figure 5.2). This example has been replicated with <strong>ggvis</strong>(Figure 5.3), <strong>shiny</strong>(Figure 5.4), and with <strong>plotly+shiny</strong> (Figure 5.5). The <strong>animint</strong> package will not be able to do this because it is restricted to clicks and selection.</p>
 <div class="figure" style="text-align: center">
-<img src="fig/interactr-density.png" alt="Figure 5.1: control density bandwidth with interactr" width="70%"  />
+<img src="fig/interactr-density.png" alt="Figure 5.2: control density bandwidth with interactr" width="70%"  />
 <p class="caption">
-Figure 5.1: control density bandwidth with interactr
+Figure 5.2: control density bandwidth with interactr
 </p>
 </div>
 <p><strong>Note: this is a static image.</strong></p>
 <div class="figure" style="text-align: center">
-<img src="fig/ggvis-density.png" alt="Figure 5.2: control density bandwidth with ggvis" width="70%"  />
+<img src="fig/ggvis-density.png" alt="Figure 5.3: control density bandwidth with ggvis" width="70%"  />
 <p class="caption">
-Figure 5.2: control density bandwidth with ggvis
+Figure 5.3: control density bandwidth with ggvis
 </p>
 </div>
 <p><strong>Note: this is a static image.</strong></p>
 <div class="figure" style="text-align: center">
-<img src="fig/shiny-density.png" alt="Figure 5.3: control density bandwidth with shiny" width="500px"  />
+<img src="fig/shiny-density.png" alt="Figure 5.4: control density bandwidth with shiny" width="500px"  />
 <p class="caption">
-Figure 5.3: control density bandwidth with shiny
+Figure 5.4: control density bandwidth with shiny
 </p>
 </div>
 <p><strong>Note: this is a static image.</strong></p>
 <div class="figure" style="text-align: center">
-<img src="fig/ggplotly-density.png" alt="Figure 5.4: control density bandwidth using plotly (rendered with ggplot2) and shiny" width="70%"  />
+<img src="fig/ggplotly-density.png" alt="Figure 5.5: control density bandwidth using plotly (rendered with ggplot2) and shiny" width="70%"  />
 <p class="caption">
-Figure 5.4: control density bandwidth using plotly (rendered with ggplot2) and shiny
+Figure 5.5: control density bandwidth using plotly (rendered with ggplot2) and shiny
 </p>
 </div>
-<p><strong>Note: this is a static image.</strong></p>
+<p><strong>Note: this is a static image. Click <a href="http://104.236.190.93:3838/YuHan/control-density/">here</a> to view all these examples.</strong></p>
 <table>
 <colgroup>
 <col width="20%" />
@@ -514,12 +518,24 @@ Figure 5.4: control density bandwidth using plotly (rendered with ggplot2) and s
 <p>The problem of handling large number of individual objects in a plot remains unresolved as the browser cannot handle too many SVG elements at once. This is a general problem that occurs across all existing tools. A solution is to render using webGL and HTML canvas environments which allow for many elements to be rendered without compromising speed. However, the problem with this is that it is not as straightforward to attach events to these elements as they are generally treated as a single object thus making it difficult to address sub-components.</p>
 <p>There is potential in developing <strong>interactr</strong> further to try achieve complex interactions that are more useful in exploratory data analysis. Currently, it is only a proof-of-concept prototype and still undeveloped in many areas. Only a very small number of examples have been successful and a limited number of interactions have been implemented. There is still a need for a simpler and versatile system for users without compromising the flexibility in which the user can define interactions and <strong>interactr</strong> is a step along this path. Other possible ideas may that may be incorporated include integrating plots with <strong>D3</strong> and other htmlwidgets to achieve special effects such as zooming and panning of a plot and to achieve multi-directional linking. It may become compatible with <strong>iNZight</strong> which also uses the grid system to produce its plots. However, this requires assessment on how the underlying grid objects are named and drawn before being implemented.</p>
 </div>
+<div id="conclusion" class="section level2">
+<h2><span class="header-section-number">5.5</span> Conclusion</h2>
+<p>There is a need in expanding web interactive graphics to create better data visualisations for users. Despite having many tools available including plotly, ggvis, shiny and animint and many other packages that produce htmlwidgets, these generally produce standard interactive plots outside of R that are hard to customise. interactr provides a way of driving interactions without the need of learning web technologies while utilising R’s power of statistical computing to aid changes in plots originally drawn in R. However, more assessment and development is required on building more informative interactive visualisations before it can catch up to the capabilities of older desktop applications and existing tools to be used in the future.</p>
+</div>
+<div id="additional-resources" class="section level2">
+<h2><span class="header-section-number">5.6</span> Additional resources</h2>
+<p>The <strong>interactr</strong> package is currently hosted on Github <a href="https://github.com/ysoh286/interactr">here</a>.</p>
+<p>To install <strong>interactr</strong>, you need to install DOM v0.4:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;https://github.com/pmur002/DOM/archive/v0.4.tar.gz&quot;</span>,
+                <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;ysoh286/interactr&#39;</span>)</code></pre></div>
+<p>For more details about this project, visit this <a href="https://github.com/ysoh286/honours-project-2017">repository</a> which contains code and additional notes.</p>
+</div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-sievert03">
 <p>Sievert, Carson. 2017. <em>Plotly 4.7.1 Now on Cran</em>. <a href="http://moderndata.plot.ly/plotly-4-7-1-now-on-cran/" class="uri">http://moderndata.plot.ly/plotly-4-7-1-now-on-cran/</a>.</p>
-</div>
 </div>
 </div>
 </div>

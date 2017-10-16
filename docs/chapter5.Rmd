@@ -1,4 +1,5 @@
 ---
+title: 5 Discussion
 output:
   html_document:
     toc: true
@@ -6,12 +7,10 @@ output:
     toc_float: true
     pandoc_args: [
       "--number-sections",
-      "--number-offset=4"
+      "--number-offset=5"
     ]
 bibliography: bibliography.bib
 ---
-
-<br>
 
 ```{r, include = FALSE}
 library(lattice)
@@ -21,17 +20,25 @@ knitr::opts_chunk$set(comment = NA, warning = FALSE, fig.align = "center",
 
 ```
 
-# Discussion
-
 The **interactr** package provides a way of generating simple interactive R plots that can be viewed in a web browser. It is advantageous in the sense that we can define and customise interactions with flexibility. It can also achieve unidirectional linking between plots. However, there are many limitations present with its current implementation and is not yet recommended for general use. But it does have potential to be further developed in the future. In this section we will discuss the advantages [(Section 5.1)](#advantages) and limitations of this method [(Section 5.2)](#limitations), further compare it to existing tools [(Section 5.3)](#comparison-to-existing-tools), and briefly comment on future directions for developing **interactr**.
 
 ## Advantages
 
 The idea of **interactr** is inspired from finding a more easier way to customise certain interactions onto plots drawn in R without the need to learn JavaScript. It takes advantage of R's flexible graphics system and caters for both **graphics** and **grid** plots.
 
-Using DOM allows us to use R to recompute and do calculations that originally cannot be done in JavaScript, such as recomputing densities on a plot based upon a selection. (*insert DOM density example*) This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.
+Using the DOM package allows us to use R to recompute and do calculations that originally cannot be done in JavaScript, such as recomputing densities on a plot based upon a selection. Below is an example of changing density plots based upon what the user has selected (Figure 5.1).
 
-Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools, as it requires information on how these plots are layered and rendered. With gridSVG underneath to provide a clear mapping structure of these layers, we can easily add on elements (that act as layers) to existing plots on the web page to show more about a user's interaction (such as a selection or a click). They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added on top of the plot.
+```{r, echo = FALSE, fig.cap = "Figure 5.1: Different selections (left) recompute different densities (right) with interactr"}
+knitr::include_graphics('./fig/int-density-example.png')
+```
+
+**Note: this image is static.**
+
+ This cannot be done with any of the existing tools unless paired with shiny. However, shiny simply reproduces the plot each time. Using an asynchronous system like DOM also creates a more responsive application.
+
+The main advantage for identifying graphical elements to data is that we have more flexibility in targeting sub components of a plot. A prime example of an interaction that is difficult to implement across other tools is linking a part of the box plot to other plots (seen in Figure 4.2.1).
+
+Another advantage is that we are able to add layers on top of plots and draw shapes that can help provide more information. This cannot be easily done by the existing tools as it requires information on how these plots are layered and rendered. With **gridSVG** underneath to provide a clear mapping structure of these layers, we can add on elements to existing plots on the web page to show more about a user's interaction such as a selection or a click. They can also be used to highlight regions and draw new elements. The is exemplified in the trend line example in Section 4.2.2, where an additional smoother can be added to the plot.
 
 **interactr** can be used to create links between plots via clicks and selection boxes, where a single plot can control the rest of the plots. It may be possible to create multi-directional links, but becomes more complex to co-ordinate. It is a success in its own for providing basic interactions to any type of plot drawn in R. However, there are still many limitations that are present with its current implementation.
 
@@ -69,7 +76,7 @@ A further assumption that the **interactr** package currently has is that the `n
 
 In comparison to the existing tools discussed in Section 2, **interactr** has a more complex API for users. The main reason for this is to increase flexibility across creating different types of interactions. But this is entirely developmental. In comparison to using **DOM** and **gridSVG** directly, it provides convenience for certain processes, such as drawing an SVG plot and adding elements to the web page and styling hovers. Currently, only certain interactions highlighted in Section 4.2 can be achieved.
 
- There is potential for designing a more simpler and structured API that is more intuitive for developers and users. An example to highlight this is changing the bandwidth of a density plot (shown below with **interactr** in Figure 5.1). This example has been replicated with **ggvis**(Figure 5.2), **shiny**(Figure 5.3), and with **plotly+shiny** (Figure 5.4). The **animint** package will not be able to do this because it is restricted to clicks and selection.
+ There is potential for designing a more simpler and structured API that is more intuitive for developers and users. An example to highlight this is changing the bandwidth of a density plot (shown below with **interactr** in Figure 5.2). This example has been replicated with **ggvis**(Figure 5.3), **shiny**(Figure 5.4), and with **plotly+shiny** (Figure 5.5). The **animint** package will not be able to do this because it is restricted to clicks and selection.
 
 ```{r, echo = FALSE, eval = FALSE}
 # control a density plot using **interactr**
@@ -104,7 +111,7 @@ int <- list(oninput = "slideDensity")
 addInteractions("slider", int)
 ```
 
-```{r, echo = FALSE, fig.cap = "Figure 5.1: control density bandwidth with interactr"}
+```{r, echo = FALSE, fig.cap = "Figure 5.2: control density bandwidth with interactr"}
 knitr::include_graphics('./fig/interactr-density.png')
 ```
 **Note: this is a static image.**
@@ -115,7 +122,7 @@ census[is.na(census[, 7]) == 0, ] %>%
 ggvis(x = ~height) %>%
 layer_densities(adjust = input_slider(0.1, 1, value = 0.1, step = 0.05))
 ```
-```{r, echo = FALSE, fig.cap = "Figure 5.2: control density bandwidth with ggvis"}
+```{r, echo = FALSE, fig.cap = "Figure 5.3: control density bandwidth with ggvis"}
 knitr::include_graphics('./fig/ggvis-density.png')
 ```
 **Note: this is a static image.**
@@ -140,7 +147,7 @@ shinyApp(ui, server)
 
 ```
 
-```{r, echo = FALSE, out.width = "500px", fig.cap = "Figure 5.3: control density bandwidth with shiny"}
+```{r, echo = FALSE, out.width = "500px", fig.cap = "Figure 5.4: control density bandwidth with shiny"}
 knitr::include_graphics('./fig/shiny-density.png')
 ```
 **Note: this is a static image.**
@@ -160,10 +167,10 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-```{r, echo = FALSE, fig.cap = "Figure 5.4: control density bandwidth using plotly (rendered with ggplot2) and shiny"}
+```{r, echo = FALSE, fig.cap = "Figure 5.5: control density bandwidth using plotly (rendered with ggplot2) and shiny"}
 knitr::include_graphics('./fig/ggplotly-density.png')
 ```
-**Note: this is a static image.**
+**Note: this is a static image. Click [here](http://104.236.190.93:3838/YuHan/control-density/) to view all these examples.**
 
 | Tool       | Approximate number of lines of code | Redraws/reproduces entire plot | Scale of axes change | Plot type rendered|
 |:------------:|:------------:|:------------:|:------------:|:----------:|
@@ -183,5 +190,20 @@ Because many of these existing tools are still being developed, it is likely tha
 The problem of handling large number of individual objects in a plot remains unresolved as the browser cannot handle too many SVG elements at once. This is a general problem that occurs across all existing tools. A solution is to render using webGL and HTML canvas environments which allow for many elements to be rendered without compromising speed. However, the problem with this is that it is not as straightforward to attach events to these elements as they are generally treated as a single object thus making it difficult to address sub-components.
 
 There is potential in developing **interactr** further to try achieve complex interactions that are more useful in exploratory data analysis. Currently, it is only a proof-of-concept prototype and still undeveloped in many areas. Only a very small number of examples have been successful and a limited number of interactions have been implemented. There is still a need for a simpler and versatile system for users without compromising the flexibility in which the user can define interactions and **interactr** is a step along this path. Other possible ideas may that may be incorporated include integrating plots with **D3** and other htmlwidgets to achieve special effects such as zooming and panning of a plot and to achieve multi-directional linking. It may become compatible with **iNZight** which also uses the grid system to produce its plots. However, this requires assessment on how the underlying grid objects are named and drawn before being implemented.
+
+## Conclusion
+There is a need in expanding web interactive graphics to create better data visualisations for users. Despite having many tools available including plotly, ggvis, shiny and animint and many other packages that produce htmlwidgets, these generally produce standard interactive plots outside of R that are hard to customise. interactr provides a way of driving interactions without the need of learning web technologies while utilising R's power of statistical computing to aid changes in plots originally drawn in R. However, more assessment and development is required on building more informative interactive visualisations before it can catch up to the capabilities of older desktop applications and existing tools to be used in the future.
+
+## Additional resources
+The **interactr** package is currently hosted on Github [here](https://github.com/ysoh286/interactr).
+
+To install **interactr**, you need to install DOM v0.4:
+```{r, eval = FALSE}
+install.packages("https://github.com/pmur002/DOM/archive/v0.4.tar.gz",
+                repos = NULL, type = "source")
+devtools::install_github('ysoh286/interactr')
+```
+
+For more details about this project, visit this [repository](https://github.com/ysoh286/honours-project-2017) which contains code and additional notes.
 
 ## References {-}

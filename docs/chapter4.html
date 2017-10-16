@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>4 Designing a more flexible way of producing simple interactions</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -324,9 +324,6 @@ div.tocify {
   <a href="chapter5.html">5 - Discussion</a>
 </li>
 <li>
-  <a href="conclusion.html">Conclusion</a>
-</li>
-<li>
   <a href="https://github.com/ysoh286/honours-project-2017">
     <span class="fa fa-github"></span>
      
@@ -341,17 +338,15 @@ div.tocify {
 
 
 
+<h1 class="title toc-ignore">4 Designing a more flexible way of producing simple interactions</h1>
 
 </div>
 
 
-<p><br /></p>
-<div id="designing-a-more-flexible-way-of-producing-simple-interactions" class="section level1">
-<h1><span class="header-section-number">4</span> Designing a more flexible way of producing simple interactions</h1>
-<p>By using gridSVG, DOM and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user with a much less steeper learning curve. This section discusses a potential solution using grid, <strong>gridSVG</strong> and DOM to drive web interactive graphics.</p>
+<p>By using <strong>gridSVG</strong>, <strong>DOM</strong> and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user with a much less steeper learning curve. This section discusses a potential solution using grid, <strong>gridSVG</strong> and DOM to drive web interactive graphics.</p>
 <div id="the-main-idea-using-grid-gridsvg-and-dom" class="section level2">
 <h2><span class="header-section-number">4.1</span> The main idea using grid, gridSVG and DOM</h2>
-<p>In each of the previous examples, they is a certain pattern. In order to define a single interaction, it requires the need to know which SVG element to target, what type of interaction or event is to be attached to that element, and how to define what happens when an interaction occurs. This idea can be broken down into 5 simple steps:</p>
+<p>In each of the previous examples, there is a certain pattern. In order to define a single interaction, it requires the need to know which SVG element to target, what type of interaction or event is to be attached to that element, and how to define what happens when an interaction occurs. This idea can be broken down into 5 simple steps:</p>
 <ul>
 <li>Draw the plot or elements in R</li>
 <li>Identify elements to interact with</li>
@@ -366,7 +361,7 @@ Figure 4.1: grid, gridSVG and DOM in the process
 </p>
 </div>
 <p>The process above (Figure 4.1) can be implemented using grid, <strong>gridSVG</strong> and DOM. We can use the relationship between grid and <strong>gridSVG</strong> elements explained in Chapter 3.1 to allow users to define and identify which elements to target. We can use DOM to attach interactions to certain elements and send these across to a web page. The reason for using DOM rather than shiny is that there are more complexities that work under the shiny framework including reactive programming, which is particularly difficult to grasp in detail. Because it is so low level, we can use DOM to create different types of interactions, but it is unreasonable for the majority of users as it requires some understanding of web technologies and takes too much effort. As seen in Figure 3.7, it takes roughly 40 lines of code to achieve a simple hover effect (with or without writing JavaScript), and about 200 lines of code to link a slider to a smoother (Figure 3.9).</p>
-<p>We need a system that is more convenient for users, not too strenuous to code up, does not require too many pre-requisites, but is flexible enough to achieve different interactions. We have created the <strong>interactr</strong> package that attempts to prototype this idea. It acts as a convenience wrapper for defining interactions with DOM, gridSVG and grid. It aims to allow users to define their own interactions to plots in R without the need for a full understanding of the web technologies involved.</p>
+<p>We need a system that is more convenient for users, not too strenuous to code up, does not require too many pre-requisites, but is flexible enough to achieve different interactions. We have created the <strong>interactr</strong> package that attempts to prototype this idea. It acts as a convenience wrapper for defining interactions with <strong>DOM</strong>, <strong>gridSVG</strong> and <strong>grid</strong>. It aims to allow users to define their own interactions to plots in R without the need for a full understanding of the web technologies involved.</p>
 <p>We have recreated some examples using <strong>interactr</strong> to demonstrate this idea. Many of the examples discussed below use functions that are found in this package.</p>
 </div>
 <div id="examples" class="section level2">
@@ -455,6 +450,7 @@ Figure 4.3: Box plot and scatter plot on the same web page
 Figure 4.4: Click on box plot to light up points on scatter plot
 </p>
 </div>
+<p><strong>Click <a href="http://104.236.190.93:3838/YuHan/link-box-lattice/">here</a> to view the example in Figure 4.4.</strong></p>
 <p>This example can be further extended by linking the box plot to both a scatter plot and density plot. Here, we have taken the first 500 observations from a survey conducted with school children in 2009 <span class="citation">(CensusAtSchool 2009)</span> and wish to find out the density of girls who have the heights that lie within that interquartile range of the boys heights.</p>
 <p>First, we draw a box plot of boys heights and attach a hover effect to the box, similar to what was done previously. The range of the box is identified for further use.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bw &lt;-<span class="st"> </span><span class="kw">bwplot</span>(boys<span class="op">$</span>height, <span class="dt">main =</span> <span class="st">&quot;Boxplot of boys&#39; heights&quot;</span>,
@@ -539,6 +535,7 @@ panel &lt;-<span class="st"> </span><span class="kw">findPanel</span>(dlist<span
 Figure 4.6: A single click on the box plot links the density and scatterplot together
 </p>
 </div>
+<p><strong>Click <a href="http://104.236.190.93:3838/YuHan/box-density/">here</a> to view the example demonstrated in Figure 4.6.</strong></p>
 </div>
 <div id="changing-the-degree-of-smoothing-of-a-trend-line" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Changing the degree of smoothing of a trend line</h3>
@@ -623,6 +620,7 @@ boxIndex =<span class="st"> </span><span class="kw">boxCallback</span>(createSmo
 Figure 4.9: Plot that has a selection box feature that draws a separate smoother
 </p>
 </div>
+<p><strong>Click <a href="http://104.236.190.93:3838/YuHan/link-trendline/">here</a> to view the entire example in Figure 4.9, which controls a trend line with a slider and a drag-box to create a new smoother.</strong></p>
 <p>The user now can draw a selection box over a set of points, and a new smoother should render on the page based upon these points (shown in Figure 4.9).</p>
 <p>The notion of having special functions is required when there is a need for querying the browser for more information (such as the value of the slider, or the points selected on a page). In the box plot example in Section 4.2.1, the information was stored back in R which did not require a special callback function. These types of interactions are more complex to handle.</p>
 </div>
@@ -630,11 +628,11 @@ Figure 4.9: Plot that has a selection box feature that draws a separate smoother
 <div id="compatibility-with-other-graphics-systems" class="section level2">
 <h2><span class="header-section-number">4.3</span> Compatibility with other graphics systems</h2>
 <p>A useful feature of interactr is its compatibility with other R graphing systems including <strong>lattice</strong>, <strong>graphics</strong> (also known as base R plots), and <strong>ggplot2</strong>.</p>
-<p>Before we begin, we will briefly mention the two different graphics systems in R. One is known as the <strong>graphics</strong>, the other known as <strong>grid</strong> . A major difference between the two systems is that <strong>grid</strong> is not made to draw complete plots by a single function <span class="citation">(Murrell 2011)</span>. Rather, it is seen as a lower level graphics tool that has been used to build successful higher level plotting packages, including lattice and ggplot2. Packages that are built on top of the <strong>grid</strong> system can be accessible to the other <strong>grid</strong> tools available, including <strong>gridSVG</strong> and <strong>grImport</strong> <span class="citation">(Murrell 2011)</span>. Likewise, there are other tools that are only compatible with the <strong>graphics</strong> system. There are many other packages that are built on top of these two major systems that make up the graphics that we can produce in R.</p>
+<p>Before we begin, we will briefly mention the two different graphics systems in R. One is known as the <strong>graphics</strong>, the other known as <strong>grid</strong> . A major difference between the two systems is that <strong>grid</strong> is not made to draw complete plots by a single function <span class="citation">(Murrell 2011)</span>. Rather, it is seen as a lower level graphics tool that has been used to build successful higher level plotting packages, including <strong>lattice</strong> and <strong>ggplot2</strong>. Packages that are built on top of the <strong>grid</strong> system can be accessible to the other <strong>grid</strong> tools available, including <strong>gridSVG</strong> and <strong>grImport</strong> <span class="citation">(Murrell 2011)</span>. Likewise, there are other tools that are only compatible with the <strong>graphics</strong> system. There are many other packages that are built on top of these two major systems that make up the graphics that we can produce in R.</p>
 <p>The examples discussed so far with <strong>interactr</strong> have been done with <strong>lattice</strong> plots. However, it is possible to achieve the same with other plotting systems. To demonstrate, we have taken the box plot example in Figure 4.5 and replicated it using <strong>graphics</strong> and <strong>ggplot2</strong>.</p>
 <div id="graphics-plots" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> graphics plots</h3>
-<p>As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the <strong>gridGraphics</strong> package <span class="citation">(Murrell 2015)</span>, which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The <code>grid.echo()</code> function achieves this.</p>
+<p>As briefly mentioned in Chapter 3, in order to convert SVG objects using <strong>gridSVG</strong> the objects must be <strong>grid</strong> objects. In the case of graphics plots, we cannot directly call <strong>gridSVG</strong> to convert it into an SVG. A simple solution to this is to use the <strong>gridGraphics</strong> package <span class="citation">(Murrell 2015)</span>, which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The <code>grid.echo()</code> function achieves this.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(grid)
 <span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)
 <span class="kw">grid.ls</span>()
@@ -684,11 +682,12 @@ boxClick &lt;-<span class="st"> </span><span class="kw">list</span>(<span class=
 Figure 4.11: box plot example replicated using a graphics plot
 </p>
 </div>
+<p><strong>Click <a href="http://104.236.190.93:3838/YuHan/link-box-graphics/">here</a> to view the example shown in Figure 4.11.</strong></p>
 <p>The same interaction has been achieved in Figure 4.11. This shows that there is potential for customising interactions onto graphics plots. The process is the same, except for an additional step to convert a <strong>graphics</strong> plot into a <strong>grid</strong> type plot.</p>
 </div>
 <div id="ggplot2" class="section level3">
 <h3><span class="header-section-number">4.3.2</span> ggplot2</h3>
-<p><strong>ggplot2</strong> <span class="citation">(Wickham 2009)</span> is a popular plotting system in R based upon the “Grammar of Graphics”. It is built upon the <strong>grid</strong> graphics system, which makes it compatible with gridSVG.</p>
+<p><strong>ggplot2</strong> <span class="citation">(Wickham 2009)</span> is a popular plotting system in R based upon the “Grammar of Graphics”. It is built upon the <strong>grid</strong> graphics system, which makes it compatible with <strong>gridSVG</strong>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> iris, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="st">&quot;&quot;</span>, <span class="dt">y =</span> Sepal.Length)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_boxplot</span>()
 p.elements &lt;-<span class="st"> </span><span class="kw">listElements</span>(p)
@@ -719,6 +718,7 @@ boxClick &lt;-<span class="st"> </span><span class="kw">list</span>(<span class=
 Figure 4.12: box plot example replicated using ggplot2
 </p>
 </div>
+<p><strong>Click <a href="http://104.236.190.93:3838/YuHan/link-box-ggplot2/">here</a> to view the example shown in Figure 4.12.</strong></p>
 <p>This demonstrates that there is a possible way of achieving interactions with <strong>ggplot2</strong> and that there is potential for <strong>interactr</strong> to plug into different R plotting systems. Consequently, when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.</p>
 <p>The <strong>interactr</strong> package acts as a proof-of-concept and a starting point for what aims to be a general solution for adding simple interactions to plots generated in R. There is potential in plugging into different plotting systems, however it depends on how compatible these systems are with the underlying tools of the <strong>interactr</strong> package. But the most commonly used systems are covered by our examples. The process is based upon defining what you want to draw in R, identifying elements drawn, and defining specific interactions to attach to certain elements drawn that can be viewed in a web browser. Next, we discuss the limitations and future directions of using this process as a way of creating web interactive graphics.</p>
 </div>
@@ -740,7 +740,6 @@ Figure 4.12: box plot example replicated using ggplot2
 </div>
 <div id="ref-ggplot01">
 <p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>.</p>
-</div>
 </div>
 </div>
 </div>

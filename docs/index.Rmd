@@ -5,17 +5,44 @@ title: "Web interactive plots in R"
 This is an interactive HTML version of an honours project report to be submitted
 on Tuesday 31st October 2017 NZT.
 
-**THIS IS NOT COMPLETE AND IS CURRENTLY UNDER DEVELOPMENT.**
+A quick table of contents has been provided below.
+Simply click on the tabs in the navigation bar (at the top of this page) to view
+each section.
 
-## Abstract {-}
+[Abstract](#abstract)  <br>
+[Acknowledgements](#acknowledgements)  <br>
+[1 Introduction](chapter1.html) <br>
+[2 An overview of tools for achieving web interactive plots in R](chapter2.html)  <br>
+[3 Interactive R plots using lower level tools](chapter3.html)  <br>
+[4 Designing a more flexible way of producing simple interactions](chapter4.html) <br>
+[5 Discussion](chapter5.html) <br>
 
-*TODO: write abstract*
+References have been provided at the bottom of each section.
 
+Most of the examples have live links - simply click on the link and follow
+the instructions. Some of them do take a while to load!
 
-## Acknowledgements {-}
+## Abstract {#abstract}
 
-Thank you to Dr Paul Murrell for his technical expertise and witty analogies that helped me understand the concepts and challenges of research and software development. Thank you for being an inspirational role model for becoming a better programmer.
+Web interactive graphics have become popular for sharing exploratory data
+analysis. There are many approaches for creating web interactive
+graphics, however, they are limited and do not allow users to customise certain
+interactions. This report gives an overview of existing tools for creating web interactive
+plots before developing and discussing a more flexible solution called **interactr**,
+a prototype package that allows users to customise interactions on plots produced
+in R and aims to remove the need for understanding how web technologies work.
 
-Thank you to Prof. Chris Wild for introducing me to the idea of interactive graphics, for inspiring me to investigate further into this topic for iNZight and for my own interests. Thank you for sharing ideas and challenging me further.
+## Acknowledgements {#acknowledgements}
 
-This project would not have been possible without their dedicated supervision and support. I hope that it has helped in their own research and inspires others to have fun in making their own interactive visuals in R.
+Thank you to Dr. Paul Murrell for his technical expertise and witty analogies
+that helped me understand the concepts and challenges of research and software
+development. Thank you for being an inspirational role model for becoming a
+better programmer.
+
+Thank you to Prof. Chris Wild for introducing me to the idea of interactive
+graphics, for inspiring me to investigate further into this topic for iNZight
+and for my own interests. Thank you for sharing ideas and challenging me further.
+
+This project would not have been possible without their dedicated supervision
+and support. I hope that it has helped in their own research and inspires others
+to have fun making their own interactive visuals in R.
