@@ -34,8 +34,10 @@ Figure 3.1: an interactive circle made using **gridSVG**
 **Hover over the circle above and it will turn red!**
 
 ```{r, echo = TRUE, eval = FALSE}
-grid.circle(x = 0.5, y = 0.5, r = 0.25, name = "circle.A", gp = gpar(fill = "yellow"))
-grid.garnish('circle.A', onmouseover = "allred()", onmouseout = "allyellow()", "pointer-events" = "all")
+grid.circle(x = 0.5, y = 0.5, r = 0.25, name = "circle.A",
+            gp = gpar(fill = "yellow"))
+grid.garnish('circle.A', onmouseover = "allred()", onmouseout = "allyellow()",
+             "pointer-events" = "all")
 grid.script("allred = function() {
   var circle = document.getElementById('circle.A.1.1');
   circle.setAttribute('fill', 'red');
@@ -54,9 +56,9 @@ In **grid**, we have named the circle as `circle.A`. **gridSVG** maintains this 
 Another important feature **gridSVG** has is the ability to translate between data and SVG coordinates[@gridSVG03]. Suppose that a plot has been generated. The `exportCoords` argument in `grid.export` is able to generate data that retains the locations of viewports and scales from the original plot in R (Murrell and Potter, 2012).
 We can use this information to convert data to SVG coordinates and vice versa.
 
-To demonstrate, we have drawn a plot using the `cars` data set and exported its coordinate system with its corresponding SVG. We have separated the svg and the coordinates.
+To demonstrate, we have drawn a plot using the `cars` data set (Figure 3.2) and exported its coordinate system with its corresponding SVG. We have separated the svg and the coordinates.
 
-```{r, fig.keep = "first"}
+```{r, fig.keep = "first", fig.cap = "Figure 3.2: a lattice plot of the relationship between speed and stopping distance of cars that is further exported as an SVG using gridSVG"}
 xyplot(dist ~ speed, data = cars)
 svgdoc <- grid.export(NULL, exportCoords = "inline")
 
@@ -65,7 +67,7 @@ svg <- svgdoc$svg
 coords <- svgdoc$coords
 ```
 
-To be able to use the coordinate system in R to convert between data and SVG coordinate systems, we need to load it in by calling `gridSVGCoords`.
+To be able to use the coordinate system in **R** to convert between data and SVG coordinate systems, we need to load it in by calling `gridSVGCoords`.
 
 ```{r}
 gridSVGCoords(coords)
@@ -86,7 +88,7 @@ panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
 The native co-ordinates (4, 5) have been translated as (`r round(x, 2)`, `r y`) in the SVG co-ordinate system. This can be further added on to the web page without redrawing the rest of the plot as we have the co-ordinates in the SVG space using JavaScript. We can also translated the coordinates back into data to return (4, 5).
 
 ```{r}
-# to translate back to data (ie native):
+# to translate back to data (native):
 viewportConvertX(panel, x, "svg", "native")
 viewportConvertY(panel, y, "svg", "native")
 
@@ -100,37 +102,37 @@ A clear limitation that is present in the existing tools discussed previously is
 
 <embed src="./fig/bp/boxplot.svg" type="image/svg+xml" />
 
-Figure 3.2: An example of a customised box plot interaction on an iNZight plot using **gridSVG**, JavaScript
+Figure 3.3: An example of a customised box plot interaction on an iNZight plot using **gridSVG**, JavaScript
 
-**Hover over Figure 3.2's box and it will light up in red. Click on the box to highlight the points that lie within that range.**
+**Hover over Figure 3.3's box and it will light up in red. Click on the box to highlight the points that lie within that range.**
 
-One such example is highlighting part of a box plot to show certain values between the median and the lower quartile (Figure 3.2). When the user clicks on this box, it will highlight the points that lie within this range. While this can be achieved with **gridSVG** and custom JavaScript, it is not as straightforward with **plotly** or **ggvis**. Despite **plotly** and **ggvis** also rendering graphs in SVG, it is more difficult to identify which elements to target and add interactions to with these systems.
+One such example is highlighting part of a box plot to show certain values between the median and the lower quartile (Figure 3.3). When the user clicks on this box, it will highlight the points that lie within this range. While this can be achieved with **gridSVG** and custom JavaScript, it is not as straightforward with **plotly** or **ggvis**. Despite **plotly** and **ggvis** also rendering graphs in SVG, it is more difficult to identify which elements to target and add interactions to with these systems.
 
 ### Preventing redraws in shiny using JavaScript messages and gridSVG
 
 As mentioned at the end of Chapter 2, one of the downsides of using **shiny** along with **plotly** or other htmlwidgets is its nature to redraw plots every time an input changes. With R plots that are rendered using the `renderPlot` function, redrawing is required because the plot is viewed as a raster image. In other cases, **shiny** simply re-runs code when a user interacts with an input, which causes the plot to be redrawn. This means that we cannot specifically target elements on the page as the plot is viewed as a single object.
 
-A new approach is to render the plot in SVG and target certain elements that need to be redrawn while using **shiny** to communicate back to R. If we use SVG, we can separate out which components to target and add interactions without changing the rest of the plot. A complication to this is that we can no longer use the usual **shiny** input and output functions that link everything on the page. **shiny** also does not have specific functions to control SVG content. A different way to do this is to pass data between the browser and back to R using JavaScript to change certain elements on the web page. **shiny** provides a set of functions that allow for messages to be sent through this channel using two JavaScript functions: `shiny.onInputChange()` and `shiny.addCustomMessageHandler()` [@heckmann01]. To send data from the browser back to R, we use `shiny.onInputChange()`. This allows JavaScript objects to be sent back to the **shiny** server in a way which can be recognised in R. To send data from R back to the browser, we use `shiny.addCustomMessageHandler()`.
+A new approach is to render the plot in SVG and target certain elements that need to be redrawn while using **shiny** to communicate back to R. If we use SVG, we can separate out which components to target and add interactions without changing the rest of the plot. A complication to this is that we can no longer use the usual **shiny** input and output functions that link everything on the page. **shiny** also does not have specific functions to control SVG content. A different way to do this is to pass data between the browser and back to R using JavaScript to change certain elements on the web page. **shiny** provides a set of functions that allow for messages to be sent through this channel using two JavaScript functions: `shiny.onInputChange` and `shiny.addCustomMessageHandler` [@heckmann01]. To send data from the browser back to R, we use `shiny.onInputChange`. This allows JavaScript objects to be sent back to the **shiny** server in a way which can be recognised in R. To send data from R back to the browser, we use `shiny.addCustomMessageHandler`.
 
 To demonstrate how this is useful in updating certain parts of a plot, we provide an example by altering a smoothing curve using **gridSVG** and these JavaScript functions. First, we use **gridSVG** to generate our plot and identify the element corresponding to the trend line. We also need to export the coordinates in order to be able to transform data into the correct SVG coordinates when we update the co-ordinates of trend line.
 
-```{r, echo = FALSE, fig.cap = "Figure 3.3: diagram of how things work using shiny's JavaScript functions in Figure 3.4"}
+```{r, echo = FALSE, fig.cap = "Figure 3.4: diagram of how things work using shiny's JavaScript functions in Figure 3.4"}
 knitr::include_graphics('./fig/tl-shiny-diagram.svg')
 ```
 
-In Figure 3.3, we can pass the degree of smoothing value from the slider back to R. R then recalculates the x and y co-ordinates of the new smooth. Once these co-ordinates are calculated, they are sent back to the browser using `session$sendCustomMessage`. These coordinates are passed to `shiny.addCustomMessageHandler()` to run a JavaScript function that will update the points of the line. This process is used in Figure 3.4 with a lattice plot of the iris data set.
+In Figure 3.4, we can pass the degree of smoothing value from the slider back to R. R then recalculates the x and y co-ordinates of the new smooth. Once these co-ordinates are calculated, they are sent back to the browser using `session$sendCustomMessage`. These coordinates are passed to `shiny.addCustomMessageHandler` to run a JavaScript function that will update the points of the line. This process is used in Figure 3.5 with a plot of the iris data set drawn with the **lattice** package.
 
-```{r, echo = FALSE, out.width = "700px", fig.cap = "Figure 3.4: A replica of Figure 2.7, but only the trendline changes"}
+```{r, echo = FALSE, out.width = "700px", fig.cap = "Figure 3.5: A replica of Figure 2.7, but only the trend line changes"}
 knitr::include_graphics('./fig/tl-shiny.png')
 ```
 
 **This is a static image. Click [here](https://ysoh286.shinyapps.io/shiny-trendline-brush/) to view the shiny application of this example.**
 
-This example (Figure 3.4) is extensible as we can render **grid** graphics (such as **lattice**) and customise interactions while maintaining a connection between R and the browser using **shiny**. By doing this rather than redrawing the entire plot, we have only changed the trend line. This method does, however, require the knowledge of JavaScript and the limitations of how much information can be sent through are unknown as it is not commonly used.
+This example (Figure 3.5) is extensible as we can render **grid** graphics (such as **lattice**) and customise interactions while maintaining a connection between R and the browser using **shiny**. By doing this rather than redrawing the entire plot, we have only changed the trend line. This method does, however, require the knowledge of JavaScript and the limitations of how much information can be sent through are unknown as it is not commonly used.
 
-To stretch this example further, we added in a feature where the user can highlight over a set of points by dragging the mouse (as seen in Figure 3.5). We return the information about these highlighted points in order to further compute a smoother for just these points. To achieve this in **shiny**, we have written some JavaScript that returns the indices of these selected points back to R with `shiny.onInputChange()` to compute a suitable smoother which is then displayed.
+To stretch this example further, we added in a feature where the user can highlight over a set of points by dragging the mouse (as seen in Figure 3.6). We return the information about these highlighted points in order to further compute a smoother for just these points. To achieve this in **shiny**, we have written some JavaScript that returns the indices of these selected points back to R with `shiny.onInputChange` to compute a suitable smoother which is then displayed.
 
-```{r, echo = FALSE, out.width = "700px", fig.cap = "Figure 3.5: Select over a set a points to show a smoother"}
+```{r, echo = FALSE, out.width = "700px", fig.cap = "Figure 3.6: Select over a set a points to show a smoother"}
 knitr::include_graphics('./fig/tl-shiny-2.png')
 ```
 
@@ -149,7 +151,7 @@ circle <- getElementById(page, "circle.A.1.1", response = nodePtr())
 setAttribute(page, circle, "fill", "red")
 ```
 
-In contrast, the JavaScript code for changing this circle from yellow to red:
+In contrast, the JavaScript code for changing the circle to red:
 
 ```{js}
 var circle = document.getElementById('circle.A.1.1');
@@ -158,19 +160,19 @@ circle.setAttribute(fill, "red");
 
 The **DOM** package is also special in which we are able to do asynchronous programming (`async = TRUE`) [@DOM02]. Asynchronous programming is a concept where we are able to start an initial task and run different tasks at the same time. Here, the **DOM** package is able to run a task from R to the browser but also be able to run commands in R while the call to the browser is still running. This is important as it makes our web applications more efficient than trying to run each command or task one at a time. When we need to call back to R from the browser, these are all asynchronous events that can easily react to user interactions, making it more responsive and creates a smoother experience for the user.
 
-**DOM** allows R to be called from the browser and for requests from R to be sent to the browser. To demonstrate this, we will replicate the hover effects on the circle as shown in Figure 3.1. Figure 3.6 shows how this can be set up using **DOM**. We can use `setAttribute` to set the colour of the circle, and use the `RDOM.Rcall` function to send requests from the browser back to R. When the user hovers over the circle, the browser will send a request back to R to run the `turnRed` function, which in turn sends a request back to the browser to change the colour of the circle to red. Once the user hovers out, the browser will send a request back to R to turn it back to yellow. Our result is shown in Figure 3.7.
+**DOM** allows R to be called from the browser and for requests from R to be sent to the browser. To demonstrate this, we will replicate the hover effects on the circle as shown in Figure 3.1. Figure 3.7 shows how this can be set up using **DOM**. We can use `setAttribute` to set the colour of the circle, and use the `RDOM.Rcall` function to send requests from the browser back to R. When the user hovers over the circle, the browser will send a request back to R to run the `turnRed` function, which in turn sends a request back to the browser to change the colour of the circle to red. Once the user hovers out, the browser will send a request back to R to turn it back to yellow. Our result is shown in Figure 3.8.
 
-```{r, echo = FALSE, fig.cap = "Figure 3.6: Simple diagram showing how DOM works with from replicating Figure 3.1"}
+```{r, echo = FALSE, fig.cap = "Figure 3.7: Simple diagram showing how DOM works with from replicating Figure 3.1"}
 knitr::include_graphics('./fig/circle-DOM-diagram.svg')
 ```
 
-```{r, echo = FALSE, out.width = "200px", fig.cap = "Figure 3.7: DOM example of Figure 3.1 - when hovered, the circle turns red (right)"}
+```{r, echo = FALSE, out.width = "200px", fig.cap = "Figure 3.8: DOM example of Figure 3.1 - when hovered, the circle turns red (right)"}
 knitr::include_graphics('./fig/circle-DOM-1.png')
 ```
 
 **Note: this is a static image. Click [here](http://104.236.190.93:3838/YuHan/circle/) to view this example.**
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, eval = FALSE}
 # draw circle with grid
 grid.circle(x = 0.5, y = 0.5, r = 0.25, name = "circle.A", gp = gpar(fill = "yellow"))
 
@@ -216,182 +218,20 @@ setAttribute(page,
              "RDOM.Rcall('turnYellow', this, ['ptr'], null)")
 
 ```
-The example (Figure 3.7) takes approximately 40 lines of code for a hover effect. It is much more 'lower level' and requires the user to know how the Document Object Model and main web technologies work together.
-A different approach would be to write some JavaScript and send it across to the browser from R. Since we are only just changing the colour of the circle, it is more efficient to write JavaScript and send it to the browser instead rather than telling the browser to call back to R. It is better to call back to R when a computation is necessary (such as recomputing a trend line's co-ordinates in the Section 3.2.1).
+The example (Figure 3.8) takes approximately 40 lines of code for a hover effect. It involves lower level programming and requires the user to know how the Document Object Model and main web technologies work together.
+A different approach would be to write some JavaScript and send it across to the browser from R. Since we are only just changing the colour of the circle, it is more efficient to write JavaScript and send it to the browser  rather than telling the browser to call back to R. It is better to call back to R when a statistical computation is necessary (such as recomputing a trend line's co-ordinates in Figure 3.6).
 
 ### Comparing DOM to shiny
 
-**DOM** is similar to **shiny** as it establishes a connection between R and the browser. To compare, we have replicated Figure 3.4 using **DOM**.
+**DOM** is similar to **shiny** as it establishes a connection between R and the browser. To compare, we have replicated Figure 3.5 using **DOM**.
 
-```{r, echo = FALSE, fig.cap = "Figure 3.8: Steps on how a trend line can be altered using the DOM package"}
+```{r, echo = FALSE, fig.cap = "Figure 3.9: Steps on how a trend line can be altered using the DOM package"}
 knitr::include_graphics('./fig/tl-DOM-diagram.svg')
 ```
 
-The process of creating this example is similar to what was done with **shiny**. However, it is more difficult to set up as it requires the user to manually link all the components on the page. First, we draw the plot and save it as an SVG in memory. Next, we can add the SVG plot and a slider to the page. We identify which element corresponds to the trend line, and define what happens when the slider moves or when text is clicked. This requires an additional query to the browser to return the value of the slider before it can be returned back to R, as shown in Figure 3.8. These are co-ordinated using asynchronous callbacks, where once a response is returned, we can schedule another task behind it. These can be viewed as a series of steps that are linked together. Once the value of the slider is returned, we can use it to recalculate the coordinates of the trend line before updating it on the page. Our final result is put together in Figure 3.9.
+The process of creating this example is similar to what was done with **shiny**. However, it is more difficult to set up as it requires the user to manually link all the components on the page. First, we draw the plot and save it as an SVG in memory. Next, we can add the SVG plot and a slider to the page. We identify which element corresponds to the trend line, and define what happens when the slider moves or when text is clicked. This requires an additional query to the browser to return the value of the slider before it can be returned back to R, as shown in Figure 3.9. These are co-ordinated using asynchronous callbacks, where once a response is returned, we can schedule another task behind it. These can be viewed as a series of steps that are linked together. Once the value of the slider is returned, we can use it to recalculate the coordinates of the trend line before updating it on the page. Our final result is put together in Figure 3.10.
 
-```{r, echo = FALSE, eval = FALSE}
-library(DOM)
-library(lattice)
-
-# draw plot in memory
-pdf(NULL)
-lattice::xyplot(Petal.Length ~ Petal.Width, data = iris, pch = 19, type = c("p", "smooth"), col.line = "orange", lwd = 3)
-# get svg output
-svgdoc <- gridSVG::grid.export(NULL, exportMappings = "inline", exportJS = "inline", exportCoords = "inline")
-svg <- svgdoc$svg
-coords <- svgdoc$coords
-# load co-ordinates
-gridSVG::gridSVGCoords(coords)
-dev.off()
-
-# render using **DOM**:
-page <- htmlPage()
-
-#add svg
-appendChild(page,
-            child = svgNode(XML::saveXML(svg)),
-            ns = TRUE,
-            response = svgNode())
-
-pl <- getElementsByTagName(page, 'svg', response = htmlNode())
-
-# get trendline
-trendline <- getElementById(page, "plot_01.loess.lines.panel.1.1.1.1", response = nodePtr())
-
-# add text for selecting linear and loess:
-appendChild(page,
-            child = htmlNode('<p id="linear"> Linear </p>'))
-
-appendChild(page,
-            child = htmlNode('<p id="loess"> Loess </p>'))
-
-js <- 'highlight = function(i) {
-          var spanText = document.getElementsByTagName("p")[i]
-              spanText.style.color = "red";
-     };
-      normal = function(i) {
-          var spanText = document.getElementsByTagName("p")[i]
-              spanText.style.color = "blue";
-     };'
-
-appendChild(page,
-            child = javascript(js))
-setAttribute(page,
-             elt = css("#linear"),
-             attrName = "onmouseover",
-             attrValue = 'highlight(0)')
-setAttribute(page,
-             elt = css("#linear"),
-             attrName = "onmouseout",
-             attrValue = 'normal(0)')
-setAttribute(page,
-             elt = css("#loess"),
-             attrName = "onmouseover",
-             attrValue = 'highlight(1)')
-setAttribute(page,
-             elt = css("#loess"),
-             attrName = "onmouseout",
-             attrValue = "normal(1)")
-
-#write R function to recalculate!
-
-calculate  = function(...) {
-  #x values:
-  x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
-  #get panel viewport to match co-ordinates correctly:
-  panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-
-  if (grepl("Linear", list(...)[1])) {
-    #linear model:
-    linear <- lm(Petal.Length~Petal.Width, data = iris)
-    y <- linear$coefficients[1] + linear$coefficients[2]*x
-  } else {
-      #loess model:
-      lo <- loess(Petal.Length~Petal.Width,data = iris)
-       y <- predict(lo, x)
-  }
-
-  #convert co-ordinates:
-  svg_x <- viewportConvertX(panel, x, "native")
-  svg_y <- viewportConvertY(panel, y, "native")
-
-  #create 'points' string:
-  pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
-
-  # update points:
-  setAttribute(page,
-               trendline,
-               "points",
-               pt,
-               async = TRUE)
-
-}
-
-#set attributes: when you click on text, it changes to that model
-setAttribute(page,
-             elt = css("#linear"),
-             attrName = "onclick",
-             attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], null)')
-
-setAttribute(page,
-             elt = css("#loess"),
-             attrName = "onclick",
-             attrValue = 'RDOM.Rcall("calculate", this, [ "HTML" ], null)')
-
-
-## ADD A SLIDER TO CONTROL LOESS:
-
-#add slider:
-appendChild(page,
-            child = htmlNode('<input name="sl" id="slider" type="range" min = "0.5" max = "1" step = "0.01"/>'),
-            response = css())
-
-appendChild(page, htmlNode('<p id="para"></p>'))
-
-sliderValue <- function(ptr) {
-  value <- getProperty(page, ptr, "value", async = TRUE, callback = calcSmooth)
-}
-
-calcSmooth <- function(value) {
-
-  newPara <- htmlNode(paste('<p id="para">', value, '</p>'))
-  replaceChild(page, newPara, css("#para"), async=TRUE)
-
-  #x values:
-  x <- seq(min(iris$Petal.Width), max(iris$Petal.Width), length = 20)
-  #get panel viewport to match co-ordinates correctly:
-  panel <- "plot_01.toplevel.vp::plot_01.panel.1.1.vp.2"
-
-  #loess model only:
-  lo <- loess(Petal.Length~Petal.Width, data = iris, span = as.numeric(value))
-  y <- predict(lo, x)
-
-  #convert co-ordinates:
-  svg_x <- viewportConvertX(panel, x, "native")
-  svg_y <- viewportConvertY(panel, y, "native")
-
-  #create 'points' string:
-  pt <-  paste(svg_x, svg_y, sep = ",", collapse = " ")
-
-  # update points:
-  setAttribute(page,
-               trendline,
-               "points",
-               pt,
-               async = TRUE)
-}
-
-#you can change the attrName = "onchange" if you want the change to be seen after the
-# user has released the slider.
-setAttribute(page,
-             elt = css("input"),
-             attrName = "oninput",
-             attrValue = 'RDOM.Rcall("sliderValue", this, [ "ptr" ], null)')
-
-
-```
-
-```{r, echo = FALSE, out.width = "400px", fig.cap = "Figure 3.9: DOM example of Fig 3.4 for changing a trendline using a slider"}
+```{r, echo = FALSE, out.width = "400px", fig.cap = "Figure 3.10: DOM example of Figure 3.5 for changing a trend line using a slider"}
 knitr::include_graphics('./fig/tl-DOM-2.png')
 ```
 
@@ -404,7 +244,7 @@ Internally, there are many limitations with this package. As this package is sti
 
  **gridSVG**, **DOM** and **shiny** provide ways in which we can bind custom JavaScript to elements, but requires the user to be able to define what kind of interactions they wish to achieve.
 
-There is a clear trade off between existing tools. It is possible to customise interactions on existing plots, but this requires a knowledge of JavaScript in order to do so. Comparatively, tools that provide standard web interactive  plots are easier to use but are complex to modify and extend further. In the next section, we discuss how we can simplify the implementation of certain interactions on plots originally rendered in R and build a solution using these tools.
+There is a clear trade off between existing tools. It is possible to customise interactions on existing plots, but this requires a knowledge of JavaScript in order to do so. Comparatively, tools that provide standard web interactive plots are easier to use but are complex to modify and extend further. In the next section, we discuss how we can simplify the implementation of certain interactions on plots originally rendered in R and build a solution using these tools.
 
 
 ## References {-}
