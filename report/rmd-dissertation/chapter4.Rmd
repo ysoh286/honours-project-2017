@@ -1,8 +1,8 @@
-# Designing a more flexible way of producing simple interactions
+# Designing a more flexible way of producing simple interactions {#interactr}
 
-By using \textsf{gridSVG}, \textsf{DOM} and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user with a much less steeper learning curve. This section discusses a potential solution using grid, \textsf{gridSVG} and \textsf{DOM} to drive web interactive graphics.
+By using \textsf{gridSVG}, \textsf{DOM} and JavaScript, we can customise interactions onto plots. However, these are too specific and assume a lot of knowledge from the user. We need a way to provide interactions that can be easily customised and defined by the user with a much less steeper learning curve. This  discusses a potential solution using \textsf{grid}, \textsf{gridSVG} and \textsf{DOM} to drive web interactive graphics.
 
-## The main idea using grid, gridSVG and DOM
+## The main idea using grid, gridSVG and DOM {#mainidea}
 
 In each of the previous examples, they is a certain pattern. In order to define a single interaction, it requires the need to know which SVG element to target, what type of interaction or event is to be attached to that element, and how to define what happens when an interaction occurs. This idea can be broken down into 5 simple steps:
 
@@ -13,24 +13,24 @@ In each of the previous examples, they is a certain pattern. In order to define 
   - Send interaction instructions and plot to the browser
 
 
-  ```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:main-idea} grid, gridSVG and DOM in the process"}
+  ```{r, echo = FALSE, out.width = "100%", fig.cap = "\\label{fig:main-idea} grid, gridSVG and DOM in the process"}
   knitr::include_graphics('./fig/main-idea.png')
   ```
 
   The process above (\autoref{fig:main-idea}) can be implemented using \textsf{grid}, \textsf{gridSVG} and \textsf{DOM}.
-  We can use the relationship between \textsf{grid} and \textsf{gridSVG} elements explained in Section 3.1 to allow users to define and identify which elements to target. We can use \textsf{DOM} to attach interactions to certain elements and send these across to a web page. The reason for using \textsf{DOM} rather than shiny is that there are more complexities that work under the shiny framework including reactive programming, which is particularly difficult to grasp in detail. Because it is so low level, we can use \textsf{DOM} to create different types of interactions, but it is unreasonable for the majority of users as it requires some understanding of web technologies and takes too much effort. As seen in \autoref{fig:circle-DOM-1}, it takes roughly 40 lines of code to achieve a simple hover effect (with or without writing JavaScript), and about 200 lines of code to link a slider to a smoother (\autoref{fig:tl-DOM-2}).
+  We can use the relationship between \textsf{grid} and \textsf{gridSVG} elements explained in [Section 3.1](#gridSVG) to allow users to define and identify which elements to target. We can use \textsf{DOM} to attach interactions to certain elements and send these across to a web page. The reason for using \textsf{DOM} rather than \textsf{shiny} is that there are more complexities that work under the \textsf{shiny} framework including reactive programming, which is particularly difficult to grasp in detail. Because it is so low level, we can use \textsf{DOM} to create different types of interactions, but it is unreasonable for the majority of users as it requires some understanding of web technologies and takes too much effort. As seen in \autoref{fig:circle-DOM-1}, it takes roughly 40 lines of code to achieve a simple hover effect (with or without writing JavaScript), and about 200 lines of code to link a slider to a smoother (\autoref{fig:tl-DOM-2}).
 
-We need a system that is more convenient for users, not too strenuous to code up, does not require too many pre-requisites, but is flexible enough to achieve different interactions. We have created the \textsf{interactr} package that attempts to prototype this idea. It acts as a convenience wrapper for defining interactions with \textsf{DOM}, \textsf{gridSVG} and \textsf{grid}. It aims to allow users to define their own interactions to plots in R without the need for a full understanding of the web technologies involved.
+We need a system that is more convenient for users, not too strenuous to code up, does not require too many pre-requisites, but is flexible enough to achieve different interactions. We have created the \textsf{interactr} package that attempts to prototype this idea. It acts as a convenience wrapper for defining interactions with \textsf{DOM}, \textsf{gridSVG} and \textsf{grid}. It aims to allow users to define their own interactions to plots in \textsf{R} without the need for a full understanding of the web technologies involved.
 
 We have recreated some examples using \textsf{interactr} to demonstrate this idea. Many of the examples discussed below use functions that are found in this package.
 
-## Examples
+## Examples {#examples}
 
-### Linking box plots
+### Linking box plots {#boxplot}
 
 The goal for this example is to link the interquartile range of the box plot to a scatter plot, followed by a density plot. When the user clicks on the box plot, it highlights the range of the box plot on the other respective plots.
 
-We note that everything that will be done is coded in R so it requires no knowledge JavaScript or other web technologies from the user.
+We note that everything that will be done is coded in \textsf{R} so it requires no knowledge JavaScript or other web technologies from the user.
 
 Our first step is to draw the box plot in R.
 
@@ -42,12 +42,12 @@ bw <- bwplot(iris$Sepal.Length, main = "Sepal length", xlab = "Sepal length")
 
 Here, we have stored the box plot into a variable called `bw`. To attach interactions, we need to identify what elements have been drawn. We can do that by listing the elements.
 
-```{r, fig.cap = "\\label{fig:bp} Producing a box plot in R"}
+```{r, fig.cap = "\\label{fig:bp} Producing a box plot in R", comment = NA}
 listElements(bw)
 box <- "plot_01.bwplot.box.polygon.panel.1.1"
 ```
 
-This will print the plot (\autoref{fig:bp}) and return a list of all the elements that make up the box plot in R. The user can identify which element to target to attach interactions. This is one of the disadvantages (further discussed in Section 5.2) of this process - the user must deduce which element to target through the names listed. In some cases, this is straightforward like in the example above, we suggest that the 'box' should refer to the box plot. We have identified the box that marks between the lower quartile and upper quartile.
+This will print the plot (\autoref{fig:bp}) and return a list of all the elements that make up the box plot in R. The user can identify which element to target to attach interactions. This is one of the disadvantages (further discussed in [Section 5.2](#limitations)) of this process - the user must deduce which element to target through the names listed. In some cases, this is straightforward like in the example above, we suggest that the 'box' should refer to the box plot. We have identified the box that marks the interquartile range.
 
 Next, we can define a simple interaction. We want to achieve an interaction where when the user hovers over the box, it will turn red. In the case of a hover, we have defined it as a type of interaction to which we can specify the 'attributes' and styles of the box.
 
@@ -63,11 +63,11 @@ draw(bw, box, interactions, new.page = TRUE)
 ```
 This line of code (the `draw` function) both links the interaction we defined before to the box element and sends the plot across to a new web page. We see that when the user hovers over the box, the box turns red as seen in \autoref{fig:int-bp-1}.
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-1} Box plot with hover interaction"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-1} Boxplot (left) that turns red when hovered (right)"}
 knitr::include_graphics('./fig/int-bp-1.png')
 ```
 
-Before we move on to drawing the scatter plot, we need to make sure we identify the interquartile range of the box plot and extract any other information we may require from the plot before moving onto the next. This is one of the disadvantages of using this package which is further discussed in Section 5.2 when plots are separately drawn to the graphics device each time.
+Before we move on to drawing the scatter plot, we need to make sure we identify the interquartile range of the box plot and extract any other information we may require from the plot before moving onto the next. This is one of the disadvantages of using this package which is further discussed in [Section 5.2](#limitations) when plots are separately drawn to the graphics device each time.
 
 Here, we can return the range of the box plot and store it in a variable called `range`.
 
@@ -76,7 +76,7 @@ Here, we can return the range of the box plot and store it in a variable called 
 range <- returnRange(box)
 ```
 
-We now proceed to add a scatter plot by drawing the scatter plot, listing the elements and identifying the 'points', before sending it to the same web page.
+We now proceed to add a scatter plot by drawing the scatter plot, listing the elements and identifying the points before sending it to the same web page.
 
 ```{r, eval = FALSE}
 sp <- xyplot(Sepal.Width ~ Sepal.Length,
@@ -87,9 +87,9 @@ points <- "plot_01.xyplot.points.panel.1.1"
 draw(sp) #by default, new.page = FALSE
 ```
 
-We see that the box plot and the scatter plot we drew in R are now on the same web page (\autoref{fig:int-bp-2}).
+We see that the box plot and the scatter plot we drew in \textsf{R} are now on the same web page (\autoref{fig:int-bp-2}).
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-2} Boxplot and scatter plot on the same web page"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-2} Boxplot and scatter plot on the same web page"}
 knitr::include_graphics('./fig/int-bp-2.png')
 ```
 
@@ -120,13 +120,12 @@ addInteractions(box, boxClick)
 
 We have inserted the function name to run when a 'click' is performed (line 1). Next in the second line of code, we have appended this interaction to the box element, so that when we click on the box, the points in the scatterplot that lie within that range should light up in red. This is shown in \autoref{fig:int-bp-3}.
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-3} Click on box plot to light up points on scatter plot"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-3} Click on box plot to light up points on scatter plot"}
 knitr::include_graphics('./fig/int-bp-3.png')
 ```
 
 This example can be further extended by linking the box plot to both a scatter plot and density plot. Here, we have taken the first 500 observations from a survey conducted with school children in 2009 [@census01] and wish to find out the density of girls who have the heights that lie within that interquartile range of the boys heights.
 
-We begin by drawing the box plot of boys heights.
 
 ```{r, echo = FALSE, eval = FALSE}
 # get dataset off web
@@ -141,7 +140,7 @@ boys <- census[census$gender == "male", ]
 girls <- census[census$gender == "female", ]
 ```
 
-First, we draw a box plot of boys heights and attach a hover effect to the box, similar to what was done previously. The range of the box is identified for further use.
+First, we draw a box plot of boys' heights and attach a hover effect to the box, similar to what was done previously. The range of the box is identified for further use.
 
 ```{r, eval = FALSE}
 bw <- bwplot(boys$height, main = "Boxplot of boys' heights",
@@ -155,7 +154,7 @@ draw(bw, box, interactions, new.page = TRUE)
 range <- returnRange(box)
 ```
 
-Next, we add the scatter plot between boys' heights and armspan to the page.
+Next, we add the scatter plot between boys' heights and arm span to the page.
 
 ```{r, eval = FALSE}
 sp <- xyplot(boys$armspan ~ boys$height,
@@ -167,7 +166,7 @@ points <- "sp_bheight.xyplot.points.panel.1.1"
 draw(sp)
 ```
 
-The next line of code adds the density plot of girls heights. Note that no interactions have been defined yet.
+The next line of code adds the density plot of girls' heights. Note that no interactions have been defined yet.
 
 ```{r, eval = FALSE}
 
@@ -181,7 +180,7 @@ draw(dplot)
 
 ```
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-4} All three plots on the same web page"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-4} All three plots on the same web page"}
 knitr::include_graphics('./fig/int-bp-4.png')
 ```
 \autoref{fig:int-bp-4} shows all three plots on the same web page.
@@ -214,7 +213,7 @@ highlightRange <- function(ptr) {
 
   # add start and end points for drawing the region to be highlighted
   xval <- c(xval[1], xval, xval[length(xval)])
-  yval <- c(-1, yval, -1)
+  yval <- c(0, yval, 0)
 
   pt <- convertXY(xval, yval, panel)
 
@@ -247,15 +246,15 @@ addInteractions(box, boxClick)
 
 When the user now clicks on the box plot, it lights up the points and the density that lie within that range as seen in \autoref{fig:int-bp-5}.
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-5} A single click on the box plot links the density and scatterplot together"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-5} A single click on the box plot links the density and scatterplot together"}
 knitr::include_graphics('./fig/int-bp-5.png')
 ```
 
-### Changing the degree of smoothing of a trend line
+### Changing the degree of smoothing of a trend line {#trendline}
 
 Another example that can be done with \textsf{interactr} is driving an interaction using a slider. The slider controls the smoothing of the trend curve. We do not want to redraw the scatter plot when the smoothing settings change.
 
-Here, it becomes more complex as it requires information to be sent and queried back and forth between R and the browser.
+Here, it becomes more complex as it requires information to be sent and queried back and forth between \textsf{R} and the browser.
 
 Once again, we begin by drawing a plot.
 ```{r, eval = FALSE}
@@ -276,7 +275,7 @@ Next, we add a slider to the page. This has not been linked up to any elements y
 addSlider("slider", min = 0.5, max = 1, step = 0.05)
 ```
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-slider-1} Plot with slider"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-slider-1} Plot with slider"}
 knitr::include_graphics('./fig/int-slider-1.png')
 ```
 
@@ -316,11 +315,11 @@ int <- list(oninput = "sliderValue")
 addInteractions("slider", int)
 ```
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-slider-2} Plot with slider that controls the smoothness of the trend line"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-slider-2} Plot with slider that controls the smoothness of the trend line"}
 knitr::include_graphics('./fig/int-slider-2.png')
 ```
 
-Another feature that the user may want to achieve is to be able to select a set of points and compute a trend line using those specific points. To be able to do this, we need to add a new element to the page to represent this special trend line. This can be done using the `addLine` function. Here, we have added it to the same group where these points are.
+Another feature that the user may want to achieve is to be able to select a set of points and compute a trend line using those specific points. To be able to do this, we need to add a new element to the page to represent this special trend line. This can be done using the `addLine` function. Here, we have added it to the same group where these points lie.
 
 ```{r, eval = FALSE}
 pointsPanel <- findPanel("plot_01.xyplot.points.panel.1.1")
@@ -361,24 +360,24 @@ boxIndex = boxCallback(createSmooth)
 addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", f = "boxIndex")
 ```
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-slider-3} Plot that has a selection box feature that draws a separate smoother"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-slider-3} Plot that has a selection box feature that draws a separate smoother"}
 knitr::include_graphics('./fig/int-slider-3.png')
 ```
 
 The user now can draw a selection box over a set of points, and a new smoother should render on the page based upon these points (shown in \autoref{fig:int-slider-3}).
 
-The notion of having special functions is required when there is a need for querying the browser for more information (such as the value of the slider, or the points selected on a page). In the box plot example in Section 4.2.1, the information was stored back in R which did not require a special callback function. These types of interactions are more complex to handle.
+The notion of having special functions is required when there is a need for querying the browser for more information (such as the value of the slider, or the points selected on a page). In the box plot example in [Section 4.2.1](#boxplot), the information was stored back in \textsf{R} which did not require a special callback function. These types of interactions are more complex to handle.
 
 
-## Compatibility with other graphics systems
+## Compatibility with other graphics systems {#compat}
 
-A useful feature of interactr is its compatibility with other R graphing systems including \textsf{lattice}, \textsf{graphics} (also known as base R plots), and \textsf{ggplot2}.
+A useful feature of interactr is its compatibility with other \textsf{R} graphing systems including \textsf{lattice}, \textsf{graphics} (also known as base \textsf{R} plots), and \textsf{ggplot2}.
 
 Before we begin, we will briefly mention the two different graphics systems in R. One is known as the \textsf{graphics}, the other known as \textsf{grid} . A major difference between the two systems is that \textsf{grid} is not made to draw complete plots by a single function [@rgraphics01]. Rather, it is seen as a lower level graphics tool that has been used to build successful higher level plotting packages, including lattice and ggplot2. Packages that are built on top of the \textsf{grid} system can be accessible to the other \textsf{grid} tools available, including \textsf{gridSVG} and \textsf{grImport} [@rgraphics01]. Likewise, there are other tools that are only compatible with the \textsf{graphics} system. There are many other packages that are built on top of these two major systems that make up the graphics that we can produce in R.
 
 The examples discussed so far with \textsf{interactr} have been done with \textsf{lattice} plots. However, it is possible to achieve the same with other plotting systems. To demonstrate, we have taken the box plot example in \autoref{fig:int-bp-3} and replicated it using \textsf{graphics} and \textsf{ggplot2}.
 
-### graphics plots
+### graphics plots {#graphics}
 
 As briefly mentioned in Chapter 3, in order to convert SVG objects using gridSVG the objects must be grid objects. In the case of graphics plots, we cannot directly call gridSVG to convert it into an SVG. A simple solution to this is to use the \textsf{gridGraphics} package [@gridGra01], which acts as a translator by converting graphics plots into grid plots with a consistent naming scheme. The `grid.echo()` function achieves this.
 
@@ -389,7 +388,7 @@ grid.ls()
 gridGraphics::grid.echo()
 grid.ls()
 ```
-```{r, echo = FALSE, fig.cap = "\\label{fig:gg-convert} An example of a graphics plot that is converted into a grid plot using gridGraphics"}
+```{r, echo = FALSE, fig.cap = c("", "\\label{fig:gg-convert} An example of a graphics plot that is converted into a grid plot using gridGraphics"), eval.after = 'fig.cap'}
 library(grid)
 plot(1:10, 1:10)
 grid.ls()
@@ -397,11 +396,9 @@ gridGraphics::grid.echo()
 grid.ls()
 ```
 
-The code above produces a graphics plot that has been converted to a grid plot (as seen in \autoref{fig:gg-convert}). To check this, we have called `grid.ls()` to check whether is a grid object. In the first call, it returns nothing because it is not a grid object. Once we call `grid.echo()`, `grid.ls()` returns a list of elements that make up the plot.
+The code above produces a graphics plot that has been converted to a grid plot (as seen in \autoref{fig:gg-convert}). To check this, we have called `grid.ls()` to identify whether it is a grid object. In the first call, it returns nothing because it is not a grid object. Once we call `grid.echo()`, `grid.ls()` returns a list of elements that make up the plot.
 
-Another problem is that when we plot or try save it into a variable, it does not plot to the graphics device. To solve this, we can use `recordPlot` to record the plot that has been drawn to further process it [@record01].
-
-The only change that we need to do is run an extra `recordPlot` command before we call `listElements`.
+Another problem is that when we plot or try save it into a variable, it does not plot to the graphics device. To solve this, we can use `recordPlot` to record the plot that has been drawn to further process it [@record01]. Thus, the only change that we need to do is run an extra `recordPlot` command before we call `listElements`.
 
 Once again, we begin by drawing the plot. We then record the plot before listing its elements. This will automatically convert the plot using `grid.echo()`.
 
@@ -433,15 +430,15 @@ boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 ```
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-graphics} Box plot example replicated using a graphics plot"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-graphics} Box plot example replicated using a graphics plot"}
 knitr::include_graphics('./fig/int-bp-graphics.png')
 ```
 
-The same interaction has been achieved in \autoref{int-bp-graphics}. This shows that there is potential for customising interactions onto graphics plots. The process is the same, except for an additional step to convert a \textsf{graphics} plot into a \textsf{grid} type plot.
+The same interaction has been achieved in \autoref{fig:int-bp-graphics}. This shows that there is potential for customising interactions onto graphics plots. The process is the same, except for an additional step to convert a \textsf{graphics} plot into a \textsf{grid} type plot.
 
-### ggplot2
+### ggplot2 {#ggplot2}
 
-\textsf{ggplot2} [@ggplot01] is a popular plotting system in R based upon the "Grammar of Graphics". It is built upon the \textsf{grid} graphics system, which makes it compatible with \textsf{gridSVG}.
+\textsf{ggplot2} [@ggplot01] is a popular plotting system in \textsf{R} based upon the "Grammar of Graphics". It is built upon the \textsf{grid} graphics system, which makes it compatible with \textsf{gridSVG}.
 
 ```{r, eval = FALSE}
 library(ggplot2)
@@ -462,7 +459,6 @@ The native coordinates given by \textsf{grid} do not return that data coordinate
 ```{r, eval = FALSE}
 # find the range of the box:
 boxData <- ggplot_build(p)$data[[1]]
-# for a box plot - IQR: lower, upper
 range <- c(boxData$lower, boxData$upper)
 ```
 
@@ -487,10 +483,10 @@ boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
 ```
 
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:int-bp-ggplot2} Box plot example replicated using a plot rendered with ggplot2"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:int-bp-ggplot2} Box plot example replicated using a plot rendered with ggplot2"}
 knitr::include_graphics('./fig/int-bp-ggplot2.png')
 ```
 
-This demonstrates that there is a possible way of achieving interactions with \textsf{ggplot2} and that there is potential for \textsf{interactr} to plug into different R plotting systems. Consequently, when we assess the compatibility of different plotting systems, we need to take into account of possible detours that could occur. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.
+This demonstrates that there is a possible way of achieving interactions with \textsf{ggplot2}. Because this is a simplistic example, it may become more complex when we try to achieve more sophisticated interactions.
 
 The \textsf{interactr} package acts as a proof-of-concept and a starting point for what aims to be a general solution for adding simple interactions to plots generated in R. There is potential in plugging into different plotting systems, however it depends on how compatible these systems are with the underlying tools of the \textsf{interactr} package. But the most commonly used systems are covered by our examples. The process is based upon defining what you want to draw in R, identifying elements drawn, and defining specific interactions to attach to certain elements drawn that can be viewed in a web browser. Next, we discuss the limitations and future directions of using this process as a way of creating web interactive graphics.

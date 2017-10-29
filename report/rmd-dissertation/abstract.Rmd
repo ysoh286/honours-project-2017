@@ -2,8 +2,10 @@
 
 Web interactive graphics have become popular for sharing exploratory data
 analysis. There are many approaches for creating web interactive
-graphics, however, they are limited and do not allow users to customise certain
-interactions. This report gives an overview of existing tools for creating web interactive
-plots before developing and discussing a more flexible solution called \textsf{interactr},
+graphics, however, they are limited and do not allow users to customise and introduce
+interactions that were not specifically planned for by these systems.
+This report gives an overview of existing tools for creating web interactive
+plots before developing and discussing a more flexible solution called
+\textsf{interactr},
 a prototype package that allows users to customise interactions on plots produced
 in R and aims to remove the need for understanding how web technologies work.

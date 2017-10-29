@@ -11,17 +11,23 @@ header-includes:
 - \usepackage{float}
 - \usepackage{caption}
 - \usepackage{parskip}
+- \usepackage{fancyhdr}
 - \renewcommand{\topfraction}{0.85}
 - \renewcommand{\textfraction}{0.1}
 - \parindent=0cm
 - \parskip=\baselineskip
+- \pagestyle{fancy}
+- \fancyfoot{}
+- \fancyhead[RO,LE]{\thepage}
+- \fancyhead[RE]{\itshape\leftmark}
+- \fancyhead[LO]{\itshape\rightmark}
 highlight: tango
 linkcolor: black
 output:
   pdf_document:
-    keep_tex: TRUE
     number_sections: yes
     toc_depth: 3
+    citation_package: natbib
 urlcolor: blue
 bibliography: bibliography.bib
 ---
@@ -29,59 +35,59 @@ bibliography: bibliography.bib
 <!-- this dissertation thesis was adapted from https://rosannavanhespenresearch.wordpress.com/2016/03/30/writing-your-thesis-with-r-markdown-5-the-thesis-layout/  -->
 
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(fig.path = 'figures/',
+knitr::opts_chunk$set(fig.path = 'fig/',
                        warning = FALSE, message = FALSE,
+                       out.width = "80%",
                        fig.align = "center", fig.pos = "H", out.extra = "")
 ```
 
-\pagenumbering{gobble}
+\thispagestyle{empty}
 
 ```{r child = 'titlepage.Rmd'}
 ```
-
-\newpage
-\pagenumbering{arabic}
+\pagenumbering{roman}
+\cleardoublepage
 
 ```{r child = 'abstract.Rmd'}
 ```
 
-\newpage
+\cleardoublepage
 
 ```{r child = 'exec-sum.Rmd'}
 ```
 
+\cleardoublepage
+
 ```{r child = "ack.Rmd"}
 ```
 
-\newpage
 \tableofcontents
 \listoffigures
 
-\newpage
+\cleardoublepage
+\pagenumbering{arabic}
 
 ```{r child = 'chapter1.Rmd'}
 ```
 
-\newpage
+\cleardoublepage
 
 ```{r child = 'chapter2.Rmd'}
 ```
 
-\newpage
+\cleardoublepage
 
 ```{r child = 'chapter3.Rmd'}
 ```
 
-\newpage
+\cleardoublepage
 
 ```{r child = 'chapter4.Rmd'}
 ```
 
-\newpage
+\cleardoublepage
 
 ```{r child = 'chapter5.Rmd'}
 ```
-
-\newpage
 
 # Bibliography

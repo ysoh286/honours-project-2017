@@ -1,4 +1,4 @@
-# An overview of tools for achieving web interactive plots in R
+# An overview of tools for achieving web interactive plots in R {#overview}
 
 ```{r include = FALSE, warning = FALSE, message = FALSE}
 #load libraries:
@@ -10,13 +10,15 @@ library(ggvis)
 #load datasets:
 income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
 ```
-There are many R packages that create different interactive data visualisations. Many of these connect R to specific JavaScript libraries. These include **DT**[@dt01] for generating interactive tables, \textsf{Leaflet} [@leaf01] for rendering interactive maps and many popular graphing libraries including \textsf{highcharter}[@kunst01], \textsf{rbokeh}[@hafen01], **googleVis**[@gesman01] and the **rCharts**[@vaidyan13] package. These generate interactive plots or widgets known as htmlwidgets that can be viewed on a web page.
-Other tools use R rather than JavaScript to drive interactivity, including \textsf{ggvis}[@ggvis01] and \textsf{shiny}[@shiny01]. The few that are discussed in this section in detail are the \textsf{plotly}[@plotly01], \textsf{ggvis}, \textsf{shiny}, and **animint**[@animint01] packages.
+There are many \textsf{R} packages that create different interactive data visualisations. Many of these connect \textsf{R} to specific JavaScript libraries. These include \textsf{Leaflet} [@leaf01] for rendering interactive maps and many popular graphing libraries including \textsf{highcharter} [@kunst01], \textsf{rbokeh} [@hafen01], \textsf{googleVis} [@gesman01] and the \textsf{rCharts} [@vaidyan13] package. These generate interactive plots or widgets known as htmlwidgets that can be viewed on a web page.
+Other tools use \textsf{R} rather than JavaScript to drive interactivity, including \textsf{ggvis} [@ggvis01] and \textsf{shiny} [@shiny01]. The few that are discussed in this section in detail are  \textsf{plotly} [@plotly01], \textsf{ggvis}, \textsf{shiny}, and \textsf{animint} [@animint01].
 
-## plotly
-`plotly.js` is a JavaScript graphing library built upon D3 [@bostock01]. The plotly package in R calls upon this library to render web interactive plots. The purpose of plotly in R is to provide a convenient way of creating interactive data visualisations [@sievert01]. With its API, we can generate a standard plot that can be shared and saved as an interactive HTML web page. One of the reasons the \textsf{plotly} R package is useful is that it can automatically convert plots rendered in the very popular `ggplot2` [@wickham01] package into interactive plots by simply applying the `ggplotly()` function to the plot drawn. It provides basic interactivity including tooltips, zooming and panning, selection of points, and subsetting groups of data as seen in Figure 2.1. We can also create and combine plots together using the `subplot()` function, allowing users to create facetted plots manually or combine different sets of types of plots together.
+## plotly {#plotly}
+`plotly.js` is a JavaScript graphing library built upon \textsf{D3} [@bostock01]. The \textsf{plotly} package in \textsf{R} calls upon this library to render web interactive plots. The purpose of \textsf{plotly} in \textsf{R} is to provide a convenient way of creating interactive data visualisations [@sievert01]. With its API, we can generate a standard plot that can be shared and saved as an interactive HTML web page. One of the reasons why the \textsf{plotly} \textsf{R} package is useful is that it can automatically convert plots rendered in the very popular `ggplot2` [@ggplot01] package into interactive plots by simply applying the `ggplotly()` function to the plot drawn (see \autoref{fig:scatterplot-matrix}). It provides basic interactivity including tooltips, zooming and panning, selection of points, and subsetting groups of data as seen in \autoref{fig:plotly-iris}. We can also create and combine plots together using the `subplot()` function, allowing users to create facetted plots manually or combine different sets of types of plots together.
 
-Figure 2.1: plotly plot of the iris dataset
+```{r, echo = FALSE, fig.cap = "\\label{fig:plotly-iris} A plotly plot of the iris dataset"}
+knitr::include_graphics('./fig/plotly-iris.png')
+```
 
 ```{r, eval = FALSE}
 plotly::plot_ly(data = iris, x = ~Sepal.Width,
@@ -24,17 +26,19 @@ plotly::plot_ly(data = iris, x = ~Sepal.Width,
                 type = "scatter", mode = "markers")
 ```
 
-Like many other htmlwidgets, \textsf{plotly} can provide interactive plots quickly to the user with basic functionalities such as tooltips, zooming and subsetting. In \textsf{plotly}, there are a lot of features for building different plots. However, while We can build upon layers of plot objects, they cannot be pulled apart or modified without re-plotting. These plots natively do not provide more information about the data or be linked to any other plot, but this can be achieved by combining these widgets with crosstalk (Section 2.1.1) or shiny (Section 2.3).
+Like many other htmlwidgets, \textsf{plotly} can provide interactive plots quickly to the user with basic functionalities such as tooltips, zooming and subsetting. In \textsf{plotly}, there are a lot of features for building different plots. However, while we can build upon layers of plot objects, they cannot be pulled apart or modified without re-plotting. These plots natively do not provide more information about the data nor be linked to any other plot. However, this can be achieved by combining these widgets with crosstalk ([Section 2.1.1](#crosstalk)) or shiny ([Section 2.3](#shiny)).
 
-It is difficult to customise interactions without a knowledge of the D3, JavaScript and the use of the `onRender` function from the htmlwidgets package. The other difficulty for the majority of users is knowing which elements to target and how it has been defined on the page. Sievert [-@sievert01] has shown an example of how a set of scatter points drawn with \textsf{plotly} can be selected via clicking which are linked to a google search page.
+It is difficult to customise interactions without a knowledge of the \textsf{D3}, JavaScript and the use of the `onRender` function from the \textsf{htmlwidgets} package. The other difficulty for the majority of users is knowing which elements to target and how it has been defined on the page. Sievert [-@sievert01] has shown an example of how a set of scatter points drawn with \textsf{plotly} can be selected via clicking which are linked to a google search page.
 
 \textsf{plotly} is constantly being developed. As of writing, it has begun to expand on different methods of linking different views of plots and is able to create animated plots[@sievert01].
 
-### Extending interactivity with crosstalk
-\textsf{crosstalk} [@cheng16] is an add-on package that allows htmlwidgets to communicate with each other. As Cheng [-@cheng16] explains, it is designed to link and co-ordinate different views of the same data. Data is converted into a R6 'shared' object, which has a corresponding key for each row observation. When selection occurs, \textsf{crosstalk} communicates which keys have been selected and these widgets will respond accordingly. This is all happens on the browser, where crosstalk acts as a 'messenger' between these widgets.
+### Extending interactivity with crosstalk {#crosstalk}
 
+\textsf{crosstalk} [@cheng16] is an add-on package that allows htmlwidgets to communicate with each other. As Cheng [-@cheng16] explains, it is designed to link and co-ordinate different views of the same data. Data is converted into a R6 `SharedData` object, which has a corresponding key for each row observation. When selection occurs, \textsf{crosstalk} communicates which keys have been selected and these widgets will respond accordingly. This all happens on the browser, where crosstalk acts as a 'messenger' between these widgets.
 
-Figure 2.2: Linked brushing between two plotly plots and a data table
+```{r, echo = FALSE, fig.cap = "\\label{fig:link-plotly} Linked brushing between two plotly plots and a data table"}
+knitr::include_graphics('./fig/link-plotly.png')
+```
 
 ```{r, eval = FALSE, comment = NA}
 #transform our data into a shared object
@@ -53,9 +57,11 @@ bscols(
   )
 ```
 
-In Figure 2.2, we have linked two plots generated by \textsf{plotly} with a table generated by the \textsf{DT} package. When we select over a set of points in one of the plots, the table will respond by filtering all the points that have been selected, while this selection is also highlighted on the other plot. Similarly, if we highlight on the other plot, that selection should change and be updated. This creates a form of multi-directional linking between different views of the iris dataset.
+In \autoref{fig:link-plotly}, we have linked two plots generated by \textsf{plotly} with a table generated by the \textsf{DT} package. When we select over a set of points in one of the plots, the table will respond by filtering all the points that have been selected and this selection is also highlighted on the other plot. Similarly, if we highlight on the other plot, that selection should change and be updated. This creates a form of multi-directional linking between different views of the iris data set.
 
-Figure 2.3: Additional filtering and selection tabs using crosstalk
+```{r, echo = FALSE, fig.cap = "\\label{fig:crosstalk-plotly} Additional filtering and selection tabs using crosstalk"}
+knitr::include_graphics('./fig/crosstalk-plotly.png')
+```
 
 ```{r, eval = FALSE, comment = NA}
 shared_income <- SharedData$new(income)
@@ -64,13 +70,19 @@ bscols(
   list(filter_checkbox("sex", "Gender", shared_income, ~sex, inline  = TRUE),
        filter_slider("weekly_hrs", "Weekly Hours", shared_income, ~weekly_hrs),
        filter_select("ethnicity", "Ethnicity", shared_income, ~ethnicity)),
-  plot_ly(shared_income, x = ~weekly_hrs, y = ~weekly_income, color = ~sex, type = "scatter", mode = "markers")
+  plot_ly(shared_income, x = ~weekly_hrs, y = ~weekly_income,
+          color = ~sex, type = "scatter", mode = "markers")
 )
 ```
 
-In figure 2.3, \textsf{crosstalk} can also be used for filtering. We can add specific inputs for filtering parts of our data set using sliders, checkboxes, and dropdown menus to allow more control over how we can subset and query our data.
+In \autoref{fig:crosstalk-plotly}, \textsf{crosstalk} can also be used for filtering. We can add specific inputs for filtering parts of our data set using sliders, checkboxes, and dropdown menus to allow more control over how we can subset and query our data.
 
-However, \textsf{crosstalk} has several limitations. As Cheng [-@cheng16] points out, the current interactions that it supports are only linked brushing (Figure 2.2) and filtering (Figure 2.3) that can only be done on a single data set in a 'row-observation' format. This means that it cannot be used on aggregate data such as linking a density plot to a scatterplot, as illustrated in Figure 2.4 below. When we select over points over the scatterplot matrix, the density curves do not change as it cannot convert the selection into aggregated data.
+However, \textsf{crosstalk} has several limitations. As Cheng [-@cheng16] points out, the current interactions that it supports are only linked brushing (\autoref{fig:link-plotly}) and filtering (\autoref{fig:crosstalk-plotly}) that can only be done on a single data set in a 'row-observation' format. This means that it cannot be used on aggregate data such as linking a density plot to a scatterplot, as illustrated in \autoref{fig:scatterplot-matrix} below. When we select over points over the scatterplot matrix, the density curves do not change as it cannot convert the selection into aggregated data.
+
+
+```{r, echo = FALSE, fig.cap = "\\label{fig:scatterplot-matrix} A scatterplot matrix based upon the first five variables in the mtcars dataset"}
+knitr::include_graphics('./fig/scatterplot-matrix.png')
+```
 
 ```{r, message = FALSE, eval = FALSE}
 mtcars$cyl <- as.factor(mtcars$cyl)
@@ -78,17 +90,19 @@ shared_cars <- SharedData$new(mtcars[1:5])
 pl <- GGally::ggpairs(shared_cars, aes(color = cyl))
 ggplotly(pl)
 ```
-*Figure 2.4: A scatterplot matrix based upon the first five variables in the mtcars dataset*
 
-Sievert [-@sievert01] explains that the densities do not update because there are no tools available in the `plotly.js` or in the browser to recompute these densities. However, it may be possible in a client-server framework such as \textsf{shiny} (discussed later in [Section 2.3](#shiny)), where we can call upon R to do the calculation. Because the `plotly.js` library recently has support for certain statistical functions that can aggregate data, \textsf{plotly} has expanded beyond being limited to linking between row-observation data. As of writing, these are still being continually developed. One of the main limitations of using crosstalk together with plotly is speed - there is a certain time lag before a user completes their query via selection or clicks [@sievert01].
+Sievert [-@sievert01] explains that the densities do not update because there are no tools available in the `plotly.js` library or in the browser to recompute these densities. Similarly, aggregated displays including bar plots and box plots are not updated. However, it may be possible in a client-server framework such as \textsf{shiny} (discussed later in [Section 2.3](#shiny)), where we can call upon \textsf{R} to do the calculation. Because the `plotly.js` library recently has support for certain statistical functions that can aggregate data, \textsf{plotly} has expanded beyond linking between row-observation data. As of writing, these are still being continually developed. One of the main limitations of using \textsf{crosstalk} together with \textsf{plotly} is speed - there is a certain time lag before a user completes their query [@sievert01].
 
-Crosstalk only supports a limited number of htmlwidgets so far - \textsf{plotly}, \textsf{DT} and \textsf{Leaflet} [@cheng16]. This is because the implementation of crosstalk is relatively complex. From a developer's point of view, it requires creating bindings between \textsf{crosstalk} and the htmlwidget itself and customizing interactions accordingly on how it reacts upon selection and filtering. Despite being under development, it is recognised as being very promising as other htmlwidget developers (notably, Kunst with \textsf{highcharter}[-@kunst01] and Hafen[-@hafen02] with \textsf{rbokeh}) have expressed interest in linking their packages with crosstalk to create more informative visualisations.
+\textsf{crosstalk} only supports a limited number of htmlwidgets so far - \textsf{plotly}, \textsf{DT} and \textsf{Leaflet} [@cheng16]. This is because the implementation of crosstalk is relatively complex. From a developer's point of view, it requires creating bindings between crosstalk and the htmlwidget itself and customizing interactions accordingly on how it reacts upon selection and filtering. Despite being under development, it is recognised as being very promising. Other htmlwidget developers (notably, Kunst with \textsf{highcharter} [-@kunst01] and Hafen[-@hafen02] with \textsf{rbokeh}) have expressed interest in linking their packages with \textsf{crosstalk} to create more informative visualisations.
 
-## ggvis
+## ggvis {#ggvis}
 
-Another common data visualisation package is \textsf{ggvis} [@ggvis01]. This package utilises the Vega JavaScript library [@vega01] to render its plots and uses the \textsf{shiny} framework to drive its interactions from R. It aims to be an interactive visualisation tool for exploratory analysis while following the "Grammar of Graphics" from Wilkinson and Leland [@wilkin01], similar to \textsf{ggplot2} for static plots. It has an advantage over htmlwidgets as it expands upon using statistical functions for plotting, such as `layer_model_predictions()` for drawing trend lines using statistical modelling (see Figure 2.6). Furthermore, because some of the interactions are driven by \textsf{shiny} [@ggvis02], we can add 'inputs' that look similar to shiny such as sliders and checkboxes to control and filter the plot, but also have the power to add tooltips as seen in Figure 2.5.
+Another common data visualisation package is \textsf{ggvis} [@ggvis01]. This package utilises the Vega JavaScript library [@vega01] to render its plots and uses the \textsf{shiny} framework to drive its interactions from R. It aims to be an interactive visualisation tool for exploratory analysis while following the "Grammar of Graphics" [@wilkin01], similar to \textsf{ggplot2} for static plots. It has an advantage over htmlwidgets as it expands upon using statistical functions for plotting, such as `layer_model_predictions()` for drawing trend lines using statistical modelling (see \autoref{fig:ggvis-02} which shows the fitting of a smoother to the weight and miles travelled per gallon of specific cars in the `mtcars` data set). Furthermore, because some of the interactions are driven by shiny [@ggvis02], we can add inputs that look similar to shiny such as sliders and checkboxes to control and filter the plot. We can also manually add tooltips as seen in \autoref{fig:ggvis-01}, which shows a basic \textsf{ggvis} plot of the iris data set with tooltips.
 
-Figure 2.5: basic ggvis plot with tooltips
+
+```{r, echo = FALSE, fig.cap = "\\label{fig:ggvis-01} A basic ggvis plot with tooltips"}
+knitr::include_graphics('./fig/ggvis-01.png')
+```
 
 ```{r, eval = FALSE}
 ggvis(iris, ~Sepal.Width, ~Sepal.Length, fill = ~Species) %>%
@@ -97,219 +111,91 @@ ggvis(iris, ~Sepal.Width, ~Sepal.Length, fill = ~Species) %>%
                                      "Sepal Length: ", iris$Sepal.Length))
 ```
 
-Figure 2.6: Change a trendline with a slider and filters using ggvis alone
+```{r, echo = FALSE, fig.cap = "\\label{fig:ggvis-02} Change a trend line with a slider and filters using ggvis alone"}
+knitr::include_graphics('./fig/ggvis-02.png')
+```
 
 ```{r, eval = FALSE}
-ggvis(cocaine, ~weight, ~price, fill = ~state) %>%
+ggvis(mtcars, ~wt, ~mpg, fill = ~gear) %>%
   layer_points() %>%
-  layer_smooths(stroke:= "red", span = input_slider(0.5, 1, value = 1, label = "Span of loess smoother" )) %>%
-  layer_model_predictions(stroke:="blue",
-                          model = input_select(c("Loess" = "loess", "Linear Model" = "lm", "RLM" = "MASS::rlm"), label = "Select a model"))
+  layer_smooths(stroke := "red",
+                span = input_slider(0.5, 1,
+                                    value = 1,
+                                    label = "Span of loess smoother" )) %>%
+  layer_model_predictions(stroke := "blue",
+                          model = input_select(c("Loess" = "loess",
+                                                 "Linear Model" = "lm",
+                                                 "RLM" = "MASS::rlm"),
+                                               label = "Select a model"))
 ```
 
-However, while we are able to achieve indirect interactions, we are limited to basic interactivity as we are not able to link layers of plot objects together. The user also does not have finer control over where these inputs such as filters and sliders can be placed on the page. We also cannot save these interactions to a standalone web page as \textsf{ggvis} plots are driven by the \textsf{shiny} framework which requires R. There is an option of saving the plot as a static plot, either as an SVG or PNG format. To date, the \textsf{ggvis} package is still under development with more features to come in the near future. With \textsf{ggvis}, we can go further by adding basic user interface options such as filters and sliders to control parts of the plot, but only to a certain extent.
+However, while we are able to achieve indirect interactions, we are limited to basic interactivity as we are not able to link layers of plot objects together. The user also does not have finer control over where these inputs such as filters and sliders can be placed on the page. We also cannot save these interactions to a standalone web page as \textsf{ggvis} plots are driven by the \textsf{shiny} framework which requires \textsf{R}. There is an option of saving the plot as a static plot, either in SVG or PNG format. To date, the \textsf{ggvis} package is still under development with more features to come in the near future. With ggvis, we can go further by adding basic user interface options such as filters and sliders to control parts of the plot, however this is only to a certain extent.
 
-We cannot do combine different views of data using \textsf{ggvis}, \textsf{plotly} and other htmlwidgets alone. Interactivity can be extended with these packages by coupling it with \textsf{shiny}.
+We cannot combine different views of data using \textsf{ggvis}, \textsf{plotly} and other htmlwidgets alone. Interactivity can be extended with these packages by coupling it with \textsf{shiny}.
 
-## shiny
+## shiny {#shiny}
 
-\textsf{shiny} [@shiny01] is an R package that builds web applications. It provides a connection of using R as a server and the browser as a client, such that R outputs are rendered on a web page. This allows users to be able to code in R without the need of learning the other main web technologies. A \textsf{shiny} application [@shiny02] can be viewed as links between inputs (what is being sent to R whenever the end user interacts with different parts of the page) and outputs (what the end user sees on the page and updates whenever an input changes).
+\textsf{shiny} [@shiny01] is an \textsf{R} package that builds web applications. It provides a connection using \textsf{R} as a server and the browser as a client, such that \textsf{R} outputs are rendered on a web page. This allows users to be able to code in \textsf{R} without the need of learning the other main web technologies. A \textsf{shiny} application [@shiny02] can be viewed as links between inputs (what is being sent to \textsf{R} whenever the end user interacts with different parts of the page) and outputs (what the end user sees on the page and updates whenever an input changes).
 
-To show how this works, we have created a simple \textsf{shiny} application that has a slider that controls the smoothness of the trend line. Whenever the user moves the slider, the plot will be redrawn and updated with a new smoother.
+To show how this works, we have created a simple \textsf{shiny} application that has a slider that controls the smoothness of the trend line. Whenever the user moves the slider, the plot will be redrawn and updated with a new smoother. \autoref{fig:shiny-diagram} is a diagram showing of how inputs work with outputs in the shiny application in \autoref{fig:simple-shiny}.
 
-*Figure 2.7: A diagram showing how inputs and outputs work*
-
-To show how this works, we have created a simple shiny application that has a slider that controls the smoothness of the trend line. Whenever the user moves the slider, the plot will be redrawn with a new smoother.
-
-```{r, echo = FALSE, eval = FALSE}
-# add a even simpler Shiny example - slider controlling redraw entire plot of smoother.
-
+```{r, echo = FALSE, fig.cap = "\\label{fig:shiny-diagram} A diagram showing how an input affects an output (slider to plot)"}
+knitr::include_graphics('./fig/shiny-diagram.svg')
 ```
 
-*Figure 2.8: A simplistic shiny application that has a slider to control the smoothness of the trend line*
-
-These applications can become more complex when more inputs and outputs are added. The main advantage of using \textsf{shiny} is that it establishes a connection to R to allow for statistical computing to occur, while leaving the browser to drive on-plot and off-plot interactions (briefly defined in Section 1.1). This allows us to be able to link different views of data easily. Furthermore, RStudio [-@shiny04] has provided ways to be able to host and share these shiny apps via a shiny server. However, we are still limited in the sense that for every time we launch a Shiny app, we do not have access to R as it runs that session. Additionally, \textsf{shiny} has a tendency to redraw entire objects whenever an 'input' changes as seen in Figure 2.7. This can lead to unnecessary computations and traffic between R and the webpage slows down the experience for the user. Despite this, it remains a popular tool for creating interactive visualisations.
-
-There are many different ways to use shiny to create more interactive data visualisations - we can simply just use it to create interactive plots or we can go further and use it to extend the interactivity in \textsf{plotly}, \textsf{ggvis} and other R packages.
-
-### Interactivity with shiny
-
-\textsf{shiny} alone can provide some interactivity to plots [@shiny03]. \autoref{fig:inc-shiny-2} shows linked brushing between facetted plots and a table. With shiny, we are able to easily link plots together with other objects. This is done simply by attaching a `plot_brush` input, and using the `brushedPoints()` function to return what has been selected to R. As we select on parts of the plot, we see this change occur as the other plot and the table updates and renders what has been selected. Other basic interactions include the addition of clicks (`plot_click`) and hovers (`plot_hover`).
-
-
-```{r, echo = FALSE, message = FALSE, eval = FALSE}
-
-ui <- basicPage(
-  plotOutput("plot", brush = "plot_brush", hover = "plot_hover"),
-  verbatimTextOutput("text"),
-  tableOutput("income_table")
-)
-
-server <- function(input, output) {
-  output$plot <- renderPlot({
-    ggplot(income, aes(x = weekly_hrs, y= weekly_income, color = sex)) + geom_point() + facet_grid(.~ethnicity)
-  })
-
-  output$text <- renderText({
-    paste0("You've hovering on: ", round(as.numeric(input$plot_hover$x), 2), ', ' , round(as.numeric(input$plot_hover$y), 2))
-  })
-
-  output$income_table <- renderTable({
-    brushedPoints(income, input$plot_brush, xvar = "weekly_hrs", yvar = "weekly_income")
-  })
-}
-
-shinyApp(ui, server)
+```{r, echo = FALSE, fig.cap = "\\label{fig:simple-shiny} A simplistic shiny application that has a slider to control the smoothness of the trend line"}
+knitr::include_graphics('./fig/simple-shiny.png')
 ```
 
-```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:inc-shiny-1} Facetted ggplot with linked brushing and hovers"}
+These applications can become more complex when more inputs and outputs are added. The main advantage of using \textsf{shiny} is that it establishes a connection to \textsf{R} to allow for statistical computing to occur, while leaving the browser to drive on-plot and off-plot interactions (briefly defined in [Section 1.1](#need)). This allows us to be able to link different views of data easily. Furthermore, RStudio [-@shiny04] has provided ways to be able to host and share these shiny apps via a shiny server. However, we are still limited in the sense that for every time we launch a \textsf{shiny} application, we do not have access to \textsf{R} as it runs that session. Additionally, \textsf{shiny} has a tendency to redraw entire objects whenever an 'input' changes as seen in \autoref{fig:simple-shiny}. This can lead to unnecessary computations and traffic between \textsf{R} and the webpage slows down the experience for the user. Despite this, it remains a popular tool for creating interactive visualisations.
+
+There are many different ways to use shiny to create more interactive data visualisations - we can simply just use it to create interactive plots or we can go further and use it to extend the interactivity in \textsf{plotly}, \textsf{ggvis} and other \textsf{R} packages.
+
+
+### Interactivity with shiny {#shiny-int}
+
+\textsf{shiny} alone can provide some interactivity to plots [@shiny03]. \autoref{fig:inc-shiny-1} shows linked brushing between facetted plots and a table of the nzincome data set. With \textsf{shiny}, we are able to easily link plots together with other objects. This is done simply by attaching a `plot_brush` input, and using the `brushedPoints()` function to return what has been selected to R. As we select parts of the plot, we see this change occur as the other plot and the table updates and renders what has been selected. Other basic interactions include the addition of clicks (`plot_click`) and hovers (`plot_hover`).
+
+```{r, echo = FALSE, fig.cap = "\\label{fig:inc-shiny-1} Facetted ggplot with linked brushing and hovers"}
 knitr::include_graphics('./fig/inc-shiny-1.png')
 ```
-However, these basic interactive tools only work on base R plots or plots rendered with **ggplot2** and best with scatter plots. It is possible to extend this to bar plots, but it requires more thought. This is because the pixel co-ordinates of the plot are correctly mapped to the data [@shiny05]. When we try this on a lattice plot as seen below in \autoref{fig:inc-shiny-2}, this mapping condition fails as the co-ordinates system differs between the data and the plot itself. It is possible to create your own mappings to a plot or image, however it is complex to develop.
 
-```{r, echo = FALSE, message = FALSE, eval = FALSE}
+However, these basic interactive tools only work on base \textsf{R} plots or plots rendered with \textsf{ggplot2} and best with scatter plots. It is possible to extend this to bar plots, but it requires more thought. This is because the pixel co-ordinates of the plot are correctly mapped to the data [@shiny05]. When we try this on a lattice plot as seen below in \autoref{fig:inc-shiny-2}, this mapping condition fails as the co-ordinates system differs between the data and the plot itself. It is possible to create your own mappings to a plot or image, however it is complex to develop.
 
-shinyApp(
-  ui <- basicPage(
-  plotOutput("plot", click = "plot_click", brush = "plot_brush"),
-  verbatimTextOutput("info")
-),
-
-server <- function(input, output) {
-  output$plot <- renderPlot({
-    x <- income$weekly_hrs
-    y <- income$weekly_income
-    xyplot(y~x,  main = "Lattice scatterplot of nzincome", ylab ="Weekly income", xlab = "Weekly hrs")
-  })
-
-  output$info <- renderText({
-    paste0("Weekly_hrs=", input$plot_click$x, "\n Weekly_income=", input$plot_click$y)
-  })
-
-}
-)
-
-```
-
-```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:inc-shiny-2} A lattice plot that fails to produce correct mapping"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:inc-shiny-2} A lattice plot that fails to produce correct mapping"}
 knitr::include_graphics('./fig/inc-shiny-2.png')
 ```
 
-Because the plots displayed are in an image format, we can only view these plots as a single object and cannot pull apart elements on the plot. We are unable to further extend and add onto a plot, such as add a trend line when brushing or change colours of points when clicked on. Despite being limited to plot interactions (clicks, brushes and hovers), we can use \textsf{shiny} to link multiple views of the data set.
+Because the plots are displayed as a single image, we can only view these plots as a single object and cannot pull apart elements on the plot. We are unable to further extend and add onto a plot, such as add a trend line when brushing or change colours of points when clicked on. Despite being limited to plot interactions such as clicks, brushes and hovers, we can use \textsf{shiny} to link multiple views of the data set.
 
-### Linking plotly or ggvis with shiny
+### Linking plotly or ggvis with shiny {#plotly-shiny-ggvis}
 
-Although \textsf{shiny} is great at facilitating interactions from outside of a plot, it is limited in facilitating interactions within a plot. It does not have all the capabilities that \textsf{plotly} provides. When we combine the two together, more interaction can be achieved with less effort.
+Although \textsf{shiny} is great at facilitating interactions from outside of a plot, it is limited in facilitating interactions within a plot. It does not have all the capabilities that \textsf{plotly} and \textsf{ggvis} provides. When we combine the two together, more interaction can be achieved with less effort.
 
-
-```{r, echo = FALSE, message = FALSE, eval = FALSE}
-ui <- fluidPage(
-  fluidRow(
-    column(4, plotlyOutput("sourceplot")),
-    column(4, plotlyOutput("boxplot")),
-    column(4, plotlyOutput("histogram"))
-  ),
-  tableOutput("table")
-)
-
-server <- function(input, output) {
-
-  #scatterplot
-  output$sourceplot <- renderPlotly({
-    plot_ly(income, x = ~weekly_hrs, y = ~weekly_income,
-            color = ~highest_qualification, type = "scatter",
-            mode = "markers", source = "source") %>%
-      layout(dragmode = "select")
-  })
-
-  #render a box plot based upon the selection from scatterplot
-  output$boxplot <- renderPlotly({
-    s = event_data('plotly_selected', source = "source")
-    selected_data <- income[s[["pointNumber"]], ]
-    plot_ly(selected_data, x = ~weekly_hrs, type = "box")
-  })
-
-  #render a histogram based upon selection from scatterplot
-  output$histogram <- renderPlotly({
-    s = event_data('plotly_selected', source = "source")
-    selected_data <- income[s[["pointNumber"]], ]
-    plot_ly(selected_data, x = ~weekly_hrs, type = "histogram")
-  })
-
-  #render table results
-  output$table <- renderTable({
-    event_data('plotly_selected', source = "source")
-  })
-
-}
-
-shinyApp(ui, server)
-
-```
-
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:inc-plotly-shiny} a shiny app with a plotly plot with linked brushing"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:inc-plotly-shiny} A shiny application with a plotly plot with linked brushing"}
 knitr::include_graphics('./fig/inc-plotly-shiny.png')
 ```
 
-\textsf{plotly} (along with many other R packages that generate htmlwidgets) and ggvis have their own way of incorporating plots into a shiny application. In  \autoref{fig:inc-plotly-shiny}, we can easily embed plots into \textsf{shiny} using the `plotlyOutput()` function. The \textsf{plotly} package also has its own way of co-ordinating linked brushing and in-plot interactions to other shiny outputs under a function called `event_data()` [@sievert01]. By combining it with \textsf{shiny}, we are able to link different plots together and to the data itself that is displayed as a table below. These in-plot interactions are very similar to what \textsf{shiny} provides for **graphics** plots and **ggplot2**. They work well on scatter plots, but not on other kinds of plots that plotly can provide. These can help generate or change different outputs on the page, but not within themselves. By combining the two together, we get on-plot functionalities from the htmlwidget, with off-plot driven interactions from shiny. Similarly, when we can combine \textsf{ggvis} and \textsf{shiny} together we get similar results as seen in  \autoref{fig:inc-ggvis-shiny}. ggvis has its own functions (`ggvisOutput()` and `linked_brush()`) that allow for similar interactions to be achieved [@ggvis02].
+\textsf{plotly} (along with many other \textsf{R} packages that generate htmlwidgets) and \textsf{ggvis} have their own way of incorporating plots into a shiny application. In \autoref{fig:inc-plotly-shiny}, we can easily embed plots into \textsf{shiny} using the `plotlyOutput()` function. The \textsf{plotly} package also has its own way of co-ordinating linked brushing and in-plot interactions to other shiny outputs under a function called `event_data()` [@sievert03]. By combining it with \textsf{shiny}, we are able to link different plots together and to the data itself that is displayed as a table below. These in-plot interactions are very similar to what \textsf{shiny} provides for \textsf{graphics} plots and \textsf{ggplot2}. They work well on scatter plots, but not on other kinds of plots that \textsf{plotly} can provide. These can help generate or change different outputs on the page, but not within themselves. By combining the two together, we get on-plot functionalities from the htmlwidget, with off-plot driven interactions from \textsf{shiny}. Similarly, we can combine \textsf{ggvis} and \textsf{shiny} together to get similar results as seen in \autoref{fig:inc-ggvis-shiny}. \textsf{ggvis} has its own functions (`ggvisOutput()` and `linked_brush()`) that allow for similar interactions to be achieved [@ggvis02].
 
-```{r, echo = FALSE, message = FALSE, eval = FALSE}
-shinyApp(
 
-  ui <- basicPage(
-  #need to use ggvis output for this
-  ggvisOutput("plot"),
-  tableOutput("brushed_data")
-  #ideally, want to show brushed data through the table
-),
-
-server <- function(input, output, session) {
-
-  #create an id for each row of data
-  iris <- cbind(iris, id = seq_len(nrow(iris)))
-
-  #creating a linked brush object
-  lb <- linked_brush(iris$id, "blue")
-
-  #selecting brushed values:
-  selected <- lb$selected
-
-  #making the dataset reactive to the brush
-  iris_selected <- reactive({
-    if (!any(selected())) return(iris)
-    iris[selected(), ]
-  })
-
-    iris %>%
-      ggvis(~Petal.Length, ~Petal.Width, fill = ~Species) %>%
-      layer_points(fill.brush := "blue") %>%
-      #takes linked brushing input
-      lb$input() %>%
-      #adds the selected data points on top of the plot
-      add_data(iris_selected) %>%
-      bind_shiny("plot")
-
-    output$brushed_data <- renderTable({
-      iris_selected()
-    })
-
-})
-
-```
-
-```{r, echo = FALSE, out.width = "70%", fig.cap = "\\label{fig:inc-ggvis-shiny} an example of linked brushing between ggvis plots"}
+```{r, echo = FALSE, fig.cap = "\\label{fig:inc-ggvis-shiny} An example of linked brushing between ggvis plots"}
 knitr::include_graphics('./fig/inc-ggvis-shiny.png')
 ```
 
-However, we are still left with a general problem of \textsf{shiny} (with the exception of \textsf{ggvis}) recomputing and redrawing a plot or widget every time an input changes. As of writing, work has been developed to prevent plots generated by plotly to only change certain parts of a plot whenever a plot is implemented with shiny.
-As of writing, this was not possible. However, in a recent version of plotly(4.7.1), Sievert[-@sievert03] has shown that this is possible with a new feature called `plotlyProxy()`, but requires knowledge of the `plotly.js` library and how these proxy objects work.
+However, we are still left with a general problem of \textsf{shiny} (with the exception of \textsf{ggvis}) recomputing and redrawing a plot or widget every time an input changes. As of writing, work has been developed to prevent plots generated by \textsf{plotly} to only change certain parts of a plot whenever a plot is implemented with shiny. In a recent version of \textsf{plotly} (version 4.7.1), Sievert[-@sievert03] has shown that this is possible with a new feature called `plotlyProxy()`, but requires knowledge of the `plotly.js` library and how these proxy objects work.
 
 
-## animint
+## animint {#animint}
 
-**animint** [@animint01] is an R package designed to allow users to create interactive and animative visuals using **ggplot2**. It uses the concept of direct manipulation defined in Scheiderman (1982). It focuses on adding two main aesthetics to ggplot2 - `clickSelects` to allow the user to click on a selection, and `showSelects` that shows the current selection.  The user is able to directly click on the plot, which can be used to link multiple views of data on the same page.  It uses D3 to generate the interactive plot on the page, and stores all the data in multiple TSV files that can be viewed locally.  
+\textsf{animint} [@animint01] is an \textsf{R} package designed to allow users to create interactive and animated visuals using \textsf{ggplot2}. It uses the concept of direct manipulation defined in Scheiderman (1982). It focuses on adding two main aesthetics to \textsf{ggplot2} - `clickSelects` to allow the user to click on a selection, and `showSelects` that shows the current selection.  The user is able to directly click on the plot, which can be used to link multiple views of data on the same page.  It uses \textsf{D3} to generate the interactive plot on the page, and stores all the data in multiple TSV files that can be viewed locally.  
 
-To illustrate, we create a simple example linking between the groups of ethnicity to different views of the nzincome data set.
+To illustrate, we create a simple example linking between gender and highest qualification to identify if there is a difference in income from the `nzincome` data set (\autoref{fig:animint}). When we click on the bars of the plot (left), we can subset the data by gender, while we can further subset the groups into qualification by selecting the legend on the scatter plot on the right. Overall,
+across all qualification groups, there appears to be a difference between income levels by gender.
+
+```{r, echo = FALSE, fig.cap = "\\label{fig:animint} An animint example linking a bar plot by gender to weekly hours and income from the nzincome data set"}
+knitr::include_graphics('./fig/animint.png')
+```
 
 ```{r, eval = FALSE}
 library(animint)
@@ -321,30 +207,28 @@ plotAll <- (list(p1 = plot1, p2 = plot2))
 structure(plotAll, class = "animint")
 ```
 
-Figure 2.12: animint example
-
 If we click on any of the bars on the bar plot (left), the scatter plot (right) shows the selected points that correspond that that group.
 
-Hocking's[-@animint01] example of the displaying different views of the World Bank dataset shows how complex these interactive and animative plots can be achieved with less than 100 lines of code. It is simple and straightforward, and is not restricted to linking scatter plots as discussed with crosstalk and plotly.
-Because the plots are rendered entirely in JavaScript using D3, the plots are relatively more responsive and faster than compared to using a web-server framework like shiny (which has an overhead cost from communicating between a remote server with R and the browser).
+Hocking's [-@animint01] example of the displaying different views of the World Bank dataset shows how complex interactive and animated plots can be achieved with less than 100 lines of code. It is simple and straightforward, and is not restricted to linking scatter plots as discussed with \textsf{crosstalk} and \textsf{plotly}.
+Because plots are rendered entirely in JavaScript using D3, they are relatively more responsive and faster than compared to using a client-server framework like \textsf{shiny} which has an overhead cost from communicating between a remote server with \textsf{R} and the browser.
 
-The key strength of **animint** is also its weakness as the only type of interactivity that can be achieved is clicking and showing what has been selected [@animint01]. Currently, it cannot achieve brushing or zooming. It is only compatible with **ggplot2**. For more developed users of **ggplot2**, not all `geoms` are supported, and may remain static when rendered with **animint**. Furthermore, because everything is computed and rendered beforehand, this means that if a selection requires a recomputation in R before it can be displayed, this is not possible. Hocking [-@animint01] suggests that a solution to this is to use **animint** with shiny, but this means that a new **animint** plot is rendered every time the user interacts with it. The unfortunate situation with creating stand-alone interactive plots this way is that the amount of data that needs to be generated to power the plots increases as we increase the number of subsets. If a data set has multiple subsets that need to be rendered, **animint** will need to make all the different combinations for each subset to link every plot together. The more number of subsets and the larger the dataset, the number of files that need to be generated to drive the interactive or animated plot increases. In this case, using a client-server framework like shiny would be more suitable.
+The key strength of \textsf{animint} is also its weakness as the only type of interactivity that can be achieved is clicking and showing what has been selected [@animint01]. Currently, it cannot achieve brushing or zooming and is only compatible with \textsf{ggplot2}. For more advanced users of \textsf{ggplot2}, not all `geoms` are supported, and may remain static when rendered with \textsf{animint}. Furthermore, because everything is computed and rendered beforehand, this means that if a selection requires a re-computation in \textsf{R} before it can be displayed, this is not possible. Hocking [-@animint01] suggests that a solution to this is to use \textsf{animint} with \textsf{shiny}, but this means that a new \textsf{animint} plot is rendered every time the user interacts with it. The unfortunate situation with creating stand-alone interactive plots this way is that the amount of data that needs to be generated to power the plots increases as we increase the number of subsets. If a data set has multiple subsets that need to be rendered, \textsf{animint} will need to make all the different combinations for each subset to link every plot together. The bigger the number of subsets and the larger the dataset, the number of files that need to be generated to drive the interactive or animated plot increases. In this case, using a client-server framework like shiny would be more suitable.
 
-The **animint** package proves itself as a success in implementing a complex system that achieves simple interactive and animative plots that can easily linked and implemented by users using clicks and selection.
+The \textsf{animint} package is promising for implementing a complex system that achieves interactive and animated plots that can be easily linked and implemented by users using clicks and selection, but there is still a great deal that it cannot do.
 
-## Summary
+## Summary {#over-sum}
 
 From assessing all these tools, we can summarise the features and drawbacks for each tool in the table below.
 
 | Tool      | Type of plot | Compatible with shiny | Types of interactions | Redraws entire plot | Framework type |
 |:-----------:|:-------------:|:----------------------:|:----------------------:|:--------------------:|:----------:|
-| plotly    | plotly(plotly.js), ggplot2 | Yes | Clicks, brushing, subsetting, filters | Yes * (unless proxy) | standalone HTML |
-| ggvis     | ggvis(Vega) | Yes | off-plot interactions, hovers, brushing, filters | No | client-server |
-| shiny     | R plots, anything compatible with it | - | clicks, brushing, filters, subsetting, hovers | Yes | client-server |
+| plotly    | plotly(plotly.js), ggplot2 | Yes | Clicks, brushing, subsetting, filters, zooming, rescales, linking multiple views with crosstalk (focuses more on on-plot interactions) | Yes (unless proxy) | standalone HTML |
+| ggvis     | ggvis(Vega) | Yes | off-plot interactions, hovers, brushing (with crosstalk), filters, rescales (focuses more on off-plot interactions) | No | client-server |
+| shiny     | \textsf{R} plots, anything compatible with it | - | clicks, brushing, filters, subsetting, hovers, able to link views (both on-plot and off-plot possible) | Yes | client-server |
 | animint | ggplot2 (D3) | Yes | clicks + selects | No (unless used with shiny) | standalone HTML |
 
 Table 1: A summary table of all the tools available and their main capabilities
 
 Note: anything that is compatible with shiny will end up adopting its client-server framework.
 
-Most of these tools can be extended using shiny. However the general problem is that when these systems are implemented with shiny (with the exception of ggvis), every time a user interacts with an input, the plot or corresponding widgets will be recomputed and redrawn. Furthermore, many of these do now allow us to customise our own interactions into the plot. We can use these tools for easily visualise our data with standard interactive plots, but if the user wishes to customise interactivity or extend it further, it presents a dead end or a need for learning its respective API. The other significant factor is that most these tools use a JavaScript library to render their plots. While graphics plots generated in R are supported by \textsf{shiny} and ggplot2 across \textsf{plotly} and **animint**, there is no support for graphics generated with other plotting systems in R. Next, we will look at how we can achieve specific on-plot interactions on static R plots by combining JavaScript with lower levels tools and avoid reproducing entire plots whenever the user interacts with it.
+Most of these tools can be extended using \textsf{shiny}. However the general problem is that when these systems are implemented with shiny (with the exception of \textsf{ggvis}), every time a user interacts with an input, the whole plot or corresponding widgets will be recomputed and redrawn. Furthermore, many of these do now allow us to customise our own interactions into the plot. We can use these tools for easily visualise our data with standard interactive plots, but if the user wishes to customise interactivity or extend it further, it presents a dead end or a need for learning its respective API. The other significant factor is that most these tools use a JavaScript library to render their plots. While graphics plots generated in \textsf{R} are supported by \textsf{shiny} and \textsf{ggplot2} across \textsf{plotly} and \textsf{animint}, there is no support for graphics generated with other plotting systems in R. Next, we will look at how we can achieve specific on-plot interactions on static \textsf{R} plots by combining JavaScript with lower levels tools and avoid reproducing entire plots whenever the user interacts with it.

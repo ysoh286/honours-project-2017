@@ -6,13 +6,13 @@ output: pdf_document
 
 Thank you to Dr. Paul Murrell for his technical expertise and witty analogies
 that helped me understand the concepts and challenges of research and software
-development. Thank you for being an inspirational role model for becoming a
-better programmer.
+development. Thank you for being an inspirational role model to allow me to become
+ a better programmer.
 
 Thank you to Prof. Chris Wild for introducing me to the idea of interactive
 graphics, for inspiring me to investigate further into this topic for iNZight
 and for my own interests. Thank you for sharing ideas and challenging me further.
 
 This project would not have been possible without their dedicated supervision
-and support. I hope that it has helped in their own research and inspires others
+and support. I hope that it has helped them in their own research and inspires others
 to have fun making their own interactive visuals in R.

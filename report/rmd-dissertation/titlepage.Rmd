@@ -5,14 +5,16 @@ output: pdf_document
 \begin{centering}
 \vspace*{\fill}
 \Huge{Web interactive plots in R} \\
-\vspace{2cm}
-\Large{Yu Han Soh} \\
 \vspace{1cm}
+\Large{Yu Han Soh} \\
+\vspace{0.5cm}
+\Large{Supervisors: Paul Murrell and Chris Wild} \\
+\vspace{0.5cm}
 \today \\
 \vspace{3cm}
 
 ```{r, echo = FALSE, out.width = "30%", fig.cap = ""}
-knitr::include_graphics("./figures/logo.png")
+knitr::include_graphics("./fig/logo.png")
 ```
 
 \vspace{1cm}
