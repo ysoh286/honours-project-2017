@@ -57,7 +57,7 @@ highlightRange <- function(ptr) {
 
   # add start and end:
   xval <- c(xval[1], xval, xval[length(xval)])
-  yval <- c(-1, yval, -1)
+  yval <- c(0, yval, 0)
 
   pt <- convertXY(xval, yval, panel)
   #set points on added polygon

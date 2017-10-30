@@ -72,35 +72,6 @@ addSelectionBox(plotNum = 1,
 boxIndex = boxCallback(rectangleMe)
 
 
-# make a general function for linking between bar plots and histograms:
-linkBars <- function() {
-  # the table function does not report zeroes! :(
-  t1 <- sum(selected$cyl == 4)
-  t2 <- sum(selected$cyl == 6)
-  t3 <- sum(selected$cyl == 8)
-
-  counts <- c(t1, t2, t3)
-
-  pp <- grid::grid.get('graphics-plot-2-rect-1')
-  x <- grid::convertX(pp$x, "native", valueOnly = TRUE)
-  w <- grid::convertX(pp$width, "native", valueOnly = TRUE)
-
-  #x values:
-  gg <- numeric(6)
-  gg1 <- ifelse((1:6) %% 2 == 0, w, 0)
-  gg2 <- rep(x, each = 2) + gg1
-  gg3 <- rep(gg2, each = 2)
-
-  # get y values:
-  ycount <- rep(counts, each = 4)
-  ll <- length(ycount)
-  y1 <- seq(1, ll, by = 4)
-  y2 <- seq(4, ll, by = 4)
-
-  ycount[y1] = 0
-  ycount[y2] = 0
-}
-
 # The unfortunate situation with interactr is that you really have to put things
 # in a certain order for everything to work smoothly.
 # One of them is finding the panel using grid (which requires the device to be
