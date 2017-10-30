@@ -1,4 +1,4 @@
-\begin{thebibliography}{45}
+\begin{thebibliography}{46}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -307,5 +307,11 @@ Leland Wilkinson.
 \newblock \emph{The Grammar of Graphics (Statistics and Computing)}.
 \newblock Springer-Verlag New York, Inc., Secaucus, NJ, USA, 2005.
 \newblock ISBN 0387245448.
+
+\bibitem[Xie(2016)]{dt01}
+Yihui Xie.
+\newblock \emph{DT: A Wrapper of the JavaScript Library 'DataTables'}, 2016.
+\newblock URL \url{http://rstudio.github.io/DT}.
+\newblock R package version 0.2.12.
 
 \end{thebibliography}

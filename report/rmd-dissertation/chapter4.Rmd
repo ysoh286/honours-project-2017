@@ -42,7 +42,7 @@ bw <- bwplot(iris$Sepal.Length, main = "Sepal length", xlab = "Sepal length")
 
 Here, we have stored the box plot into a variable called `bw`. To attach interactions, we need to identify what elements have been drawn. We can do that by listing the elements.
 
-```{r, fig.cap = "\\label{fig:bp} Producing a box plot in R", comment = NA}
+```{r, out.width = "60%", fig.cap = "\\label{fig:bp} Producing a box plot in R", comment = NA}
 listElements(bw)
 box <- "plot_01.bwplot.box.polygon.panel.1.1"
 ```
@@ -275,7 +275,7 @@ Next, we add a slider to the page. This has not been linked up to any elements y
 addSlider("slider", min = 0.5, max = 1, step = 0.05)
 ```
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:int-slider-1} Plot with slider"}
+```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:int-slider-1} Plot with slider"}
 knitr::include_graphics('./fig/int-slider-1.png')
 ```
 
@@ -315,7 +315,7 @@ int <- list(oninput = "sliderValue")
 addInteractions("slider", int)
 ```
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:int-slider-2} Plot with slider that controls the smoothness of the trend line"}
+```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:int-slider-2} Plot with slider that controls the smoothness of the trend line"}
 knitr::include_graphics('./fig/int-slider-2.png')
 ```
 
@@ -332,17 +332,17 @@ Note that this appears to be hidden on the page, as the points of this line have
 Next, a new function needs to be defined to be able to compute this new smoother.
 
 ```{r, eval = FALSE}
-#create new smoother:
+# create new smoother
 createSmooth  = function(index) {
-  #this returns the indices of the points selected
+  # this returns the indices of the points selected
   index <- as.numeric(unlist(strsplit(index, ",")))
-  #filter selected points:
+  # filter selected points
   if (length(index) > 20) {
     selected <- iris[index, ]
     x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
     lo <<- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
     y <- predict(lo, x)
-    #convert co-ordinates:
+    # convert co-ordinates
     pt <- convertXY(x, y, pointsPanel)
   } else {
     pt <- ""
@@ -357,10 +357,11 @@ Because the index of the points need to be returned from the browser back to R, 
 ```{r, eval = FALSE}
 #link callback functions together to pass index values to function
 boxIndex = boxCallback(createSmooth)
-addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", f = "boxIndex")
+addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1",
+                f = "boxIndex")
 ```
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:int-slider-3} Plot that has a selection box feature that draws a separate smoother"}
+```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:int-slider-3} Plot that has a selection box feature that draws a separate smoother"}
 knitr::include_graphics('./fig/int-slider-3.png')
 ```
 
@@ -457,7 +458,7 @@ However, because it works on a completely different co-ordinates system, we cann
 The native coordinates given by \textsf{grid} do not return that data coordinates of the ggplot. A simple solution to this is that the information about the plot can be extracted from `ggplot_build`. Below, we have manually identified the range of the box.
 
 ```{r, eval = FALSE}
-# find the range of the box:
+# find the range of the box
 boxData <- ggplot_build(p)$data[[1]]
 range <- c(boxData$lower, boxData$upper)
 ```

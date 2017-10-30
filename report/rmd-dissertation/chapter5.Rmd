@@ -53,21 +53,21 @@ A further assumption that the \textsf{interactr} package currently has is that t
 
 In comparison to the existing tools discussed in [Section 2](#overview), \textsf{interactr} has a more complex API for users. The main reason for this is to increase flexibility across creating different types of interactions. But this is entirely developmental. In comparison to using \textsf{DOM} and \textsf{gridSVG} directly, it provides convenience for certain processes, such as drawing an SVG plot and adding elements to the web page and styling hovers. Currently, only certain interactions highlighted in [Section 4.2](#examples) can be achieved.
 
- There is potential for designing a more simpler and structured API that is more intuitive for developers and users. An example to highlight this is changing the bandwidth of a density plot (shown below with \textsf{interactr} in \autoref{fig:d1}). This example has been replicated with \textsf{ggvis}(\autoref{fig:d2}), \textsf{shiny}(\autoref{fig:d3}), and with \textsf{plotly+shiny} (\autoref{fig:d4}). The \textsf{animint} package will not be able to do this because it is restricted to clicks and selection.
+ There is potential for designing a more simpler and structured API that is more intuitive for developers and users. An example to highlight this is changing the bandwidth of a density plot (shown below with \textsf{interactr} in \autoref{fig:d1}). This example has been replicated with \textsf{ggvis} (\autoref{fig:d2}), \textsf{shiny} (\autoref{fig:d3}), and with \textsf{plotly+shiny} (\autoref{fig:d4}). The \textsf{animint} package will not be able to do this because it is restricted to clicks and selection.
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:d1} Control density bandwidth with interactr"}
+```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:d1} Control density bandwidth with interactr"}
 knitr::include_graphics('./fig/interactr-density.png')
 ```
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:d2} Control density bandwidth with ggvis"}
+```{r, echo = FALSE, out.width = "65%", fig.cap = "\\label{fig:d2} Control density bandwidth with ggvis"}
 knitr::include_graphics('./fig/ggvis-density.png')
 ```
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:d3} Control density bandwidth with shiny"}
+```{r, echo = FALSE, out.width = "65%", fig.cap = "\\label{fig:d3} Control density bandwidth with shiny"}
 knitr::include_graphics('./fig/shiny-density.png')
 ```
 
-```{r, echo = FALSE, fig.cap = "\\label{fig:d4} Control density bandwidth using plotly (rendered with ggplot2) and shiny"}
+```{r, echo = FALSE, out.width = "65%", fig.cap = "\\label{fig:d4} Control density bandwidth using plotly (rendered with ggplot2) and shiny"}
 knitr::include_graphics('./fig/ggplotly-density.png')
 ```
 

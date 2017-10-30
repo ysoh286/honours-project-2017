@@ -213,7 +213,7 @@ knitr::include_graphics('./fig/tl-DOM-diagram.png')
 
 The process of creating this example is similar to what was done with \textsf{shiny}. However, it is more difficult to set up as it requires the user to manually link all the components on the page. First, we draw the plot and save it as an SVG in memory. Next, we can add the SVG plot and a slider to the page. We identify which element corresponds to the trend line, and define what happens when the slider moves or when text is clicked. This requires an additional query to the browser to return the value of the slider before it can be returned back to R, as shown in \autoref{fig:tl-DOM-diagram}. These are co-ordinated using asynchronous callbacks, where once a response is returned, we can schedule another task behind it. These can be viewed as a series of steps that are linked together. Once the value of the slider is returned, we can use it to recalculate the coordinates of the trend line before updating it on the page. Our final result is put together in \autoref{fig:tl-DOM-2}.
 
-```{r, echo = FALSE, out.width = "40%", fig.cap = "\\label{fig:tl-DOM-2} DOM example of Figure 3.5 for changing a trend line using a slider"}
+```{r, echo = FALSE, out.width = "60%", fig.cap = "\\label{fig:tl-DOM-2} DOM example of Figure 3.5 for changing a trend line using a slider"}
 knitr::include_graphics('./fig/tl-DOM-2.png')
 ```
 
