@@ -1,11 +1,12 @@
 Package: interactr
 Title: trial package for on-plot interactivity
 Version: 0.0.1
-Authors@R: person(
+Author: person(
     "Yu Han",
     "Soh",
     email = "ysoh286@aucklanduni.ac.nz",
     role  = c("aut", "cre"))
+Maintainer: Yu Han Soh <ysoh286@aucklanduni.ac.nz>
 Description: Aiming to achieve on-plot interactivity.
 License: GPL-3
 Encoding: UTF-8
@@ -13,5 +14,5 @@ LazyData: true
 Imports: grid, XML, gridSVG
 Depends: DOM
 Remotes: pmur002/DOM
-Suggests: gridGraphics
+Suggests: gridGraphics, knitr
 RoxygenNote: 5.0.1
