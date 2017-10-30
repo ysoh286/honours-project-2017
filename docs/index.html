@@ -9,6 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Yu Han Soh" />
 
 
 <title>Web interactive plots in R</title>
@@ -157,7 +158,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Report</a>
+      <a class="navbar-brand" href="index.html">Web interactive plots in R</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -198,18 +199,21 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Web interactive plots in R</h1>
+<h4 class="author"><em>Yu Han Soh</em></h4>
 
 </div>
 
 
-<p>This is an interactive HTML version of an honours project report to be submitted on Tuesday 31st October 2017 NZT.</p>
+<p>This is the online interactive version of an <a href="dissertation.pdf">honours project report</a>.</p>
 <p>A quick table of contents has been provided below. Simply click on the tabs in the navigation bar (at the top of this page) to view each section.</p>
 <p><a href="#abstract">Abstract</a> <br> <a href="#acknowledgements">Acknowledgements</a> <br> <a href="chapter1.html">1 Introduction</a> <br> <a href="chapter2.html">2 An overview of tools for achieving web interactive plots in R</a> <br> <a href="chapter3.html">3 Interactive R plots using lower level tools</a> <br> <a href="chapter4.html">4 Designing a more flexible way of producing simple interactions</a> <br> <a href="chapter5.html">5 Discussion</a> <br></p>
 <p>References have been provided at the bottom of each section.</p>
-<p>Most of the examples have live links - simply click on the link and follow the instructions. Some of them do take a while to load!</p>
+<p><strong>NOTE:</strong> <strong>Most of the examples have live links - simply click on the link and follow the instructions. Some of them do take a while to load! Those that involve the DOM package (Section 3.2 and all the examples from Section 4) only last for a few minutes and require a strong internet connection. Once the text instructions load, it is best to follow the instructions immediately.</strong></p>
+<hr />
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
 <p>Web interactive graphics have become popular for sharing exploratory data analysis. There are many approaches for creating web interactive graphics, however, they are limited and do not allow users to customise and introduce interactions that were not specifically planned for by these systems. This report gives an overview of existing tools for creating web interactive plots before developing and discussing a more flexible solution called <strong>interactr</strong>, a prototype package that allows users to customise interactions on plots produced in R and aims to remove the need for understanding how web technologies work.</p>
+<hr />
 </div>
 <div id="acknowledgements" class="section level2">
 <h2>Acknowledgements</h2>

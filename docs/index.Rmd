@@ -1,9 +1,9 @@
 ---
 title: "Web interactive plots in R"
+author: "Yu Han Soh"
 ---
 
-This is an interactive HTML version of an honours project report to be submitted
-on Tuesday 31st October 2017 NZT.
+This is the online interactive version of an [honours project report](dissertation.pdf).
 
 A quick table of contents has been provided below.
 Simply click on the tabs in the navigation bar (at the top of this page) to view
@@ -19,8 +19,14 @@ each section.
 
 References have been provided at the bottom of each section.
 
-Most of the examples have live links - simply click on the link and follow
-the instructions. Some of them do take a while to load!
+**NOTE:**
+**Most of the examples have live links - simply click on the link and follow
+the instructions. Some of them do take a while to load! Those that involve the
+DOM package (Section 3.2 and all the examples from Section 4) only last for a few
+minutes and require a strong internet connection. Once the text instructions
+load, it is best to follow the instructions immediately.**
+
+---
 
 ## Abstract {#abstract}
 
@@ -32,6 +38,8 @@ This report gives an overview of existing tools for creating web interactive
 plots before developing and discussing a more flexible solution called **interactr**,
 a prototype package that allows users to customise interactions on plots produced
 in R and aims to remove the need for understanding how web technologies work.
+
+---
 
 ## Acknowledgements {#acknowledgements}
 

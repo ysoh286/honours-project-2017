@@ -1,7 +1,7 @@
 name: "project-report"
 output_dir: "."
 navbar:
-  title: "Report"
+  title: "Web interactive plots in R"
   right:
     - text: "Executive Summary"
       href: exec-sum.html
