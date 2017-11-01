@@ -1,0 +1,52 @@
+Talk outline:
+- 15 minutes + 5 mins Q & A 
+
+Slides: 10-15?
+
+1 - title slide : Web interactive plots in R
+
+2 - What is interactive graphics + why do we need it?
+	- briefly mention why the web?
+  - Problem: investigate web interactive graphics
+  - Process:
+	- what's out there + limitations
+	- introduce interactr
+	- mention :) and :(
+	
+3 - plotly, plotly + crosstalk?
+
+4 - shiny 
+
+5 - Others: ggvis + animint (or namedrop) + other htmlwidgets
+
+6 - Main limitations:
+	- tendency to reproduce entire plots
+	MY PROBLEM STILL EXISTS
+	- I can't customise interactions into the plot or add layers
+	- Not without expert knowledge and knowing web tech :(
+	
+7 - Jumping down to lower level tools and establishing 
+	building blocks
+	- gridSVG, JavaScript, shiny
+	- gridSVG + DOM
+	- Not ideal - majority of statisticians don't know JavaScript/HTML/CSS
+	(why shiny is so popular and successful!) 
+	- great for customisation, but requires heaps of effort
+
+9 - A more general solution??
+	- introduce interactr + main idea diagram
+
+10 - examples
+
+11 - examples /demo??
+
+12 - Happiness is here!  :) - discuss advantages
+
+13 - ...though, a little short lived  :( - discuss limitations 
+
+14 - Key takeaways:
+	- My problem's half solved (still developing + only a proof-of-concept)
+	- Need for better interactive tools
+	- Might take a while before everything can catch up to the capabilities of desktop applications
+	 - Thank you, questions?
+	 (please don't ask me about the DOM server)

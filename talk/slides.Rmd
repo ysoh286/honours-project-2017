@@ -1,0 +1,123 @@
+---
+title: Web interactive plots in R
+output:
+  xaringan::moon_reader:
+    yolo: FALSE
+    nature:
+      css: "default"
+      highlightStyle: github
+      highlightLines: TRUE
+      countIncrementalSlides: FALSE
+---
+
+## What is interactive graphics?
+
+## Why do we need it?
+
+## Problem
+
+## Approach
+- investigate what tools are out there?
+- What are they good/bad at?
+- introduce interactr - a package for making your static R plot into something a little more interactive!
+
+---
+
+## plotly
+
+
+- compatible with crosstalk for linking multiple views (standalone, therefore sharable)
+
+---
+
+## shiny
+
+- establishes a connection to R
+---
+
+## ...and other tools!
+
+ggvis
+
+animint
+
+...and other htmlwidgets
+ - rCharts
+ - googleVis
+ - rbokeh
+ - DT
+ - Leaflet
+
+---
+
+## Problems?
+- tendency to reproduce entire plots
+- I can't customise or add interactions onto the plot
+  - not without expert knowledge + knowing web tech :(
+
+---
+
+## Jumping down the ladder...
+
+- Many of the tools are considered 'higher' level tools.
+- Jumping down lower gives us more flexibility and allows us to customise interactions
+  - gridSVG
+  - DOM
+  - shiny's 'JavaScript messaging'
+
+---
+
+## Example: A moving trend line
+
+
+---
+
+## BUT...
+
+- This is not ideal!
+  - majority of statisticians don't know Javascript
+  - requires too much effort :(
+
+---
+
+## The tradeoff
+
+- Balance between simplicity vs flexibility
+
+**Could we make something that's a bit more general, and a bit more flexible?**
+
+---
+
+## A more general solution...?
+
+The main idea...
+
+
+- gridSVG + grid + DOM = interactr
+- provides functions to help make your static plot in R into something interactive!
+- Based upon graphical elements present rather than data
+
+---
+
+## Examples
+
+
+---
+
+## Advantages
+- Compatible with plots drawn with grid, including ggplot2 + lattice
+- Compatible with plots drawn in base R (via gridGraphics)
+- Only updates specific components of the plot
+
+---
+
+## Limitations
+-
+---
+
+## Key takeaways
+
+- There is potential need for better interactive tools that can be viewed on the web
+- the world of web interactive graphics remains dynamic, and will continue to evolve - but it'll take a bit of time before it can catch up to the capabilities of desktop applications
+
+Questions? :)
