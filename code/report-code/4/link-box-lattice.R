@@ -8,7 +8,7 @@ bw <- bwplot(iris$Sepal.Length, main = "Sepal Length")
 box <- "plot_01.bwplot.box.polygon.panel.1.1"
 interactions <- list(hover = styleHover(attrs = list(fill = "red",
                                                     fill.opacity = "1")))
-draw(bw, box, interactions, new.page = TRUE, client = shinyClient)
+draw(bw, box, interactions, new.page = TRUE)
 #obtain the range of the box before we draw the scatterplot:
 range <- returnRange(box)
 
@@ -18,7 +18,7 @@ points <- "plot_01.xyplot.points.panel.1.1"
 draw(sp)
 
 #highlightPoints: defined by user:
-highlightPoints <- function(ptr, pageID) {
+highlightPoints <- function(ptr) {
   index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
   setPoints(points, type = "index",
             value = index,
@@ -27,13 +27,3 @@ highlightPoints <- function(ptr, pageID) {
 
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)
-
-registerCallback(highlightPoints, "highlightPoints")
-
-#instructions
-appendChild(pageNo,
-            htmlNode('<p id = "man" style = "font-weight: bold">
-                     Click on the box (once) in the box plot to highlight
-                     the points in the scatter plot.<br>
-                     <span style = "color: red"> If this stops working, go back to the
-                     previous page to relaunch the app. </span> </p>'))

@@ -36,6 +36,34 @@ sliderValue <- sliderCallback(controlTrendline)
 int <- list(oninput = "sliderValue")
 addInteractions("slider", int)
 
+pointsPanel <- findPanel("plot_01.xyplot.points.panel.1.1")
+addLine("newSmooth", pointsPanel, class = "hello", list(stroke = "red",
+                                                        stroke.width = "1",
+                                                        fill = "none"))
+
+
+#create new smoother:
+createSmooth  = function(index) {
+  #this returns the indices of the points selected
+  index <- as.numeric(unlist(strsplit(index, ",")))
+  #filter selected points:
+  if (length(index) > 20) {
+    selected <- iris[index, ]
+    x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
+    lo <<- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
+    y <- predict(lo, x)
+    #convert co-ordinates:
+    pt <- convertXY(x, y, pointsPanel)
+  } else {
+    pt <- ""
+  }
+  setPoints("newSmooth", type = "coords", value = pt)
+}
+
+
+boxIndex = boxCallback(createSmooth)
+addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", f = "boxIndex")
+
 # instructions:
 appendChild(pageNo,
             htmlNode('<p id = "man" style = "font-weight: bold">

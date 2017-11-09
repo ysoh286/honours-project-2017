@@ -28,9 +28,8 @@ addPolygon("highlightRegion", panel, class = "highlight",
 
 rectangleMe <- function(index) {
   index <- as.numeric(unlist(strsplit(index, ",")))
-  selected <- mtcars[index, ]
   # compute points for linking bar plot together:
-  pt <- computeBars("graphics-plot-2-rect-1", panel, selected, "cyl")
+  pt <- computeBars("graphics-plot-2-rect-1", panel, mtcars, index, "cyl")
   #draw bar plot that highlights selected region:
   setPoints("highlightRegion", type = "coords", value = pt)
 
@@ -46,17 +45,3 @@ appendChild(pageNo,
             htmlNode('<p id="man" style = "font-weight: bold;">
              Brush over the scatterplot and see which groups are highlighted
              on the bar plot! </p>'))
-
-## challenge: try on a histogram:
-
-hist(mtcars$hp)
-d <- density(mtcars$drat)
-plot(d)
-
-## link a density plot, a histogram, and a bar plot together with scatters.
-
-
-## hover effects (recreate animint)
-
-
-## non-point selection:
