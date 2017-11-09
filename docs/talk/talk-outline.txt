@@ -1,0 +1,59 @@
+Talk outline:
+- 15 minutes + 5 mins Q & A
+
+Notes:
+- It doesn't have to follow the report
+- The purpose of the talk is to provide highlights about the project and
+	WHY it's important
+- WHAT IS MOST IMPORTANT??
+	 - what did you solve?
+	 - how did you solve it?
+	 - DID you solve it?
+- Possible idea from Paul: could have literally have a series of examples
+that you just walk through and talk about limitations + advantages (this works,
+this doesn't... this doesn't quite - without all this code *and show off all this blah)
+
+TODOS:
+- 5 main things you want to express
+- Draft plan
+- Slides
+- Practice talk
+
+What are the 5 main things I want the audience to know and take away?
+
+PURPOSE/PROBLEM (WHY):
+- need for web interactive graphics: exploratory data analysis
+- provide web interactive graphics to advance features in iNZight/ R plotting systems
+	WITHOUT too much work + with FLEXIBILITY
+
+APPROACH (HOW):
+- look at existing tools (plotly, shiny, ggvis, animint)
+- assess advantages/disadvantages
+
+SUBPROBLEMS:
+- redrawing entire plots when not necessary
+- not provided for R plots (except for ggplot2)
+- tradeoff: higher level tools great for some interactivity, others not so much, meanwhile
+	lower level tools require too much work to coordinate
+
+SOLUTION:
+- The interactr package aims to provide flexibility in creating web interactive
+graphics based upon graphical elements present in R. (an in-between solution + proof of concept!)
+
+FUTURE:
+- web interactive graphics still remains 'hot' in demand and dynamic in nature
+
+5 POINTERS:
+(1 - WHY) The need for web interactive graphics for exploratory data analysis
+is becoming more important
+(2 - PROBLEM) Investigate existing tools and find a way to provide web interactive graphics
+to static R plots (including lattice, ggplot2, graphics and eventually
+iNZight) WITHOUT too much work + extensible to customise certain interactions
+(3 - A KEY FINDING) Some good current tools provide certain types of interactivity
+basically effort free. A huge effort in doing anything beyond what is canned (what the investigation shows).
+(4 - SOLUTION TO PROBLEM) interactr aims to provide flexibility in creating web interactive
+plots based upon graphical elements drawn in R. (a solution that lies between 'high level'
+and 'low level' + proof of concept)
+(5 - FUTURE DIRECTION/CONCLUDE) Web interactive graphics still remains dynamic, but there's still a
+	long way to go before all these tools can catch up to older desktop applications + provide interactions
+	that are important for statistical analysis
