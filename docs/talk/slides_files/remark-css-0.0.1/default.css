@@ -10,14 +10,19 @@ a, a > code {
 }
 .remark-code-line-highlighted     { background-color: #ffff88; }
 
+.remark-code-line {
+  font-size: 65%;
+}
+
 .inverse {
   background-color: #272822;
-  color: #d6d6d6;
-  text-shadow: 0 0 20px #333;
+  color: white;
 }
 .inverse h1, .inverse h2, .inverse h3 {
   color: #f3f3f3;
 }
+
+
 /* Two-column layout */
 .left-column {
   color: #777;
@@ -35,11 +40,11 @@ a, a > code {
 }
 .pull-left {
   float: left;
-  width: 47%;
+  width: 69%;
 }
 .pull-right {
   float: right;
-  width: 47%;
+  width: 30%;
 }
 .pull-right ~ * {
   clear: both;
@@ -69,4 +74,8 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
     top: 0 !important;
     left: 0 !important;
   }
+}
+
+p {
+  font-size: 120%;
 }

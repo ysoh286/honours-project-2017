@@ -2,20 +2,20 @@
 title: Web interactive plots in R
 author:
   - Yu Han Soh
-  - <ysoh286@aucklanduni.ac.nz>
+  - Department of Statistics, University of Auckland
+  - "Supervisors: Paul Murrell, Chris Wild"
 output:
   xaringan::moon_reader:
     yolo: FALSE
     nature:
-      css: ["default"]
+      css: "edils.css"
       highlightStyle: github
       highlightLines: TRUE
       countIncrementalSlides: FALSE
+      ratio: '4:3'
 ---
 
-```{r, include = FALSE}
-income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
-```
+class: inverse
 
 ## The goal
 
@@ -23,54 +23,46 @@ income <- read.csv('~/Desktop/datasets/nzincome.csv', header = TRUE)
 
 --
 
-- Briefly introduce some tools for creating web interactive visualisations and
-  how they work
+- introduce tools for creating web interactive visualisations
 
-- realise that many of these tools are great for certain interactions, but difficult
+- realise they are great for certain interactions, but difficult
 and not designed to be extended further
 
-- introduce a more easier and flexible solution for turning static R plots
+- introduce a flexible solution for turning static R plots
 into interactive ones (interactr)
+
 ---
+class: inverse
 
 ## Interactive graphics
 
-### What is interactive graphics?
-> "querying, selection and linking, and varying plot characteristics"
-- Theus, Unwin, Hoffmann(2006)
+exploratory data analysis
 
---
+## Why the web?
 
-### Why do we need it?
-- exploratory data analysis, get key insights faster
---
+accessible + portable
 
-### Why the web?
-- accessible + portable
-- avoid installation issues and device compatibility
-- A good platform for displaying interactive graphics
+avoid installation issues and device compatibility
 
-???
-Querying involves finding out more about features that the user may be interested in, selection and linking involves subsetting a certain group and linking to different displays of the same data set, while varying plot characteristics involve changing parts of the plot to get more information which could include “rescaling, zooming, reordering and reshading”
+A good platform for displaying interactive graphics
 
 ---
+class: inverse
+## R -> Browser
 
-## plotly
-
-```{r, out.width = "80%", fig.align = "center", echo = FALSE}
+```{r, out.width = "100%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/d1.svg')
 ```
+---
+class: inverse
+## plotly
 
-```{r, out.width = "80%", fig.align = "center", echo = FALSE}
+```{r, out.width = "100%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/plotly.gif')
 ```
 
-???
-- was originally only restricted to row-observation data, but now
-extends to dynamic aggregates.
-
 ---
-
+class: inverse
 ## animint
 
 ```{r, out.width = "100%", fig.align = "center", echo = FALSE}
@@ -78,58 +70,43 @@ knitr::include_graphics('./img/animint.gif')
 ```
 
 ---
+class: inverse
+## R <-> Browser with shiny
 
-## shiny
-
-- provides a way of linking multiple views together
-- establishes a connection between R and the browser
-
-```{r, out.width = "35%", fig.align = "center", echo = FALSE}
+```{r, out.width = "60%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/shiny1.gif')
 ```
 
-```{r, out.width = "60%", fig.align = "center", echo = FALSE}
-knitr::include_graphics('./img/shiny-diagram.svg')
-```
 ---
-
-## shiny
-
-```{r, out.width = "70%", fig.align = "center", echo = FALSE}
-knitr::include_graphics('./img/shiny2.gif')
-```
---
-
-- Interactions can be made directly on a plot, but only if:
-  - it is rendered in ggplot2 or base R
-  - AND has to be a scatter plot
-      ...unless you want to define your own mappings
-
-
----
-
+class: inverse
 ## ggvis
 
-```{r, out.width = "70%", fig.align = "center", echo = FALSE}
+```{r, out.width = "80%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/ggvis.gif')
 ```
 ---
+class: inverse
+## Lower level tools
 
-## Other tools...
-
-Using lower level tools like gridSVG, the DOM package and plain JavaScript
-help us achieve the interactions we want, but require too much effort.
+gridSVG, DOM package + JavaScript achieve what we want but requires too much effort!
 
 ```{r, out.width = "40%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/out.gif')
 ```
-
-... take a guess at how many lines of code this takes?
-
 ---
+class:inverse
+## How much?
 
+```{r, fig.align = "center", echo = FALSE}
+knitr::include_graphics('./img/code-horror.png')
+```
+
+... and some more lines in JavaScript.
+---
+class: inverse
 ## So far...
-Some good current tools provide certain types of interactivity basically effort free,
+
+These tools provide certain types of interactivity basically effort free,
 but a huge effort is required in doing anything beyond what is canned.
 
 - tendency to reproduce entire plots (shiny)
@@ -140,22 +117,21 @@ but a huge effort is required in doing anything beyond what is canned.
 - Limited support for other R graphics (lattice, graphics plots,
     'grid' plotting systems other than ggplot2)
 ---
-
-## A more general solution...
+class: inverse
+## A more general solution for plots drawn in R
 
 ```{r, echo = FALSE}
 knitr::include_graphics('./img/main-idea.svg')
 ```
 <br>
 
-- the interactr package provides functions to help make your static plot in R into something interactive!
-
-- Based upon graphical elements present rather than data
+- the **interactr** package provides functions to help make your static plot in R into something interactive
 
 ---
-
+class: inverse
 ## Examples: A simple circle
 
+.pull-left[
 ```{r, fig.keep = "none"}
 library(grid)
 library(interactr)
@@ -163,17 +139,23 @@ library(interactr)
 circle <- grid.circle(x = 0.5, y = 0.5, r = 0.25, name = "circle.A",
                       gp = gpar(fill = "yellow"))
 listElements(circle)
-interaction <- list(hover = styleHover(attrs = list(fill = "red",
-                                                    fill.opacity = "1")))
-draw(bw, "circle.A", interaction, new.page = TRUE)
-````
+```
+```{r, eval = FALSE}
+interaction <- list(hover =
+                    styleHover(attrs = list(fill = "red",
+                                            fill.opacity = "1")))
+draw(circle, "circle.A", interaction, new.page = TRUE)
+```
+]
 
-```{r, out.width  = "25%", fig.align = "center", echo = FALSE}
+.pull-right[
+```{r, out.width  = "60%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/circle.gif')
 ```
+]
 
 ---
-
+class: inverse
 ## Examples: A linking box plot
 
 ```{r, fig.align = "center", out.width = "100%", echo = FALSE}
@@ -181,28 +163,40 @@ knitr::include_graphics('./img/bp.gif')
 ```
 
 ---
-
+class: inverse
 ## Examples: Trend lines
-
-We have added a new line element onto the existing plot to render the
-second smoother based upon the points that are selected within the drag-box.
 
 ```{r, out.width = "45%", fig.align = "center", echo = FALSE}
 knitr::include_graphics('./img/tl.gif')
 ```
 
 ---
+class: inverse
+## Compatible with graphics plots
 
+```{r, out.width = "100%", fig.align = "center", echo = FALSE}
+knitr::include_graphics('./img/graphics.gif')
+```
+---
+class: inverse
+
+## Compatible with ggplot2
+```{r, out.width = "100%", fig.align = "center", echo = FALSE}
+knitr::include_graphics('./img/ggplot2.gif')
+```
+
+---
+class: inverse
 ## Advantages
 
-- Compatible with plots drawn in R (lattice, ggplot2, graphics...)
+- Compatible with ggplot2, lattice, graphics plots
 
 - Only updates specific components of the plot
 
-- more with less effort in comparison to lower level tools
+- less effort in comparison to lower level tools
 
 ---
-
+class: inverse
 ## Limitations
 
 - Name matching between elements
@@ -210,35 +204,36 @@ knitr::include_graphics('./img/tl.gif')
 --
 
 ```{r, eval = FALSE}
-sp <- xyplot(Petal.Length ~ Petal.Width, data = iris)
-listElements(sp)
+p <- ggplot(iris) + aes(x = Petal.Width, y = Petal.Length) + geom_point()
+listElements(p)
 ```
 
-```{r, echo = FALSE}
-knitr::include_graphics('./img/lattice.png')
+```{r, out.width = "80%", echo = FALSE}
+knitr::include_graphics('./img/ggplot2.png')
 ```
 ---
-
+class: inverse
 ## More limitations
 
-- Graphics device must be open in R and links to a single plot window
+- Graphics device must be open in R
 
-- need for simplicity
+- need for simplicity + structure
 
-- Only acts as a proof-of-concept - currently limited to certain interactions
+- Only acts as a proof-of-concept
 
 ---
+class: inverse
 ## Key takeaways
 
 - There is a need for web interactive graphics
 
-- Many of these tools are great for achieving certain interactions, but are somewhat canned
+- Many of these tools are great for achieving certain interactions, but are canned
 when going beyond
 
-- The interactr package acts as a proof-of-concept for providing simple interactivity to static R plots without the need to know JavaScript (+ a possible solution for extending interactive features for iNZight)
+- interactr acts as a proof-of-concept for providing simple interactions to R plots (+ a possible solution for extending interactive features for iNZight)
 
 - the world of web interactive graphics remains dynamic, and will continue to evolve
 
 --
 
-### Thank you! Questions? :)
+### Thank you! Questions? 
