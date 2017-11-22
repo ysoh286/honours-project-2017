@@ -1,9 +1,26 @@
-**Things to keep in mind:** When you get to a point where things start to take longer than expected, build your own.
+*This is a supposed journal of the entire honours project. It contains weekly notes from
+start (Feb 2017) to end (Nov 2017). It contains findings, diagrams, information, progress the occasional trivia and random thoughts in no particular order. It was used as a open way of keeping on track.*
 
-## TALK?
-- Q: can you include extra things that weren't discussed in your report?
+**Things to keep in mind:**
+
+> When you get to a point where things start to take longer than expected, build your own.
+
+# PROJECT STATUS: COMPLETE.
+- development for interactr may continue (moved to its own repository)
+
+**Concluding thoughts:**
+- A big thank you to my two awesome supervisors! - thank you for giving me direction, but also for giving me flexibility in this project to pursue different paths whenever I got lost.
+- I had fun throughout this project - it was informative, it had all kinds of challenges (both code + creativity). I got to make a package out of it (which was totally on a whim - but really, it's just building on top of other packages - so I'm not really doing anything new...)
+- I didn't quite reach the goal of integrating iNZight in (and probably never will be used since interactr is so unstable) nor did I get to learn D3 (that's for summer now after delaying for an entire year), but it'll probably be an experiment to try.
+- **A question that may/or may never be answered:** Is this going to be useful to anyone in the future? Who knows.
+
+Till next time!
+
+## TALK:
+- PRACTICE. PRACTICE. PRACTICE.... but it's in between exams :(
+- Q: can you include extra things that weren't discussed in your report? Yes.
 - Try out the xaringan package for presentation slides
-- Rmarkdown slides?
+- Rmarkdown [slides](https://ysoh286.github.io/honours-project-2017/talk/slides.html) can be found here
 
 **extras for interactr**
 - These were just extra things that were done in the last weekend but couldn't be included in the report. Serves as informal documentation for the interactr package for now...

@@ -11,7 +11,8 @@ interactions <- list(hover = styleHover(attrs = list(fill = "red", fill.opacity 
 draw(pl, box, interactions, new.page = TRUE)
 range <- returnRange(box)
 
-plot(iris$Sepal.Length, iris$Sepal.Width)
+plot(iris$Sepal.Length, iris$Sepal.Width,
+    xlab = "Sepal Length", ylab = "Sepal Width")
 sp <- recordPlot()
 listElements(sp)
 draw(sp)
@@ -20,9 +21,12 @@ draw(sp)
 points <- 'graphics-plot-1-points-1'
 highlightPoints <- function(ptr) {
   #find the index of points that lie within the range of the box
-  index <- which(min(range) <= iris$Sepal.Length & iris$Sepal.Length <= max(range))
+  index <- which(min(range) <= iris$Sepal.Length
+                 & iris$Sepal.Length <= max(range))
   setPoints(points, type = "index", value = index,
-            attrs = list(fill = "red", fill.opacity = "1", class = "selected"))
+            attrs = list(fill = "red",
+                         fill.opacity = "1",
+                         class = "selected"))
 }
 boxClick <- list(onclick = "highlightPoints")
 addInteractions(box, boxClick)

@@ -4,7 +4,6 @@
 library(interactr)
 library(lattice)
 
-
 iris.plot <- xyplot(Petal.Length ~ Petal.Width,
                     data = iris,
                     pch = 19,
@@ -40,8 +39,6 @@ pointsPanel <- findPanel("plot_01.xyplot.points.panel.1.1")
 addLine("newSmooth", pointsPanel, class = "hello", list(stroke = "red",
                                                         stroke.width = "1",
                                                         fill = "none"))
-
-
 #create new smoother:
 createSmooth  = function(index) {
   #this returns the indices of the points selected
@@ -50,7 +47,7 @@ createSmooth  = function(index) {
   if (length(index) > 20) {
     selected <- iris[index, ]
     x <- seq(min(selected$Petal.Width), max(selected$Petal.Width), length = 20)
-    lo <<- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
+    lo <- loess(Petal.Length ~Petal.Width, data = selected, span = 1)
     y <- predict(lo, x)
     #convert co-ordinates:
     pt <- convertXY(x, y, pointsPanel)
@@ -60,11 +57,5 @@ createSmooth  = function(index) {
   setPoints("newSmooth", type = "coords", value = pt)
 }
 
-
 boxIndex = boxCallback(createSmooth)
 addSelectionBox(plotNum = 1, el = "plot_01.xyplot.points.panel.1.1", f = "boxIndex")
-
-# instructions:
-appendChild(pageNo,
-            htmlNode('<p id = "man" style = "font-weight: bold">
-                      Move the slider to control the smoothing of the curve </p>'))
